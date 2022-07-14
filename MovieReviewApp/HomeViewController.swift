@@ -10,6 +10,7 @@ import UIKit
 class HomeViewController: UIViewController {
     
     let mainTableView: UITableView = UITableView(frame: .zero, style: .grouped)
+    let homeViewModel: HomeViewModel = HomeViewModel()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -17,6 +18,11 @@ class HomeViewController: UIViewController {
         
         viewSetting()
         
+        homeViewModel.getMovies { movies in
+            DispatchQueue.main.async {
+                self.mainTableView.reloadData()
+            }
+        }
         
     }
     
@@ -92,7 +98,11 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: HomeTableViewCell.identifier, for: indexPath) as! HomeTableViewCell
+        if indexPath.section == 0 { cell.movieList = homeViewModel.getPopualrMovieList() }
+        else if indexPath.section == 1 { cell.movieList = homeViewModel.getTopratedMovieList() }
+        else { cell.movieList = homeViewModel.getUpcomingMovieList() }
         
+        if !(homeViewModel.moviesIsEmpty()) { cell.collectionViewReloadData() }
         return cell
     }
     
