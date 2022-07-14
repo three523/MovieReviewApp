@@ -11,6 +11,7 @@ class HomeTableViewCell: UITableViewCell, UICollectionViewDelegate, UICollection
     
     static let identifier: String = "\(HomeTableViewCell.self)"
     private var collectionView: UICollectionView?
+    var movieList: [MovieDetail] = [MovieDetail]()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -41,6 +42,15 @@ class HomeTableViewCell: UITableViewCell, UICollectionViewDelegate, UICollection
         collectionView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true
     }
     
+    func collectionViewReloadData() {
+        DispatchQueue.main.async {
+            guard let collectionView = self.collectionView else {
+                return
+            }
+            collectionView.reloadData()
+        }
+    }
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -51,12 +61,15 @@ class HomeTableViewCell: UITableViewCell, UICollectionViewDelegate, UICollection
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 10
+        return movieList.count
     }
         
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MoviewListCollectionViewCell.identifier, for: indexPath) as! MoviewListCollectionViewCell
-                
+        let index = indexPath.item
+        guard 0 <= index && index < movieList.count else { return cell }
+        cell.movie = movieList[index]
+        cell.settingData()
         return cell
     }
     
