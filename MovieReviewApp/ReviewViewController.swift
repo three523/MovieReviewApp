@@ -9,7 +9,12 @@ import UIKit
 
 class ReviewViewController: UIViewController, UICollectionViewDataSource,  UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
         
-    let dummyView: UIView = UIView()
+    lazy var cellMoveStackView: CellMoveStackView = {
+        let sv: CellMoveStackView = CellMoveStackView(frame: .zero, collectionView: collectionView)
+        let textList: [String] = ["영화", "드라마", "책", "웹툰"]
+        sv.addButtonList(textList: textList)
+        return sv
+    }()
     let dummyView2: UIView = UIView()
     lazy var collectionView: UICollectionView = {
         let flowLayot: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
@@ -21,6 +26,7 @@ class ReviewViewController: UIViewController, UICollectionViewDataSource,  UICol
         cv.delegate = self
         cv.register(ReviewListCVCell.self, forCellWithReuseIdentifier: ReviewListCVCell.identifier)
         cv.isPagingEnabled = true
+        cv.showsHorizontalScrollIndicator = false
         return cv
     }()
 
@@ -35,22 +41,22 @@ class ReviewViewController: UIViewController, UICollectionViewDataSource,  UICol
     
     func viewSetting() {
         
-        view.addSubview(dummyView)
+        view.addSubview(cellMoveStackView)
         view.addSubview(dummyView2)
         view.addSubview(collectionView)
         
         let safeArea = view.safeAreaLayoutGuide
         
-        dummyView.backgroundColor = .gray
-        dummyView.translatesAutoresizingMaskIntoConstraints = false
-        dummyView.topAnchor.constraint(equalTo: safeArea.topAnchor).isActive = true
-        dummyView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        dummyView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        dummyView.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        cellMoveStackView.backgroundColor = .gray
+        cellMoveStackView.translatesAutoresizingMaskIntoConstraints = false
+        cellMoveStackView.topAnchor.constraint(equalTo: safeArea.topAnchor).isActive = true
+        cellMoveStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        cellMoveStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        cellMoveStackView.heightAnchor.constraint(equalToConstant: 50).isActive = true
         
-        dummyView2.backgroundColor = .brown
+        dummyView2.backgroundColor = .lightGray
         dummyView2.translatesAutoresizingMaskIntoConstraints = false
-        dummyView2.topAnchor.constraint(equalTo: dummyView.bottomAnchor).isActive = true
+        dummyView2.topAnchor.constraint(equalTo: cellMoveStackView.bottomAnchor, constant: 2).isActive = true
         dummyView2.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         dummyView2.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         dummyView2.heightAnchor.constraint(equalToConstant: 50).isActive = true
@@ -61,6 +67,11 @@ class ReviewViewController: UIViewController, UICollectionViewDataSource,  UICol
         collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let count = cellMoveStackView.stackViewButtonCount()
+        cellMoveStackView.barLeadingAnchor?.constant = scrollView.contentOffset.x / CGFloat(count)
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
