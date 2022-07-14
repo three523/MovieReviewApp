@@ -31,6 +31,7 @@ class HomeTableViewCell: UITableViewCell, UICollectionViewDelegate, UICollection
         collectionView.backgroundColor = .white
         collectionView.delegate = self
         collectionView.dataSource = self
+        collectionView.showsHorizontalScrollIndicator = false
         collectionView.register(MoviewListCollectionViewCell.self, forCellWithReuseIdentifier: MoviewListCollectionViewCell.identifier)
         
         contentView.addSubview(collectionView)
