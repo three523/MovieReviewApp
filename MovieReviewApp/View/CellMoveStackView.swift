@@ -82,6 +82,14 @@ class CellMoveStackView: UIStackView {
         return buttonViewCount
     }
     
+    func setButtonTitleColor(index: Int) {
+        for buttonIndex in 0..<self.arrangedSubviews.count {
+            if let btn = self.arrangedSubviews[buttonIndex] as? UIButton {
+                btn.isSelected = index == buttonIndex ? true : false
+            }
+        }
+    }
+    
     @objc func cellMove(senderBtn: UIButton) {
         for index in 0..<self.arrangedSubviews.count {
             if let btn = self.arrangedSubviews[index] as? UIButton {
