@@ -60,7 +60,7 @@ class MoviewListCollectionViewCell: UICollectionViewCell {
             return
         }
 
-        ImageLoader().getImage(path: movie.posterPath) { image in
+        ImageLoader().imageLoad(stringUrl: movie.posterPath) { image in
             DispatchQueue.main.async {
                 self.moviePoster.image = image
             }

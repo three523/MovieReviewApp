@@ -12,7 +12,7 @@ class HomeViewModel {
     private let kinds: [String] = ["popular", "top_rated", "upcoming"]
     private var movies: HomeVCMovie = HomeVCMovie(popularMovie: MovieList(results: []), topRatedMovie: MovieList(results: []), upComingMovie: MovieList(results: []))
     
-    func getMovies(completed: @escaping (HomeVCMovie)->()) {
+    func getMovies(completed: @escaping (HomeVCMovie) -> Void) {
         
         for index in 0..<kinds.count {
             apiHandler.getJson(kind: kinds[index], language: "ko") { movieList in
