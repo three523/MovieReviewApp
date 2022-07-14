@@ -74,6 +74,12 @@ class ReviewViewController: UIViewController, UICollectionViewDataSource,  UICol
         cellMoveStackView.barLeadingAnchor?.constant = scrollView.contentOffset.x / CGFloat(count)
     }
     
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        let index = collectionView.indexPathsForVisibleItems[0].item
+        cellMoveStackView.setButtonTitleColor(index: index)
+        
+    }
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return 4
     }
