@@ -19,6 +19,7 @@
 		18A2F732287ECBEA00CA9947 /* APIHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18A2F731287ECBEA00CA9947 /* APIHandler.swift */; };
 		18AC2993287FA6990043B812 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18AC2992287FA6990043B812 /* HomeViewModel.swift */; };
 		18AC2995287FB35C0043B812 /* ImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18AC2994287FB35C0043B812 /* ImageLoader.swift */; };
+		18AC2997287FEC710043B812 /* CellMoveStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18AC2996287FEC710043B812 /* CellMoveStackView.swift */; };
 		18E17961287805790060BCD9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18E17960287805790060BCD9 /* AppDelegate.swift */; };
 		18E17963287805790060BCD9 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18E17962287805790060BCD9 /* SceneDelegate.swift */; };
 		18E17965287805790060BCD9 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18E17964287805790060BCD9 /* TabBarController.swift */; };
@@ -39,6 +40,7 @@
 		18A2F731287ECBEA00CA9947 /* APIHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIHandler.swift; sourceTree = "<group>"; };
 		18AC2992287FA6990043B812 /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
 		18AC2994287FB35C0043B812 /* ImageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLoader.swift; sourceTree = "<group>"; };
+		18AC2996287FEC710043B812 /* CellMoveStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellMoveStackView.swift; sourceTree = "<group>"; };
 		18E1795D287805790060BCD9 /* MovieReviewApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MovieReviewApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		18E17960287805790060BCD9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		18E17962287805790060BCD9 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -77,6 +79,7 @@
 			isa = PBXGroup;
 			children = (
 				184272C8287D7A30004E1C9E /* TopTabView.swift */,
+				18AC2996287FEC710043B812 /* CellMoveStackView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -209,6 +212,7 @@
 				18E17963287805790060BCD9 /* SceneDelegate.swift in Sources */,
 				18A2F72D287EC86F00CA9947 /* APIKEY.swift in Sources */,
 				184272C1287D690B004E1C9E /* HomeViewController.swift in Sources */,
+				18AC2997287FEC710043B812 /* CellMoveStackView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

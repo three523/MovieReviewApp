@@ -29,12 +29,12 @@ class TopTabView: UIStackView {
         btn.backgroundColor = .white
         btn.setTitleColor(.gray, for: .normal)
         btn.setTitleColor(.black, for: .selected)
-        btn.addTarget(self, action: #selector(test), for: .touchUpInside)
+        btn.addTarget(self, action: #selector(setTextColor), for: .touchUpInside)
         
         self.addArrangedSubview(btn)
     }
     
-    @objc func test(clickBtn: UIButton) {
+    @objc func setTextColor(clickBtn: UIButton) {
         for view in self.arrangedSubviews {
             if let btn = view as? UIButton {
                 btn.isSelected = false
