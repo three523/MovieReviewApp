@@ -15,7 +15,7 @@ class ReviewViewController: UIViewController, UICollectionViewDataSource,  UICol
         sv.addButtonList(textList: textList)
         return sv
     }()
-    let dummyView2: UIView = UIView()
+    let filterHeaderView: FilterHeaderView = FilterHeaderView()
     lazy var collectionView: UICollectionView = {
         let flowLayot: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
         flowLayot.scrollDirection = .horizontal
@@ -42,7 +42,7 @@ class ReviewViewController: UIViewController, UICollectionViewDataSource,  UICol
     func viewSetting() {
         
         view.addSubview(cellMoveStackView)
-        view.addSubview(dummyView2)
+        view.addSubview(filterHeaderView)
         view.addSubview(collectionView)
         
         let safeArea = view.safeAreaLayoutGuide
@@ -54,15 +54,15 @@ class ReviewViewController: UIViewController, UICollectionViewDataSource,  UICol
         cellMoveStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         cellMoveStackView.heightAnchor.constraint(equalToConstant: 50).isActive = true
         
-        dummyView2.backgroundColor = .lightGray
-        dummyView2.translatesAutoresizingMaskIntoConstraints = false
-        dummyView2.topAnchor.constraint(equalTo: cellMoveStackView.bottomAnchor, constant: 2).isActive = true
-        dummyView2.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        dummyView2.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        dummyView2.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        filterHeaderView.backgroundColor = .lightGray
+        filterHeaderView.translatesAutoresizingMaskIntoConstraints = false
+        filterHeaderView.topAnchor.constraint(equalTo: cellMoveStackView.bottomAnchor, constant: 2).isActive = true
+        filterHeaderView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        filterHeaderView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        filterHeaderView.heightAnchor.constraint(equalToConstant: 50).isActive = true
         
         collectionView.translatesAutoresizingMaskIntoConstraints = false
-        collectionView.topAnchor.constraint(equalTo: dummyView2.bottomAnchor).isActive = true
+        collectionView.topAnchor.constraint(equalTo: filterHeaderView.bottomAnchor).isActive = true
         collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
