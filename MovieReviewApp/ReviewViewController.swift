@@ -15,7 +15,7 @@ class ReviewViewController: UIViewController, UICollectionViewDataSource,  UICol
         sv.addButtonList(textList: textList)
         return sv
     }()
-    let filterHeaderView: FilterHeaderView = FilterHeaderView()
+    lazy var filterHeaderView: FilterHeaderView = FilterHeaderView(frame: .zero, vc: self)
     lazy var collectionView: UICollectionView = {
         let flowLayot: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
         flowLayot.scrollDirection = .horizontal

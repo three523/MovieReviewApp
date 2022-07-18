@@ -31,7 +31,10 @@ class FilterHeaderView: UIView {
         return btn
     }()
     
-    override init(frame: CGRect) {
+    var vc: UIViewController? = nil
+    
+    init(frame: CGRect, vc: UIViewController) {
+        self.vc = vc
         super.init(frame: frame)
         self.addSubview(filterButton)
         self.addSubview(searchIconButton)
@@ -40,6 +43,14 @@ class FilterHeaderView: UIView {
         filterButton.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
         filterButton.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
         filterButton.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
+        
+        let action: UIAction = UIAction { _ in
+            let presentVC = FilterViewController()
+            presentVC.modalPresentationStyle = .overCurrentContext
+            self.vc?.present(presentVC, animated: true)
+        }
+        
+        filterButton.addAction(action, for: .touchUpInside)
         
         searchIconButton.translatesAutoresizingMaskIntoConstraints = false
         searchIconButton.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
