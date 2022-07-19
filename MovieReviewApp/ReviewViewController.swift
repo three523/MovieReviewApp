@@ -29,6 +29,7 @@ class ReviewViewController: UIViewController, UICollectionViewDataSource,  UICol
         cv.showsHorizontalScrollIndicator = false
         return cv
     }()
+    let reviewViewModel: ReviewFilterViewModel = ReviewFilterViewModel()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -67,6 +68,28 @@ class ReviewViewController: UIViewController, UICollectionViewDataSource,  UICol
         collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         
+        NotificationCenter.default.addObserver(self, selector: #selector(getMovieFilterList(_:)), name: Notification.Name("MovieFilterName"), object: nil)
+        
+    }
+    
+    @objc func getMovieFilterList(_ notification: Notification) {
+        guard let indexPath = notification.object as? [Int] else { return }
+        let section = indexPath[0]
+        let index = indexPath[1]
+        var findDataName = ""
+        var findDataPath = ""
+        if section == 0 {
+            findDataName = movieFilterList[index]["name"]!
+            findDataPath = movieFilterList[index]["path"]!
+        } else {
+            findDataName = genres[index]["name"]!
+            findDataPath = "discover/movie?"
+        }
+        reviewViewModel.movieList(findData: findDataName, path: findDataPath, section: section) { movieList in
+            DispatchQueue.main.async {
+                self.collectionView.reloadData()
+            }
+        }
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -86,10 +109,13 @@ class ReviewViewController: UIViewController, UICollectionViewDataSource,  UICol
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ReviewListCVCell.identifier, for: indexPath) as! ReviewListCVCell
+        cell.movieList = reviewViewModel.getMovieList()
         if indexPath.item == 0 { cell.backgroundColor = .cyan }
         else if indexPath.item == 1 { cell.backgroundColor = .green }
         else if indexPath.item == 2 { cell.backgroundColor = .red }
         else { cell.backgroundColor = .link }
+        
+        if reviewViewModel.getCount() != 0 { cell.tableViewReload() }
         return cell
     }
     
@@ -110,6 +136,7 @@ class ReviewListCVCell: UICollectionViewCell, UITableViewDelegate, UITableViewDa
         tb.rowHeight = 100
         return tb
     }()
+    var movieList: [MovieDetail]? = nil
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -121,14 +148,25 @@ class ReviewListCVCell: UICollectionViewCell, UITableViewDelegate, UITableViewDa
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 8
+        guard let count = movieList?.count else {
+            return 0
+        }
+        return count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: ReviewListTBCell.identifier, for: indexPath) as! ReviewListTBCell
-        cell.setupViews()
+        guard let movieList = movieList else {
+            return UITableViewCell()
+        }
+        let movieDetail = movieList[indexPath.row]
+        cell.setupViews(titleText: movieDetail.title, yearText: movieDetail.releaseDate)
         
         return cell
+    }
+    
+    func tableViewReload() {
+        reviewListTableView.reloadData()
     }
 }
 
@@ -152,8 +190,7 @@ class ReviewListTBCell: UITableViewCell {
         lb.sizeToFit()
         return lb
     }()
-//    let imageLoader: ImageLoader = ImageLoader()
-//    var movie: MovieDetail?
+    var movieDetail: MovieDetail? = nil
     let starView: UIView = UIView()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -164,7 +201,7 @@ class ReviewListTBCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setupViews() {
+    func setupViews(titleText: String, yearText: String) {
         addSubview(poster)
         addSubview(title)
         addSubview(year)
@@ -180,13 +217,13 @@ class ReviewListTBCell: UITableViewCell {
         title.translatesAutoresizingMaskIntoConstraints = false
         title.topAnchor.constraint(equalTo: poster.topAnchor).isActive = true
         title.leadingAnchor.constraint(equalTo: poster.trailingAnchor, constant: 10).isActive = true
-        title.text = "test"
+        title.text = titleText
         title.sizeToFit()
         
         year.translatesAutoresizingMaskIntoConstraints = false
         year.topAnchor.constraint(equalTo: title.bottomAnchor).isActive = true
         year.leadingAnchor.constraint(equalTo: title.leadingAnchor).isActive = true
-        year.text = "test"
+        year.text = yearText
         year.sizeToFit()
         
         starView.translatesAutoresizingMaskIntoConstraints = false
