@@ -58,6 +58,24 @@ class FilterHeaderView: UIView {
         searchIconButton.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
         searchIconButton.widthAnchor.constraint(equalTo: self.heightAnchor).isActive = true
         
+        NotificationCenter.default.addObserver(self, selector: #selector(setFilterLabel(_:)), name: Notification.Name(rawValue: "MovieFilterName"), object: nil)
+    }
+    
+    @objc func setFilterLabel(_ notification: Notification) {
+        guard let indexList = notification.object as? [Int] else {
+            print("notification typecasting error")
+            return
+        }
+        let section = indexList[0]
+        let index = indexList[1]
+        
+        if section == 0 {
+            let btnText: String = movieFilterList[index]["name"]!
+            filterButton.configuration?.title = btnText
+        } else {
+            let btnText: String = genres[index]["name"]!
+            filterButton.configuration?.title = btnText
+        }
         
     }
     

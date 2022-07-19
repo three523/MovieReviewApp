@@ -8,15 +8,17 @@
 import Foundation
 
 class ApiHandler {
-    private let baseUrl: String = "https://api.themoviedb.org/3/movie/"
+    private let baseUrl: String = "https://api.themoviedb.org/3/"
     private let shared: URLSession = URLSession.shared
     
-    func getJson(kind: String, language: String, completed: @escaping (MovieList) -> Void) {
-        guard let url: URL = URL(string: "\(baseUrl)\(kind)?api_key=\(APIKEY)&language=\(language)") else {
+    func getJson(path: String, query: [String: String], completed: @escaping (MovieList) -> Void) {
+        
+        let fullPath: String = self.baseUrl + path + query.map{ k, v in "\(k)=\(v)" }.joined(separator: "&")
+        guard let url = URL(string: fullPath) else {
             print("url is nil")
             return
         }
-        
+                
         shared.dataTask(with: url) { data, response, error in
             guard let data = data else {
                 print("data is nil")

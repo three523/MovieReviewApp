@@ -9,13 +9,13 @@ import Foundation
 
 class HomeViewModel {
     private let apiHandler: ApiHandler = ApiHandler()
-    private let kinds: [String] = ["popular", "top_rated", "upcoming"]
+    private let kinds: [String] = ["movie/popular?", "movie/top_rated?", "movie/upcoming?"]
     private var movies: HomeVCMovie = HomeVCMovie(popularMovie: MovieList(results: []), topRatedMovie: MovieList(results: []), upComingMovie: MovieList(results: []))
     
     func getMovies(completed: @escaping (HomeVCMovie) -> Void) {
         
         for index in 0..<kinds.count {
-            apiHandler.getJson(kind: kinds[index], language: "ko") { movieList in
+            apiHandler.getJson(path: kinds[index], query: ["api_key": APIKEY, "language": "ko"]) { movieList in
                 if index == 0 { self.movies.popularMovie = movieList }
                 else if index == 1 { self.movies.topRatedMovie = movieList }
                 else { self.movies.upComingMovie = movieList }
