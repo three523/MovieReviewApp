@@ -20,6 +20,7 @@ class FilterViewController: UIViewController, UITableViewDelegate, UITableViewDa
         view.addSubview(filterListTableView)
         
         filterListTableView.backgroundColor = .gray.withAlphaComponent(0.8)
+        filterListTableView.sectionHeaderTopPadding = 0
                 
         filterListTableView.translatesAutoresizingMaskIntoConstraints = false
         filterListTableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
@@ -44,7 +45,15 @@ class FilterViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 20
+        if section == 0 {
+            return 10
+        } else {
+            return 10
+        }
+    }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 2
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -57,34 +66,49 @@ class FilterViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         
-        let headerView: UIView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 50))
-        headerView.backgroundColor = .white
-        headerView.layer.cornerRadius = 10
-        headerView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
-        
-        let action: UIAction = UIAction { _ in
-            self.dismiss(animated: true)
-        }
-        
-        let cancelButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 60, height: 50) ,primaryAction: action)
+        if section == 0{
+            let headerView: UIView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 50))
+            headerView.backgroundColor = .white
+            headerView.layer.cornerRadius = 10
+            headerView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+            
+            let action: UIAction = UIAction { _ in
+                self.dismiss(animated: true)
+            }
+            
+            let cancelButton: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 60, height: 50) ,primaryAction: action)
 
-        cancelButton.setTitle("취소", for: .normal)
-        cancelButton.setTitleColor(.systemPink, for: .normal)
-        cancelButton.backgroundColor = .none
-        cancelButton.titleLabel?.font = .systemFont(ofSize: 16, weight: .light)
-        headerView.addSubview(cancelButton)
-        
-        let mainLabel: UILabel = UILabel()
-        
-        headerView.addSubview(mainLabel)
-        
-        mainLabel.text = "영화"
-        mainLabel.font = .systemFont(ofSize: 16, weight: .black)
-        mainLabel.textColor = .black
-        mainLabel.sizeToFit()
-        mainLabel.center = headerView.center
-        
-        return headerView
+            cancelButton.setTitle("취소", for: .normal)
+            cancelButton.setTitleColor(.systemPink, for: .normal)
+            cancelButton.backgroundColor = .none
+            cancelButton.titleLabel?.font = .systemFont(ofSize: 16, weight: .light)
+            headerView.addSubview(cancelButton)
+            
+            let mainLabel: UILabel = UILabel()
+            
+            headerView.addSubview(mainLabel)
+            
+            mainLabel.text = "영화"
+            mainLabel.font = .systemFont(ofSize: 16, weight: .black)
+            mainLabel.textColor = .black
+            mainLabel.sizeToFit()
+            mainLabel.center = headerView.center
+            
+            return headerView
+        } else {
+            let headerView: UIView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 50))
+            headerView.backgroundColor = .white
+            let label: UILabel = UILabel()
+            label.font = .systemFont(ofSize: 16)
+            label.text = "장르"
+            label.textColor = .gray
+            label.sizeToFit()
+            label.center.x += 15
+            label.center.y = headerView.center.y
+            headerView.addSubview(label)
+            
+            return headerView
+        }
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
