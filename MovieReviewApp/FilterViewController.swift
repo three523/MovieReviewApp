@@ -58,7 +58,9 @@ class FilterViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        filterListTableView.selectRow(at: IndexPath(item: 0, section: 0), animated: false, scrollPosition: .top)
+        if filterViewModel.getCount() != 0 {
+            filterListTableView.selectRow(at: IndexPath(item: 0, section: 0), animated: false, scrollPosition: .top)
+        }
     }
     
     override func viewDidLayoutSubviews() {
