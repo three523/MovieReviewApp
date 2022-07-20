@@ -74,6 +74,7 @@
 		184272BF287D68E5004E1C9E /* ViewController */ = {
 			isa = PBXGroup;
 			children = (
+				18A82FC1288146F100791B03 /* FilterViewController.swift */,
 				18E17964287805790060BCD9 /* TabBarController.swift */,
 				184272C0287D690B004E1C9E /* HomeViewController.swift */,
 				184272C2287D691E004E1C9E /* SearchViewController.swift */,
@@ -91,7 +92,6 @@
 				184272C8287D7A30004E1C9E /* TopTabView.swift */,
 				18AC2996287FEC710043B812 /* CellMoveStackView.swift */,
 				18A82FBD2881006C00791B03 /* FilterHeaderView.swift */,
-				18A82FC1288146F100791B03 /* FilterViewController.swift */,
 				18C018CC2886A7A500E6AE2C /* FilterTableViewHeader.swift */,
 			);
 			path = View;

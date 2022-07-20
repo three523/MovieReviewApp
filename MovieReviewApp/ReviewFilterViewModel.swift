@@ -37,11 +37,12 @@ class ReviewFilterViewModel {
                     print(movieList)
                     completed(movieList)
                 }
-            }
-            apiHandler.getJson(path: path, query: ["api_key": APIKEY, "language": "ko"]) { movieList in
-                print(movieList)
-                self.movieListModel = movieList
-                completed(movieList)
+            } else {
+                apiHandler.getJson(path: path, query: ["api_key": APIKEY, "language": "ko"]) { movieList in
+                    print(movieList)
+                    self.movieListModel = movieList
+                    completed(movieList)
+                }
             }
         }
     }
