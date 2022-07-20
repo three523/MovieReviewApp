@@ -200,6 +200,7 @@ class SearchDefaultTableViewCell: UITableViewCell {
         let lb = UILabel()
         lb.textAlignment = .left
         lb.font = UIFont(name: "AvenirNext-Medium", size: 15)
+        lb.text = "제목"
         lb.numberOfLines = 0
         lb.sizeToFit()
         return lb
@@ -208,6 +209,7 @@ class SearchDefaultTableViewCell: UITableViewCell {
         let lb = UILabel()
         lb.textAlignment = .left
         lb.font = UIFont(name: "AvenirNext-Medium", size: 13)
+        lb.text = "2022"
         lb.numberOfLines = 0
         lb.sizeToFit()
         return lb
