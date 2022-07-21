@@ -31,7 +31,8 @@ class SearchViewController: UIViewController, UISearchBarDelegate, UISearchResul
     private let recentlyCollectionHeaderView: RecentlyHeaderView = RecentlyHeaderView(frame: .zero, labelText: "최근 본 작품", buttonText: "모두 삭제")
     
     private var searchBar: UISearchBar? = nil
-    private let searchBarController: UISearchController = UISearchController(searchResultsController: nil)
+//    private let searchBarController: UISearchController = UISearchController(searchResultsController: SearchingTableViewController())
+    private var searchBarController: UISearchController?
     
     private let tableViewCellHeight: CGFloat = 100
     
@@ -42,6 +43,10 @@ class SearchViewController: UIViewController, UISearchBarDelegate, UISearchResul
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let searchingVC: SearchingTableViewController = SearchingTableViewController()
+        searchBarController = UISearchController(searchResultsController: searchingVC)
+        searchBarController!.searchResultsUpdater = searchingVC
         
         searchingTableView.delegate = self
         searchingTableView.dataSource = self
@@ -61,11 +66,15 @@ class SearchViewController: UIViewController, UISearchBarDelegate, UISearchResul
     
     private func viewSetting() {
         
+        guard let searchBarController = searchBarController else {
+            return
+        }
+        
         self.navigationItem.titleView = searchBarController.searchBar
-        searchBarController.searchResultsUpdater = self
         searchBarController.searchBar.delegate = self
         searchBarController.hidesNavigationBarDuringPresentation = false
         navigationItem.hidesSearchBarWhenScrolling = false
+        self.definesPresentationContext = true
         
         view.addSubview(scrollView)
         view.addSubview(searchingTableView)
