@@ -7,7 +7,10 @@
 
 import UIKit
 
-class SearchViewController: UIViewController, UISearchBarDelegate {
+class SearchViewController: UIViewController, UISearchBarDelegate, UISearchResultsUpdating {
+    func updateSearchResults(for searchController: UISearchController) {
+        print(searchController.searchBar.text)
+    }
     
     private let scrollView: UIScrollView = UIScrollView()
     private let defaultTableView: UITableView = UITableView(frame: .zero, style: .plain)
@@ -27,8 +30,8 @@ class SearchViewController: UIViewController, UISearchBarDelegate {
     }()
     private let recentlyMoviesCollectionHeaderView: RecentlyMoviesCollectionHeaderView = RecentlyMoviesCollectionHeaderView()
     
-    private let searchBar: UISearchBar = UISearchBar(frame: .zero)
-    private let searchBarController: UISearchController = UISearchController(searchResultsController: UIViewController())
+    private var searchBar: UISearchBar? = nil
+    private let searchBarController: UISearchController = UISearchController(searchResultsController: nil)
     
     private let tableViewCellHeight: CGFloat = 100
     
@@ -37,8 +40,6 @@ class SearchViewController: UIViewController, UISearchBarDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        searchBar.delegate = self
                 
         recentlyMoviesCollectionView.delegate = self
         recentlyMoviesCollectionView.dataSource = self
@@ -49,22 +50,31 @@ class SearchViewController: UIViewController, UISearchBarDelegate {
         defaultTableView.register(SearchDefaultTableViewCell.self, forCellReuseIdentifier: SearchDefaultTableViewCell.identifier)
         defaultTableView.isScrollEnabled = false
         
-        viewSetting()
+//        viewSetting()
         // Do any additional setup after loading the view.
     }
     
     private func viewSetting() {
+        
+        searchBarController.searchResultsUpdater = self
+        searchBar = searchBarController.searchBar
+        searchBar?.delegate = self
+        
+        guard let searchBar = searchBar else {
+            return
+        }
+        
+        guard let safeArea: UIEdgeInsets = UIApplication.shared.keyWindow?.safeAreaInsets else { return }
+        
+        searchBar.delegate = self
+        searchBar.frame = CGRect(x: 10, y: safeArea.top, width: UIScreen.main.bounds.width, height: 60)
+        
         view.addSubview(searchBar)
         view.addSubview(scrollView)
         scrollView.addSubview(recentlyMoviesCollectionHeaderView)
         scrollView.addSubview(recentlyMoviesCollectionView)
         scrollView.addSubview(defaultLabel)
         scrollView.addSubview(defaultTableView)
-        
-        searchBar.translatesAutoresizingMaskIntoConstraints = false
-        searchBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20).isActive = true
-        searchBar.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        searchBar.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.topAnchor.constraint(equalTo: searchBar.bottomAnchor).isActive = true
@@ -101,6 +111,10 @@ class SearchViewController: UIViewController, UISearchBarDelegate {
         defaultTableView.heightAnchor.constraint(equalToConstant: 10*tableViewCellHeight).isActive = true
         defaultTableView.bottomAnchor.constraint(equalTo: contentLayoutGuide.bottomAnchor).isActive = true
         
+    }
+    
+    override func viewWillLayoutSubviews() {
+        viewSetting()
     }
     
 }
