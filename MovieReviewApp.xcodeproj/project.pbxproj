@@ -25,6 +25,7 @@
 		18C018C92886801300E6AE2C /* MovieGenres.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C018C82886801300E6AE2C /* MovieGenres.swift */; };
 		18C018CB288682D400E6AE2C /* ReviewFilterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C018CA288682D400E6AE2C /* ReviewFilterViewModel.swift */; };
 		18C018CD2886A7A500E6AE2C /* FilterTableViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C018CC2886A7A500E6AE2C /* FilterTableViewHeader.swift */; };
+		18C584A12889817800C58278 /* SearchingTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C584A02889817800C58278 /* SearchingTableViewController.swift */; };
 		18E17961287805790060BCD9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18E17960287805790060BCD9 /* AppDelegate.swift */; };
 		18E17963287805790060BCD9 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18E17962287805790060BCD9 /* SceneDelegate.swift */; };
 		18E17965287805790060BCD9 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18E17964287805790060BCD9 /* TabBarController.swift */; };
@@ -51,6 +52,7 @@
 		18C018C82886801300E6AE2C /* MovieGenres.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieGenres.swift; sourceTree = "<group>"; };
 		18C018CA288682D400E6AE2C /* ReviewFilterViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewFilterViewModel.swift; sourceTree = "<group>"; };
 		18C018CC2886A7A500E6AE2C /* FilterTableViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterTableViewHeader.swift; sourceTree = "<group>"; };
+		18C584A02889817800C58278 /* SearchingTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchingTableViewController.swift; sourceTree = "<group>"; };
 		18E1795D287805790060BCD9 /* MovieReviewApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MovieReviewApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		18E17960287805790060BCD9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		18E17962287805790060BCD9 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -78,6 +80,7 @@
 				18E17964287805790060BCD9 /* TabBarController.swift */,
 				184272C0287D690B004E1C9E /* HomeViewController.swift */,
 				184272C2287D691E004E1C9E /* SearchViewController.swift */,
+				18C584A02889817800C58278 /* SearchingTableViewController.swift */,
 				184272C4287D692B004E1C9E /* ReviewViewController.swift */,
 				184272C6287D6935004E1C9E /* MyProfileViewController.swift */,
 				18A2F726287EABB000CA9947 /* HomeTableViewCell.swift */,
@@ -216,6 +219,7 @@
 				184272C9287D7A30004E1C9E /* TopTabView.swift in Sources */,
 				18AC2995287FB35C0043B812 /* ImageLoader.swift in Sources */,
 				18A2F729287EABEA00CA9947 /* MoviewListCollectionViewCell.swift in Sources */,
+				18C584A12889817800C58278 /* SearchingTableViewController.swift in Sources */,
 				184272C3287D691E004E1C9E /* SearchViewController.swift in Sources */,
 				18E17965287805790060BCD9 /* TabBarController.swift in Sources */,
 				184272C7287D6935004E1C9E /* MyProfileViewController.swift in Sources */,
