@@ -7,7 +7,9 @@
 
 import UIKit
 
-class SearchViewController: UIViewController, UISearchBarDelegate {
+class SearchViewController: UIViewController, UISearchBarDelegate, UISearchResultsUpdating {
+    func updateSearchResults(for searchController: UISearchController) {
+    }
     
     private let scrollView: UIScrollView = UIScrollView()
     private let defaultTableView: UITableView = UITableView(frame: .zero, style: .plain)
@@ -25,20 +27,24 @@ class SearchViewController: UIViewController, UISearchBarDelegate {
         cv.showsHorizontalScrollIndicator = false
         return cv
     }()
-    private let recentlyMoviesCollectionHeaderView: RecentlyMoviesCollectionHeaderView = RecentlyMoviesCollectionHeaderView()
     
-    private let searchBar: UISearchBar = UISearchBar(frame: .zero)
-    private let searchBarController: UISearchController = UISearchController(searchResultsController: UIViewController())
+    private let recentlyCollectionHeaderView: RecentlyHeaderView = RecentlyHeaderView(frame: .zero, labelText: "최근 본 작품", buttonText: "모두 삭제")
+    
+    private var searchBar: UISearchBar? = nil
+    private let searchBarController: UISearchController = UISearchController(searchResultsController: nil)
     
     private let tableViewCellHeight: CGFloat = 100
     
-    private var collectionHeaderViewHeightAnchor: NSLayoutConstraint? = nil
+    private var searchingTableViewHeightAnchor: NSLayoutConstraint? = nil
     private var collectionViewHeightAnchor: NSLayoutConstraint? = nil
-
+    
+    private var searchingTableView: UITableView = UITableView()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        searchBar.delegate = self
+        searchingTableView.delegate = self
+        searchingTableView.dataSource = self
                 
         recentlyMoviesCollectionView.delegate = self
         recentlyMoviesCollectionView.dataSource = self
@@ -50,24 +56,34 @@ class SearchViewController: UIViewController, UISearchBarDelegate {
         defaultTableView.isScrollEnabled = false
         
         viewSetting()
-        // Do any additional setup after loading the view.
+        
     }
     
     private func viewSetting() {
-        view.addSubview(searchBar)
+        
+        self.navigationItem.titleView = searchBarController.searchBar
+        searchBarController.searchResultsUpdater = self
+        searchBarController.searchBar.delegate = self
+        searchBarController.hidesNavigationBarDuringPresentation = false
+        navigationItem.hidesSearchBarWhenScrolling = false
+        
         view.addSubview(scrollView)
-        scrollView.addSubview(recentlyMoviesCollectionHeaderView)
+        view.addSubview(searchingTableView)
+        
+        searchingTableView.translatesAutoresizingMaskIntoConstraints = false
+        searchingTableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 70).isActive = true
+        searchingTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        searchingTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        searchingTableViewHeightAnchor = searchingTableView.heightAnchor.constraint(equalToConstant: 0)
+        searchingTableViewHeightAnchor?.isActive = true
+        
+        scrollView.addSubview(recentlyCollectionHeaderView)
         scrollView.addSubview(recentlyMoviesCollectionView)
         scrollView.addSubview(defaultLabel)
         scrollView.addSubview(defaultTableView)
         
-        searchBar.translatesAutoresizingMaskIntoConstraints = false
-        searchBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20).isActive = true
-        searchBar.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        searchBar.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        
         scrollView.translatesAutoresizingMaskIntoConstraints = false
-        scrollView.topAnchor.constraint(equalTo: searchBar.bottomAnchor).isActive = true
+        scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
         scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
@@ -75,15 +91,15 @@ class SearchViewController: UIViewController, UISearchBarDelegate {
         let contentLayoutGuide: UILayoutGuide = scrollView.contentLayoutGuide
         let frameLayoutGuide: UILayoutGuide = scrollView.frameLayoutGuide
         
-        recentlyMoviesCollectionHeaderView.translatesAutoresizingMaskIntoConstraints = false
-        recentlyMoviesCollectionHeaderView.topAnchor.constraint(equalTo: contentLayoutGuide.topAnchor, constant: 10).isActive = true
-        recentlyMoviesCollectionHeaderView.leadingAnchor.constraint(equalTo: frameLayoutGuide.leadingAnchor, constant: 10).isActive = true
-        recentlyMoviesCollectionHeaderView.trailingAnchor.constraint(equalTo: frameLayoutGuide.trailingAnchor, constant: -10).isActive = true
-        collectionViewHeightAnchor = recentlyMoviesCollectionHeaderView.heightAnchor.constraint(equalToConstant: 50)
+        recentlyCollectionHeaderView.translatesAutoresizingMaskIntoConstraints = false
+        recentlyCollectionHeaderView.topAnchor.constraint(equalTo: contentLayoutGuide.topAnchor, constant: 10).isActive = true
+        recentlyCollectionHeaderView.leadingAnchor.constraint(equalTo: frameLayoutGuide.leadingAnchor, constant: 10).isActive = true
+        recentlyCollectionHeaderView.trailingAnchor.constraint(equalTo: frameLayoutGuide.trailingAnchor, constant: -10).isActive = true
+        collectionViewHeightAnchor = recentlyCollectionHeaderView.heightAnchor.constraint(equalToConstant: 50)
         collectionViewHeightAnchor?.isActive = true
         
         recentlyMoviesCollectionView.translatesAutoresizingMaskIntoConstraints = false
-        recentlyMoviesCollectionView.topAnchor.constraint(equalTo: recentlyMoviesCollectionHeaderView.bottomAnchor, constant: 10).isActive = true
+        recentlyMoviesCollectionView.topAnchor.constraint(equalTo: recentlyCollectionHeaderView.bottomAnchor, constant: 10).isActive = true
         recentlyMoviesCollectionView.leadingAnchor.constraint(equalTo: frameLayoutGuide.leadingAnchor).isActive = true
         recentlyMoviesCollectionView.trailingAnchor.constraint(equalTo: frameLayoutGuide.trailingAnchor).isActive = true
         collectionViewHeightAnchor = recentlyMoviesCollectionView.heightAnchor.constraint(equalToConstant: 100)
@@ -103,6 +119,26 @@ class SearchViewController: UIViewController, UISearchBarDelegate {
         
     }
     
+    func setSearchTableView() {
+        if searchingTableViewHeightAnchor?.constant == 0 {
+            let height = view.frame.height - (view.safeAreaInsets.top + 50)
+            searchingTableViewHeightAnchor?.constant = height
+            recentlyCollectionHeaderView.setText(labelText: "최근 검색", buttonText: "모두 삭제")
+        } else {
+            searchingTableViewHeightAnchor?.constant = 0
+            recentlyCollectionHeaderView.setText(labelText: "최근에 본 영화", buttonText: "모두 삭제")
+        }
+    }
+    
+    func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
+        setSearchTableView()
+        return true
+    }
+    
+    func searchBarShouldEndEditing(_ searchBar: UISearchBar) -> Bool {
+        setSearchTableView()
+        return true
+    }
 }
 
 extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSource {
@@ -122,36 +158,49 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
 extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10
+        if tableView == searchingTableView {
+            return 10
+        } else {
+            return 10
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if tableView == searchingTableView {
+            let cell = UITableViewCell()
+            var config = cell.defaultContentConfiguration()
+            config.text = "test"
+            cell.contentConfiguration = config
+            return cell
+        }
         let cell = tableView.dequeueReusableCell(withIdentifier: SearchDefaultTableViewCell.identifier, for: indexPath) as! SearchDefaultTableViewCell
         return cell
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return tableViewCellHeight
+        if tableView == searchingTableView {
+            return 40
+        } else {
+            return tableViewCellHeight
+        }
     }
     
 }
 
-class RecentlyMoviesCollectionHeaderView: UIView {
+class RecentlyHeaderView: UIView {
         
     private let titleLabel: UILabel = {
         let label: UILabel = UILabel()
         label.font = .systemFont(ofSize: 16, weight: .black)
-        label.text = "최근 본 작품"
         return label
     }()
     private let removeAllBtn: UIButton = {
         let btn: UIButton = UIButton()
-        btn.setTitle("모두 삭제", for: .normal)
         btn.setTitleColor(UIColor.systemPink, for: .normal)
         return btn
     }()
     
-    override init(frame: CGRect) {
+    init(frame: CGRect, labelText: String, buttonText: String) {
         super.init(frame: frame)
         
         self.addSubview(titleLabel)
@@ -160,14 +209,21 @@ class RecentlyMoviesCollectionHeaderView: UIView {
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
         titleLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 10).isActive = true
+        titleLabel.text = labelText
         
         removeAllBtn.translatesAutoresizingMaskIntoConstraints = false
         removeAllBtn.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
         removeAllBtn.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -10).isActive = true
+        removeAllBtn.setTitle(buttonText, for: .normal)
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    func setText(labelText: String, buttonText: String) {
+        titleLabel.text = labelText
+        removeAllBtn.setTitle(buttonText, for: .normal)
     }
 }
 

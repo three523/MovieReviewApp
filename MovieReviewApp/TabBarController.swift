@@ -19,12 +19,14 @@ class TabBarController: UITabBarController {
         let vc3 = ReviewViewController()
         let vc4 = MyProfileViewController()
         
+        let vc5 = UINavigationController(rootViewController: vc2)
+        
         vc1.title = "홈"
-        vc2.title = "검색"
+        vc5.tabBarItem.title = "검색"
         vc3.title = "평가"
         vc4.title = "나의 정보"
         
-        self.setViewControllers([vc1, vc2, vc3, vc4], animated: false)
+        self.setViewControllers([vc1, vc5, vc3, vc4], animated: false)
         
         guard let items = self.tabBar.items else { return }
         
