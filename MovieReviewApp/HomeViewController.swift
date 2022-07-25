@@ -28,8 +28,7 @@ class HomeViewController: UIViewController {
     private func viewSetting() {
         
         let toptabView: TopTabView = TopTabView()
-        toptabView.addButton(text: "영화")
-        toptabView.addButton(text: "TV 프로그램")
+        toptabView.addButton(textList: ["영화", "TV 프로그램"])
         
         mainTableView.delegate = self
         mainTableView.dataSource = self
