@@ -17,11 +17,11 @@ class ReviewViewController: UIViewController, UICollectionViewDataSource,  UICol
     }()
     lazy var filterHeaderView: FilterHeaderView = FilterHeaderView(frame: .zero, vc: self)
     lazy var collectionView: UICollectionView = {
-        let flowLayot: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
-        flowLayot.scrollDirection = .horizontal
-        flowLayot.minimumInteritemSpacing = 0
-        flowLayot.minimumLineSpacing = 0
-        let cv = UICollectionView(frame: .zero, collectionViewLayout: flowLayot)
+        let flowLayout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
+        flowLayout.scrollDirection = .horizontal
+        flowLayout.minimumInteritemSpacing = 0
+        flowLayout.minimumLineSpacing = 0
+        let cv = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
         cv.dataSource = self
         cv.delegate = self
         cv.register(ReviewListCVCell.self, forCellWithReuseIdentifier: ReviewListCVCell.identifier)

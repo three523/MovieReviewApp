@@ -17,21 +17,24 @@ class TopTabView: UIStackView {
         self.spacing = 10
     }
     
-    func addButton(text: String) {
+    func addButton(textList: [String]) {
         
-        if self.arrangedSubviews.count != 0 {
-            addSeparator()
+        textList.forEach { text in
+            if self.arrangedSubviews.count != 0 {
+                addSeparator()
+            }
+            
+            let btn = UIButton()
+            btn.setTitle(text, for: .normal)
+            btn.titleLabel?.font = .systemFont(ofSize: 24, weight: .heavy)
+            btn.backgroundColor = .white
+            btn.setTitleColor(.gray, for: .normal)
+            btn.setTitleColor(.black, for: .selected)
+            btn.addTarget(self, action: #selector(setTextColor), for: .touchUpInside)
+            
+            self.addArrangedSubview(btn)
         }
         
-        let btn = UIButton()
-        btn.setTitle(text, for: .normal)
-        btn.titleLabel?.font = .systemFont(ofSize: 24, weight: .heavy)
-        btn.backgroundColor = .white
-        btn.setTitleColor(.gray, for: .normal)
-        btn.setTitleColor(.black, for: .selected)
-        btn.addTarget(self, action: #selector(setTextColor), for: .touchUpInside)
-        
-        self.addArrangedSubview(btn)
     }
     
     @objc func setTextColor(clickBtn: UIButton) {

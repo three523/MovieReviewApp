@@ -96,6 +96,7 @@
 				18AC2996287FEC710043B812 /* CellMoveStackView.swift */,
 				18A82FBD2881006C00791B03 /* FilterHeaderView.swift */,
 				18C018CC2886A7A500E6AE2C /* FilterTableViewHeader.swift */,
+				18A82FC1288146F100791B03 /* FilterViewController.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";

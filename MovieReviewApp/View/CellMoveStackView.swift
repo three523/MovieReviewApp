@@ -55,6 +55,7 @@ class CellMoveStackView: UIStackView {
         
         let btn = UIButton()
         btn.setTitle(text, for: .normal)
+        btn.contentEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
         btn.titleLabel?.font = buttonTextFont
         btn.backgroundColor = .white
         btn.setTitleColor(.gray, for: .normal)
