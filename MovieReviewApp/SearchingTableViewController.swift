@@ -74,14 +74,16 @@ class SearchingTableViewController: UIViewController, UISearchBarDelegate ,UISea
     }
         
     func updateSearchResults(for searchController: UISearchController) {
-        print(searchController.searchBar.text)
+//        print(searchController.searchBar.text)
     }
     
     func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
         guard let searchBeginOrEndDelegate = searchBeginOrEndDelegate else {
             return false
         }
+        print("begin")
         searchBeginOrEndDelegate.searchBeginOrEnd()
+        if isEnded { isEnded = false }
         return true
     }
     
@@ -90,10 +92,12 @@ class SearchingTableViewController: UIViewController, UISearchBarDelegate ,UISea
             return false
         }
         searchBeginOrEndDelegate.searchBeginOrEnd()
+        print("end")
         return true
     }
     
     func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+        print("didEnd")
         isEnded = !isEnded
     }
 

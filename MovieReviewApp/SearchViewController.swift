@@ -130,20 +130,6 @@ class SearchViewController: UIViewController, SearchBeginOrEndDelegate {
         
     }
     
-//    func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
-//        setSearchTableView()
-//        return true
-//    }
-//    
-//    func searchBarShouldEndEditing(_ searchBar: UISearchBar) -> Bool {
-//        setSearchTableView()
-//        return true
-//    }
-//    
-//    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
-//        print("test")
-//    }
-    
     func searchBeginOrEnd() {
         if searchingTableViewHeightAnchor?.constant == 0 {
             let height = view.frame.height - (view.safeAreaInsets.top + 50)
