@@ -12,6 +12,7 @@
 		184272C5287D692B004E1C9E /* ReviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 184272C4287D692B004E1C9E /* ReviewViewController.swift */; };
 		184272C7287D6935004E1C9E /* MyProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 184272C6287D6935004E1C9E /* MyProfileViewController.swift */; };
 		184272C9287D7A30004E1C9E /* TopTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 184272C8287D7A30004E1C9E /* TopTabView.swift */; };
+		18A13F29288EA06E00A34538 /* MovieDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18A13F28288EA06E00A34538 /* MovieDetailViewController.swift */; };
 		18A2F727287EABB000CA9947 /* HomeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18A2F726287EABB000CA9947 /* HomeTableViewCell.swift */; };
 		18A2F729287EABEA00CA9947 /* MoviewListCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18A2F728287EABEA00CA9947 /* MoviewListCollectionViewCell.swift */; };
 		18A2F72D287EC86F00CA9947 /* APIKEY.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18A2F72C287EC86F00CA9947 /* APIKEY.swift */; };
@@ -19,6 +20,7 @@
 		18A2F732287ECBEA00CA9947 /* APIHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18A2F731287ECBEA00CA9947 /* APIHandler.swift */; };
 		18A82FBE2881006C00791B03 /* FilterHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18A82FBD2881006C00791B03 /* FilterHeaderView.swift */; };
 		18A82FC2288146F100791B03 /* FilterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18A82FC1288146F100791B03 /* FilterViewController.swift */; };
+		18ABB6592891319100BACD73 /* MovieDetailHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18ABB6582891319100BACD73 /* MovieDetailHeaderView.swift */; };
 		18AC2993287FA6990043B812 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18AC2992287FA6990043B812 /* HomeViewModel.swift */; };
 		18AC2995287FB35C0043B812 /* ImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18AC2994287FB35C0043B812 /* ImageLoader.swift */; };
 		18AC2997287FEC710043B812 /* CellMoveStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18AC2996287FEC710043B812 /* CellMoveStackView.swift */; };
@@ -39,6 +41,7 @@
 		184272C4287D692B004E1C9E /* ReviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewViewController.swift; sourceTree = "<group>"; };
 		184272C6287D6935004E1C9E /* MyProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProfileViewController.swift; sourceTree = "<group>"; };
 		184272C8287D7A30004E1C9E /* TopTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopTabView.swift; sourceTree = "<group>"; };
+		18A13F28288EA06E00A34538 /* MovieDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDetailViewController.swift; sourceTree = "<group>"; };
 		18A2F726287EABB000CA9947 /* HomeTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTableViewCell.swift; sourceTree = "<group>"; };
 		18A2F728287EABEA00CA9947 /* MoviewListCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoviewListCollectionViewCell.swift; sourceTree = "<group>"; };
 		18A2F72C287EC86F00CA9947 /* APIKEY.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIKEY.swift; sourceTree = "<group>"; };
@@ -46,6 +49,7 @@
 		18A2F731287ECBEA00CA9947 /* APIHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIHandler.swift; sourceTree = "<group>"; };
 		18A82FBD2881006C00791B03 /* FilterHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterHeaderView.swift; sourceTree = "<group>"; };
 		18A82FC1288146F100791B03 /* FilterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterViewController.swift; sourceTree = "<group>"; };
+		18ABB6582891319100BACD73 /* MovieDetailHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDetailHeaderView.swift; sourceTree = "<group>"; };
 		18AC2992287FA6990043B812 /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
 		18AC2994287FB35C0043B812 /* ImageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLoader.swift; sourceTree = "<group>"; };
 		18AC2996287FEC710043B812 /* CellMoveStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellMoveStackView.swift; sourceTree = "<group>"; };
@@ -77,6 +81,7 @@
 			isa = PBXGroup;
 			children = (
 				18A82FC1288146F100791B03 /* FilterViewController.swift */,
+				18A13F28288EA06E00A34538 /* MovieDetailViewController.swift */,
 				18E17964287805790060BCD9 /* TabBarController.swift */,
 				184272C0287D690B004E1C9E /* HomeViewController.swift */,
 				184272C2287D691E004E1C9E /* SearchViewController.swift */,
@@ -96,7 +101,7 @@
 				18AC2996287FEC710043B812 /* CellMoveStackView.swift */,
 				18A82FBD2881006C00791B03 /* FilterHeaderView.swift */,
 				18C018CC2886A7A500E6AE2C /* FilterTableViewHeader.swift */,
-				18A82FC1288146F100791B03 /* FilterViewController.swift */,
+				18ABB6582891319100BACD73 /* MovieDetailHeaderView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -220,6 +225,8 @@
 				184272C9287D7A30004E1C9E /* TopTabView.swift in Sources */,
 				18AC2995287FB35C0043B812 /* ImageLoader.swift in Sources */,
 				18A2F729287EABEA00CA9947 /* MoviewListCollectionViewCell.swift in Sources */,
+				18A13F29288EA06E00A34538 /* MovieDetailViewController.swift in Sources */,
+				18ABB6592891319100BACD73 /* MovieDetailHeaderView.swift in Sources */,
 				18C584A12889817800C58278 /* SearchingTableViewController.swift in Sources */,
 				184272C3287D691E004E1C9E /* SearchViewController.swift in Sources */,
 				18E17965287805790060BCD9 /* TabBarController.swift in Sources */,
