@@ -59,11 +59,12 @@ class MovieDetailViewController: UIViewController {
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        guard let header = movieDetailTableView.tableHeaderView as? MovieDetailHeaderView else { return  }
-        header.scrollViewDidScroll(scrollView: scrollView)
-        stickyView.isSticky = scrollView.contentOffset.y >= 300 ? true : false
+        guard let header = movieDetailTableView.tableHeaderView as? MovieDetailHeaderView else { return }
+        if scrollView.contentOffset.y < 1000 {
+            header.scrollViewDidScroll(scrollView: scrollView)
+            stickyView.isSticky = scrollView.contentOffset.y >= 300 ? true : false
+        }
     }
-    
 }
 
 extension MovieDetailViewController: UITableViewDelegate, UITableViewDataSource {
