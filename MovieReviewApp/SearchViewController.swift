@@ -36,8 +36,8 @@ class SearchViewController: UIViewController, SearchBeginOrEndDelegate {
     
     private let tableViewCellHeight: CGFloat = 100
     
-    private var searchingTableViewHeightAnchor: NSLayoutConstraint? = nil
-    private var collectionViewHeightAnchor: NSLayoutConstraint? = nil
+    private var searchingTableViewHeightAnchor: NSLayoutConstraint = NSLayoutConstraint()
+    private var collectionViewHeightAnchor: NSLayoutConstraint = NSLayoutConstraint()
     
     private var searchingTableView: UITableView = UITableView()
     
@@ -86,7 +86,7 @@ class SearchViewController: UIViewController, SearchBeginOrEndDelegate {
         searchingTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         searchingTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         searchingTableViewHeightAnchor = searchingTableView.heightAnchor.constraint(equalToConstant: 0)
-        searchingTableViewHeightAnchor?.isActive = true
+        searchingTableViewHeightAnchor.isActive = true
         
         scrollView.addSubview(recentlyCollectionHeaderView)
         scrollView.addSubview(recentlyMoviesCollectionView)
@@ -107,14 +107,14 @@ class SearchViewController: UIViewController, SearchBeginOrEndDelegate {
         recentlyCollectionHeaderView.leadingAnchor.constraint(equalTo: frameLayoutGuide.leadingAnchor, constant: 10).isActive = true
         recentlyCollectionHeaderView.trailingAnchor.constraint(equalTo: frameLayoutGuide.trailingAnchor, constant: -10).isActive = true
         collectionViewHeightAnchor = recentlyCollectionHeaderView.heightAnchor.constraint(equalToConstant: 50)
-        collectionViewHeightAnchor?.isActive = true
+        collectionViewHeightAnchor.isActive = true
         
         recentlyMoviesCollectionView.translatesAutoresizingMaskIntoConstraints = false
         recentlyMoviesCollectionView.topAnchor.constraint(equalTo: recentlyCollectionHeaderView.bottomAnchor, constant: 10).isActive = true
         recentlyMoviesCollectionView.leadingAnchor.constraint(equalTo: frameLayoutGuide.leadingAnchor).isActive = true
         recentlyMoviesCollectionView.trailingAnchor.constraint(equalTo: frameLayoutGuide.trailingAnchor).isActive = true
         collectionViewHeightAnchor = recentlyMoviesCollectionView.heightAnchor.constraint(equalToConstant: 100)
-        collectionViewHeightAnchor?.isActive = true
+        collectionViewHeightAnchor.isActive = true
         
         
         defaultLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -131,12 +131,12 @@ class SearchViewController: UIViewController, SearchBeginOrEndDelegate {
     }
     
     func searchBeginOrEnd() {
-        if searchingTableViewHeightAnchor?.constant == 0 {
+        if searchingTableViewHeightAnchor.constant == 0 {
             let height = view.frame.height - (view.safeAreaInsets.top + 50)
-            searchingTableViewHeightAnchor?.constant = height
+            searchingTableViewHeightAnchor.constant = height
             recentlyCollectionHeaderView.setText(labelText: "최근 검색", buttonText: "모두 삭제")
         } else {
-            searchingTableViewHeightAnchor?.constant = 0
+            searchingTableViewHeightAnchor.constant = 0
             recentlyCollectionHeaderView.setText(labelText: "최근에 본 영화", buttonText: "모두 삭제")
         }
     }
