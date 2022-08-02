@@ -20,7 +20,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         let window = UIWindow(windowScene: scene)
         window.backgroundColor = .white
-        window.rootViewController = MovieDetailViewController()
+//        window.rootViewController = MovieDetailViewController()
+        window.rootViewController = TabBarController()
         window.makeKeyAndVisible()
         self.window = window
         

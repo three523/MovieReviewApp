@@ -107,8 +107,7 @@ class MovieDetailHeaderView: UIView {
         let offsetY = scrollView.contentOffset.y
         containerView.clipsToBounds = offsetY <= 0
         imageViewBottom.constant = offsetY >= 0 ? 0 : -offsetY / 2
-        imageViewHeight.constant = max(offsetY + scrollView.contentInset.top, scrollView.contentInset.top)
-//        imageViewHeight.constant = offsetY >= 0 ? offsetY : 0
+        imageViewHeight.constant = max(offsetY, 0)
         if offsetY <= 0 {
             subviewsContainerView.alpha = 1
         } else if offsetY > 0 {

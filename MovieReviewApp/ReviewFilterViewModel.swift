@@ -19,7 +19,7 @@ class ReviewFilterViewModel {
             for list in genres {
                 if list["name"] == findData { findedData = list }
             }
-            apiHandler.getJson(path: path, query: ["api_key":APIKEY, "with_genres": findedData["id"]!, "language": "ko"], completed: { movieList in
+            apiHandler.getJson(type: MovieList.self ,path: path, query: ["api_key":APIKEY, "with_genres": findedData["id"]!, "language": "ko"], completed: { movieList in
                 self.movieListModel = movieList
                 completed(movieList)
                 print(movieList)
@@ -33,12 +33,12 @@ class ReviewFilterViewModel {
             }
             if findData == "랜덤 영화" {
                 let page = Int.random(in: 1...1000)
-                apiHandler.getJson(path: path, query: ["api_key": APIKEY, "page": String(page), "language": "ko"]) { movieList in
+                apiHandler.getJson(type: MovieList.self ,path: path, query: ["api_key": APIKEY, "page": String(page), "language": "ko"]) { movieList in
                     print(movieList)
                     completed(movieList)
                 }
             } else {
-                apiHandler.getJson(path: path, query: ["api_key": APIKEY, "language": "ko"]) { movieList in
+                apiHandler.getJson(type: MovieList.self ,path: path, query: ["api_key": APIKEY, "language": "ko"]) { movieList in
                     print(movieList)
                     self.movieListModel = movieList
                     completed(movieList)

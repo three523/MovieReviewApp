@@ -15,7 +15,7 @@ class HomeViewModel {
     func getMovies(completed: @escaping (HomeVCMovie) -> Void) {
         
         for index in 0..<kinds.count {
-            apiHandler.getJson(path: kinds[index], query: ["api_key": APIKEY, "language": "ko"]) { movieList in
+            apiHandler.getJson(type: MovieList.self ,path: kinds[index], query: ["api_key": APIKEY, "language": "ko"]) { movieList in
                 if index == 0 { self.movies.popularMovie = movieList }
                 else if index == 1 { self.movies.topRatedMovie = movieList }
                 else { self.movies.upComingMovie = movieList }
