@@ -11,7 +11,7 @@ class ApiHandler {
     private let baseUrl: String = "https://api.themoviedb.org/3/"
     private let shared: URLSession = URLSession.shared
     
-    func getJson(path: String, query: [String: String], completed: @escaping (MovieList) -> Void) {
+    func getJson<T: Decodable>(type: T.Type, path: String, query: [String: String], completed: @escaping (T) -> Void) {
         
         let fullPath: String = self.baseUrl + path + query.map{ k, v in "\(k)=\(v)" }.joined(separator: "&")
         print("path: \(path), query: \(query)")
@@ -30,12 +30,11 @@ class ApiHandler {
             let jsonEncoder: JSONDecoder = JSONDecoder()
                         
             do {
-                let movie: MovieList = try jsonEncoder.decode(MovieList.self, from: data)
-                completed(movie)
+                let json: T = try jsonEncoder.decode(T.self, from: data)
+                completed(json)
             } catch let e {
                 print(e.localizedDescription)
             }
-            
 
         }.resume()
     }
