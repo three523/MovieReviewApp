@@ -10,13 +10,6 @@ import UIKit
 class MovieDetailViewController: UIViewController {
     let movieDetailTableView: UITableView = UITableView(frame: .zero, style: .grouped)
     let stickyView: MovieDetailStickyView = MovieDetailStickyView()
-    let voteAverageLabel: UILabel = {
-        let label: UILabel = UILabel()
-        label.text = "평균 2.9"
-        label.textColor = .systemPink
-        label.font = .systemFont(ofSize: 16, weight: .medium)
-        return label
-    }()
     let cosmosView: UIView = UIView()
     let stackView: UIStackView = UIStackView()
     let overView: UITextView = {
@@ -24,19 +17,18 @@ class MovieDetailViewController: UIViewController {
         textView.font = .systemFont(ofSize: 16, weight: .black)
         return textView
     }()
-    let voteCountLabel: UILabel = {
-        let label: UILabel = UILabel()
-        label.text = "코맨트"
-        label.textColor = .black
-        label.font = .systemFont(ofSize: 16, weight: .semibold)
-        return label
-    }()
+    var movieId: String = ""
+    lazy var detailViewModel: MovieDetailViewModel = MovieDetailViewModel(movieId: movieId)
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         view.addSubview(movieDetailTableView)
         view.addSubview(stickyView)
+        
+        detailViewModel.getMovieDetail { movieDetail in
+            print(movieDetail)
+        }
         
         let header: MovieDetailHeaderView = MovieDetailHeaderView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.width))
         header.setImage(backgroundImage: UIImage(systemName: "person"), moviePosterImage: UIImage(systemName: "person"))

@@ -83,7 +83,7 @@ class ReviewViewController: UIViewController, UICollectionViewDataSource,  UICol
             findDataName = genres[index]["name"]!
             findDataPath = "discover/movie?"
         }
-        reviewViewModel.movieList(findData: findDataName, path: findDataPath, section: section) { movieList in
+        reviewViewModel.movieList(findData: findDataName, path: findDataPath, section: section) { _ in 
             DispatchQueue.main.async {
                 self.collectionView.reloadData()
             }
@@ -134,7 +134,7 @@ class ReviewListCVCell: UICollectionViewCell, UITableViewDelegate, UITableViewDa
         tb.rowHeight = 100
         return tb
     }()
-    var movieList: [MovieDetail]? = nil
+    var movieList: [MovieInfo]? = nil
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -188,7 +188,7 @@ class ReviewListTBCell: UITableViewCell {
         lb.sizeToFit()
         return lb
     }()
-    var movieDetail: MovieDetail? = nil
+    var movieDetail: MovieInfo? = nil
     let starView: UIView = UIView()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {

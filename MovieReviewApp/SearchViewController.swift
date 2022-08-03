@@ -271,7 +271,7 @@ class SearchDefaultTableViewCell: UITableViewCell {
         lb.sizeToFit()
         return lb
     }()
-    var movieDetail: MovieDetail? = nil
+    var movieDetail: MovieInfo? = nil
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)

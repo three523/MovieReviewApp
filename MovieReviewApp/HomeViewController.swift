@@ -96,6 +96,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: HomeTableViewCell.identifier, for: indexPath) as! HomeTableViewCell
+        cell.currentVC = self
         if indexPath.section == 0 { cell.movieList = homeViewModel.getPopualrMovieList() }
         else if indexPath.section == 1 { cell.movieList = homeViewModel.getTopratedMovieList() }
         else { cell.movieList = homeViewModel.getUpcomingMovieList() }
