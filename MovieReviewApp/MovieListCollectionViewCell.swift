@@ -7,9 +7,9 @@
 
 import UIKit
 
-class MoviewListCollectionViewCell: UICollectionViewCell {
+class MovieListCollectionViewCell: MovieDetailCollectionViewCell {
     
-    static let identifier: String = "\(MoviewListCollectionViewCell.self)"
+    static let identifier: String = "\(MovieListCollectionViewCell.self)"
     
     let moviePoster: UIImageView = UIImageView(image: UIImage(systemName: "square.and.arrow.up")!)
     let movieTitleLabel: UILabel = {
@@ -27,7 +27,7 @@ class MoviewListCollectionViewCell: UICollectionViewCell {
         return label
     }()
     
-    var movie: MovieDetail? = nil
+    var movie: MovieInfo? = nil
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -59,7 +59,7 @@ class MoviewListCollectionViewCell: UICollectionViewCell {
         guard let movie = movie else {
             return
         }
-
+        
         ImageLoader().imageLoad(stringUrl: movie.posterPath) { image in
             DispatchQueue.main.async {
                 self.moviePoster.image = image

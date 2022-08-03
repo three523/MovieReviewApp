@@ -11,7 +11,8 @@ class HomeTableViewCell: UITableViewCell, UICollectionViewDelegate, UICollection
     
     static let identifier: String = "\(HomeTableViewCell.self)"
     private var collectionView: UICollectionView?
-    var movieList: [MovieDetail] = [MovieDetail]()
+    weak var currentVC: UIViewController? = nil
+    var movieList: [MovieInfo] = [MovieInfo]()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -32,7 +33,7 @@ class HomeTableViewCell: UITableViewCell, UICollectionViewDelegate, UICollection
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.showsHorizontalScrollIndicator = false
-        collectionView.register(MoviewListCollectionViewCell.self, forCellWithReuseIdentifier: MoviewListCollectionViewCell.identifier)
+        collectionView.register(MovieListCollectionViewCell.self, forCellWithReuseIdentifier: MovieListCollectionViewCell.identifier)
         
         contentView.addSubview(collectionView)
         
@@ -66,12 +67,19 @@ class HomeTableViewCell: UITableViewCell, UICollectionViewDelegate, UICollection
     }
         
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MoviewListCollectionViewCell.identifier, for: indexPath) as! MoviewListCollectionViewCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MovieListCollectionViewCell.identifier, for: indexPath) as! MovieListCollectionViewCell
         let index = indexPath.item
         guard 0 <= index && index < movieList.count else { return cell }
         cell.movie = movieList[index]
         cell.settingData()
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MovieListCollectionViewCell.identifier, for: indexPath) as! MovieListCollectionViewCell
+        cell.currentVC = currentVC
+        cell.movieId = movieList[indexPath.item].id
+        cell.presentMovieDetail()
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
