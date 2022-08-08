@@ -73,7 +73,6 @@ class SearchViewController: UIViewController, SearchBeginOrEndDelegate {
         }
         
         self.navigationItem.titleView = searchBarController.searchBar
-//        searchBarController.searchBar.delegate = self
         searchBarController.hidesNavigationBarDuringPresentation = false
         navigationItem.hidesSearchBarWhenScrolling = false
         self.definesPresentationContext = true

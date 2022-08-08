@@ -8,10 +8,15 @@
 import Foundation
 import UIKit
 
+enum ImageSize: String {
+    case poster = "/w185"
+    case bacdrop = "/w780"
+}
+
 class ImageLoader {
     
     private let shared: URLSession = URLSession.shared
-    private let baseUrlString: String = "https://image.tmdb.org/t/p/w200"
+    private let baseUrlString: String = "https://image.tmdb.org/t/p"
     private let cacheImages = NSCache<NSURL, UIImage>()
     
     private func getImage(path: String, completed: @escaping (UIImage) -> Void) {
@@ -29,19 +34,18 @@ class ImageLoader {
         return cacheImages.object(forKey: url)
     }
     
-    func imageLoad(stringUrl: String, completed: @escaping (UIImage) -> Void) {
-        
-        guard let url = NSURL(string: "\(baseUrlString)\(stringUrl)") else {
+    func imageLoad(stringUrl: String, size: ImageSize ,completed: @escaping (UIImage) -> Void) {
+        guard let url = NSURL(string: "\(baseUrlString)\(size.rawValue)\(stringUrl)") else {
             print("url is nil")
             return
         }
-        
         if let cacheImage = getCaccheImage(url: url) {
             completed(cacheImage)
             return
         }
         
-        getImage(path: stringUrl) { image in
+        let path: String = "\(size.rawValue)\(stringUrl)"
+        getImage(path: path) { image in
             self.cacheImages.setObject(image, forKey: url)
             completed(image)
         }

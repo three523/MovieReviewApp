@@ -10,6 +10,7 @@ import UIKit
 class MovieDetailViewController: UIViewController {
     let movieDetailTableView: UITableView = UITableView(frame: .zero, style: .grouped)
     let stickyView: MovieDetailStickyView = MovieDetailStickyView()
+    let header: MovieDetailHeaderView = MovieDetailHeaderView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.width))
     let cosmosView: UIView = UIView()
     let stackView: UIStackView = UIStackView()
     let overView: UITextView = {
@@ -26,12 +27,27 @@ class MovieDetailViewController: UIViewController {
         view.addSubview(movieDetailTableView)
         view.addSubview(stickyView)
         
-        detailViewModel.getMovieDetail { movieDetail in
-            print(movieDetail)
+        movieDetailTableView.rowHeight = UITableView.automaticDimension
+        movieDetailTableView.estimatedRowHeight = 50
+        
+        detailViewModel.getMovieDetail {
+            DispatchQueue.main.async {
+                self.movieDetailTableView.reloadData()
+            }
+            let movieDetail: MovieDetail = self.detailViewModel.getMovie()!
+            let releaseDate: String = movieDetail.releaseDate
+            let productionCountrie: String = movieDetail.productionCountries[0].name
+            let geres: [String] = movieDetail.genres.map{ $0.name }
+            let subText: String = "\(releaseDate)∙\(productionCountrie)∙\(geres.joined(separator: "/"))"
+            self.header.setTitle(mainText: movieDetail.title, subText: subText)
+            self.detailViewModel.getBackdropImage { backdropImage in
+                self.header.setBackdropImage(backdropImage: backdropImage)
+            }
+            self.detailViewModel.getPosterImage { posterImage in
+                self.header.setPosterImage(moviePosterImage: posterImage)
+            }
         }
         
-        let header: MovieDetailHeaderView = MovieDetailHeaderView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.width))
-        header.setImage(backgroundImage: UIImage(systemName: "person"), moviePosterImage: UIImage(systemName: "person"))
         movieDetailTableView.tableHeaderView = header
         
         movieDetailTableView.delegate = self
@@ -62,7 +78,7 @@ class MovieDetailViewController: UIViewController {
 extension MovieDetailViewController: UITableViewDelegate, UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 6
+        return 5
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -70,11 +86,10 @@ extension MovieDetailViewController: UITableViewDelegate, UITableViewDataSource 
         switch section {
             
         case 0: return 2
-        case 1: return 1
-        case 2: return 2
-        case 3: return 3
-        case 4: return 4
-        case 5: return 1
+        case 1: return 2
+        case 2: return 3
+        case 3: return 4
+        case 4: return 1
         default: return 0
             
         }
@@ -82,38 +97,53 @@ extension MovieDetailViewController: UITableViewDelegate, UITableViewDataSource 
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell()
-        var config = cell.defaultContentConfiguration()
-        config.text = "test"
-        cell.contentConfiguration = config
+        if indexPath.section == 0 {
+            if indexPath.item == 0 {
+                var config = cell.defaultContentConfiguration()
+                config.image = UIImage(systemName: "person")
+                cell.contentConfiguration = config
+            }
+            else if indexPath.item == 1 {
+                
+            }
+        } else if indexPath.section == 1 {
+            if indexPath.item == 0 {
+                var config = cell.defaultContentConfiguration()
+                guard let detailMovie = detailViewModel.getMovie() else { return cell }
+                config.text = detailMovie.overview
+                cell.contentConfiguration = config
+            }
+        }
         return cell
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        guard let movieDetail = detailViewModel.getMovie() else { return nil }
         let width: CGFloat = UIScreen.main.bounds.width
         let defaultFrame: CGRect = CGRect(x: 0, y: 0, width: width, height: 50)
         switch section {
         case 0:
             let frame: CGRect = CGRect(x: 0, y: 0, width: width, height: 40)
-            let sectionView: MovieDetailSectionView = MovieDetailSectionView(frame: frame, count: .three, textList: ["예상 ★4.9", "평균 ✭3.8","13.5만명"])
+            let stringAverage: String = String(format: "%.1f", movieDetail.voteAverage)
+            let textList: [String] = ["평균 ✭\(stringAverage)", "\(movieDetail.voteCount)"]
+            let sectionView: MovieDetailSectionView = MovieDetailSectionView(frame: frame, sectionType: .voteSection, textList: textList)
             sectionView.layer.cornerRadius = 10
             sectionView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
             return sectionView
         case 1:
-            let sectionView: MovieDetailSectionView = MovieDetailSectionView(frame: defaultFrame, count: .one, textList: ["관련 키워드"])
+            let sectionView: MovieDetailSectionView = MovieDetailSectionView(frame: defaultFrame, sectionType: .defaultSection, textList: ["기본 정보"])
             return sectionView
         case 2:
-            let sectionView: MovieDetailSectionView = MovieDetailSectionView(frame: defaultFrame, count: .one, textList: ["기본 정보"])
+            let sectionView: MovieDetailSectionView = MovieDetailSectionView(frame: defaultFrame, sectionType: .defaultSection, textList: ["출연/제작"])
             return sectionView
         case 3:
-            let sectionView: MovieDetailSectionView = MovieDetailSectionView(frame: defaultFrame, count: .one, textList: ["출연/제작"])
+            let textList: [String] = ["코멘트","\(movieDetail.voteCount)"]
+            let sectionView: MovieDetailSectionView = MovieDetailSectionView(frame: defaultFrame, sectionType: .twoLabelSection, textList: textList)
             return sectionView
         case 4:
-            let sectionView: MovieDetailSectionView = MovieDetailSectionView(frame: defaultFrame, count: .two, textList: ["코멘트", "3000+"])
+            let sectionView: MovieDetailSectionView = MovieDetailSectionView(frame: defaultFrame, sectionType: .defaultSection, textList: ["비슷한 작품"])
             return sectionView
-        case 5:
-            let sectionView: MovieDetailSectionView = MovieDetailSectionView(frame: defaultFrame, count: .one, textList: ["비슷한 작품"])
-            return sectionView
-        default: return UIView()
+        default: return nil
             
         }
     }
