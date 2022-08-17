@@ -96,9 +96,21 @@ class MovieDetailHeaderView: UIView {
         moviesubTitleLabel.bottomAnchor.constraint(equalTo: subviewsContainerView.bottomAnchor).isActive = true
     }
     
-    func setImage(backgroundImage: UIImage?, moviePosterImage: UIImage?) {
+    func setTitle(mainText: String, subText: String) {
         DispatchQueue.main.async {
-            self.backgroundImageView.image = backgroundImage
+            self.movieTitleLabel.text = mainText
+            self.moviesubTitleLabel.text = subText
+        }
+    }
+    
+    func setBackdropImage(backdropImage: UIImage?) {
+        DispatchQueue.main.async {
+            self.backgroundImageView.image = backdropImage
+        }
+    }
+    
+    func setPosterImage(moviePosterImage: UIImage?) {
+        DispatchQueue.main.async {
             self.posterImageView.image = moviePosterImage
         }
     }

@@ -7,8 +7,8 @@
 
 import UIKit
 
-enum SectionViewLabelCount: Int {
-    case one, two, three
+enum SectionViewLabelCount {
+    case defaultSection, twoLabelSection, voteSection
 }
 
 class MovieDetailSectionView: UIView {
@@ -32,12 +32,8 @@ class MovieDetailSectionView: UIView {
         return label
     }()
 
-    init(frame: CGRect, count: SectionViewLabelCount, textList: [String]) {
+    init(frame: CGRect, sectionType: SectionViewLabelCount, textList: [String]) {
         super.init(frame: frame)
-        if textList.count != count.rawValue + 1 {
-            print("labelcount not equal textList Count")
-            return
-        }
         
         self.backgroundColor = .white
         
@@ -47,26 +43,26 @@ class MovieDetailSectionView: UIView {
         
         self.autoLayoutSetting()
         
-        switch count {
-        case .one:
+        switch sectionType {
+        case .defaultSection:
             guard let mainText = textList.first else { return }
             mainLabel.text = mainText
             
-        case .two:
+        case .twoLabelSection:
+            if textList.count != 2 { return }
             mainLabel.textColor = .black
             mainLabel.text = textList[0]
             
             subLabel.font = .systemFont(ofSize: 15, weight: .regular)
             subLabel.text = textList[1]
             
-        case .three:
+        case .voteSection:
+            if textList.count != 2 { return }
             mainLabel.text = textList[0]
             mainLabel.textColor = .systemPink
             mainLabel.font = .systemFont(ofSize: 16, weight: .regular)
-            
-            subLabel.text = textList[1]
-            
-            smallLabel.text = textList[2]
+                        
+            smallLabel.text = "(\(textList[1]))"
         }
     }
     
@@ -85,7 +81,7 @@ class MovieDetailSectionView: UIView {
         
         smallLabel.translatesAutoresizingMaskIntoConstraints = false
         smallLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
-        smallLabel.leadingAnchor.constraint(equalTo: subLabel.trailingAnchor, constant: 10).isActive = true
+        smallLabel.leadingAnchor.constraint(equalTo: subLabel.trailingAnchor).isActive = true
         
     }
     
