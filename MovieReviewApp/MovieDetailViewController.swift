@@ -7,9 +7,13 @@
 
 import UIKit
 
+protocol MovieDetailVCPresent {
+    func presentVC(vc: UIViewController) -> Void
+}
+
 class MovieDetailViewController: UIViewController {
     let movieDetailTableView: UITableView = UITableView(frame: .zero, style: .grouped)
-    let stickyView: MovieDetailStickyView = MovieDetailStickyView()
+    let stickyView: CustomNavigationBar = CustomNavigationBar()
     let header: MovieDetailHeaderView = MovieDetailHeaderView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.width))
     let cosmosView: UIView = UIView()
     let stackView: UIStackView = UIStackView()
@@ -26,6 +30,11 @@ class MovieDetailViewController: UIViewController {
         
         view.addSubview(movieDetailTableView)
         view.addSubview(stickyView)
+        
+        stickyView.leftButtonSetImage(image: UIImage(systemName: "chevron.backward")!)
+        stickyView.rightButtonSetImage(image: UIImage(systemName: "square.and.arrow.up")!)
+        let dismissAction: UIAction = UIAction { _ in self.dismiss(animated: true) }
+        stickyView.leftButtonAction(action: dismissAction)
         
         movieDetailTableView.rowHeight = UITableView.automaticDimension
         movieDetailTableView.estimatedRowHeight = 50
@@ -52,6 +61,8 @@ class MovieDetailViewController: UIViewController {
         
         movieDetailTableView.delegate = self
         movieDetailTableView.dataSource = self
+        movieDetailTableView.rowHeight = UITableView.automaticDimension
+        movieDetailTableView.estimatedRowHeight = 50
         
         movieDetailTableView.translatesAutoresizingMaskIntoConstraints = false
         movieDetailTableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
@@ -96,7 +107,7 @@ extension MovieDetailViewController: UITableViewDelegate, UITableViewDataSource 
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell()
+        var cell = UITableViewCell()
         if indexPath.section == 0 {
             if indexPath.item == 0 {
                 var config = cell.defaultContentConfiguration()
@@ -104,7 +115,7 @@ extension MovieDetailViewController: UITableViewDelegate, UITableViewDataSource 
                 cell.contentConfiguration = config
             }
             else if indexPath.item == 1 {
-                
+                cell = DetailSectionTableViewCell(style: .default, reuseIdentifier: DetailSectionTableViewCell.identifier, type: .stackCell)
             }
         } else if indexPath.section == 1 {
             if indexPath.item == 0 {
