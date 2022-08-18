@@ -24,8 +24,9 @@ class MovieCommentViewController: UIViewController {
         textView.delegate = self
         textView.font = .systemFont(ofSize: placeHolderLabel.font.pointSize)
         textView.textColor = .lightGray
+        textView.textContainerInset = UIEdgeInsets(top: 20, left: 20, bottom: 40, right: 20)
         textView.addSubview(placeHolderLabel)
-        placeHolderLabel.frame.origin = CGPoint(x: 5, y: placeHolderLabel.font.pointSize/2)
+        placeHolderLabel.frame.origin = CGPoint(x: 25, y: placeHolderLabel.font.pointSize/2 + 12)
         return textView
     }()
     let bottomHeader: UIView = UIView()
@@ -42,8 +43,7 @@ class MovieCommentViewController: UIViewController {
         
         commentTextView.becomeFirstResponder()
         commentTextView.selectedTextRange = commentTextView.textRange(from: commentTextView.beginningOfDocument, to: commentTextView.beginningOfDocument)
-                
-
+        
         topCommentViewSetting()
         autolayoutSetting()
         bottomHeaderSetting()
@@ -75,7 +75,7 @@ class MovieCommentViewController: UIViewController {
         
         toggle.translatesAutoresizingMaskIntoConstraints = false
         toggle.centerYAnchor.constraint(equalTo: bottomHeader.centerYAnchor).isActive = true
-        toggle.leadingAnchor.constraint(equalTo: bottomHeader.leadingAnchor, constant: 10).isActive = true
+        toggle.leadingAnchor.constraint(equalTo: bottomHeader.leadingAnchor, constant: 20).isActive = true
         
         toggleLabel.translatesAutoresizingMaskIntoConstraints = false
         toggleLabel.centerYAnchor.constraint(equalTo: bottomHeader.centerYAnchor).isActive = true
@@ -87,9 +87,15 @@ class MovieCommentViewController: UIViewController {
         
         shareButton.translatesAutoresizingMaskIntoConstraints = false
         shareButton.topAnchor.constraint(equalTo: bottomHeader.topAnchor).isActive = true
-        shareButton.trailingAnchor.constraint(equalTo: bottomHeader.trailingAnchor, constant: -10).isActive = true
+        shareButton.trailingAnchor.constraint(equalTo: bottomHeader.trailingAnchor, constant: -20).isActive = true
         shareButton.bottomAnchor.constraint(equalTo: bottomHeader.bottomAnchor).isActive = true
         
+        let layer: CALayer = CALayer()
+        layer.backgroundColor = UIColor.gray.cgColor
+        layer.opacity = 0.5
+        layer.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 0.5)
+        
+        bottomHeader.layer.addSublayer(layer)
     }
     
     private func topCommentViewSetting() {
@@ -121,8 +127,8 @@ class MovieCommentViewController: UIViewController {
         bottomHeader.topAnchor.constraint(equalTo: commentTextView.bottomAnchor).isActive = true
         bottomHeader.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         bottomHeader.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        bottomHeader.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-        bottomHeader.heightAnchor.constraint(equalToConstant: 70).isActive = true
+        bottomHeader.bottomAnchor.constraint(equalTo: view.keyboardLayoutGuide.topAnchor).isActive = true
+        bottomHeader.heightAnchor.constraint(equalToConstant: 50).isActive = true
     }
     
 }
