@@ -7,8 +7,9 @@
 
 import UIKit
 
-protocol MovieDetailVCPresent {
-    func presentVC(vc: UIViewController) -> Void
+protocol AddExpectationsProtocol: AnyObject {
+    func addCell() -> Void
+    func deleteCell() -> Void
 }
 
 class MovieDetailViewController: UIViewController {
@@ -24,6 +25,7 @@ class MovieDetailViewController: UIViewController {
     }()
     var movieId: String = ""
     lazy var detailViewModel: MovieDetailViewModel = MovieDetailViewModel(movieId: movieId)
+    var count = 2
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,7 +39,7 @@ class MovieDetailViewController: UIViewController {
         stickyView.leftButtonAction(action: dismissAction)
         
         movieDetailTableView.rowHeight = UITableView.automaticDimension
-        movieDetailTableView.estimatedRowHeight = 50
+        movieDetailTableView.estimatedRowHeight = 70
         
         detailViewModel.getMovieDetail {
             DispatchQueue.main.async {
@@ -86,7 +88,7 @@ class MovieDetailViewController: UIViewController {
     }
 }
 
-extension MovieDetailViewController: UITableViewDelegate, UITableViewDataSource {
+extension MovieDetailViewController: UITableViewDelegate, UITableViewDataSource, AddExpectationsProtocol {
     
     func numberOfSections(in tableView: UITableView) -> Int {
         return 5
@@ -96,7 +98,7 @@ extension MovieDetailViewController: UITableViewDelegate, UITableViewDataSource 
         
         switch section {
             
-        case 0: return 2
+        case 0: return count
         case 1: return 2
         case 2: return 3
         case 3: return 4
@@ -109,16 +111,23 @@ extension MovieDetailViewController: UITableViewDelegate, UITableViewDataSource 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         var cell = UITableViewCell()
         if indexPath.section == 0 {
-            if indexPath.item == 0 {
+            let rowCount = tableView.numberOfRows(inSection: 0)
+            if indexPath.row == 0 && rowCount == 2 {
                 var config = cell.defaultContentConfiguration()
                 config.image = UIImage(systemName: "person")
                 cell.contentConfiguration = config
-            }
-            else if indexPath.item == 1 {
-                cell = DetailSectionTableViewCell(style: .default, reuseIdentifier: DetailSectionTableViewCell.identifier, type: .stackCell)
+            } else if indexPath.row == 0 && rowCount == 3 {
+                let expectationsCell: UITableViewCell = DetailSectionTableViewCell(style: .default, reuseIdentifier: DetailSectionTableViewCell.identifier, type: .expectationsCell)
+                expectationsCell.selectionStyle = .none
+                return expectationsCell
+                
+            } else if indexPath.row == 1 {
+                let detailCell: DetailSectionTableViewCell = DetailSectionTableViewCell(style: .default, reuseIdentifier: DetailSectionTableViewCell.identifier, type: .stackCell, delegate: self)
+                detailCell.delegate = self
+                return detailCell
             }
         } else if indexPath.section == 1 {
-            if indexPath.item == 0 {
+            if indexPath.row == 0 {
                 var config = cell.defaultContentConfiguration()
                 guard let detailMovie = detailViewModel.getMovie() else { return cell }
                 config.text = detailMovie.overview
@@ -156,6 +165,34 @@ extension MovieDetailViewController: UITableViewDelegate, UITableViewDataSource 
             return sectionView
         default: return nil
             
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if indexPath.section == 0 && indexPath.row == 0 && count == 3 {
+            let commentVC: UIViewController = MovieCommentViewController()
+            commentVC.modalPresentationStyle = .fullScreen
+            present(commentVC, animated: true)
+        }
+    }
+    
+    func addCell() {
+        print("add")
+        if count == 2 {
+            movieDetailTableView.beginUpdates()
+            count = 3
+            movieDetailTableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
+            movieDetailTableView.endUpdates()
+        }
+    }
+    
+    func deleteCell() {
+        print("delete")
+        if count == 3 {
+            movieDetailTableView.beginUpdates()
+            count = 2
+            movieDetailTableView.deleteRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
+            movieDetailTableView.endUpdates()
         }
     }
     
