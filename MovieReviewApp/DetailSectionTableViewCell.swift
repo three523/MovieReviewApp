@@ -8,7 +8,7 @@
 import UIKit
 
 enum DetailSectionCell {
-    case starCell, stackCell, overCell, movieInfoCell, creditsCell, commentGraphCell, commentTableCell, similarCell, defaultCell, expectationsCell
+    case starCell, stackCell, overCell, movieInfoCell, movieInfoStackCell, creditsCell, commentGraphCell, commentTableCell, similarCell, defaultCell, expectationsCell
 }
 
 class DetailSectionTableViewCell: UITableViewCell {
@@ -16,6 +16,7 @@ class DetailSectionTableViewCell: UITableViewCell {
     var type: DetailSectionCell
     static let identifier: String = "\(DetailSectionTableViewCell.self)"
     weak var delegate: AddExpectationsProtocol?
+    var movieDefaultInfo: [String: String] = [:]
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -80,7 +81,58 @@ class DetailSectionTableViewCell: UITableViewCell {
         case .overCell:
             return
         case .movieInfoCell:
+            let overViewLabel: UILabel = UILabel()
+            overViewLabel.lineBreakMode = .byClipping
             return
+        case .movieInfoStackCell:
+            let movieInfoStackView: MovieInfoStackView = MovieInfoStackView(frame: .zero, textListCount: 6)
+            let scrollView: UIScrollView = UIScrollView()
+            scrollView.showsHorizontalScrollIndicator = false
+            scrollView.showsVerticalScrollIndicator = false
+            
+            contentView.addSubview(scrollView)
+            scrollView.addSubview(movieInfoStackView)
+
+            scrollView.translatesAutoresizingMaskIntoConstraints = false
+            scrollView.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
+            scrollView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
+            scrollView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).isActive = true
+            scrollView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true
+
+            let frameLayoutGuide: UILayoutGuide = scrollView.frameLayoutGuide
+            let contentLayoutGuide: UILayoutGuide = scrollView.contentLayoutGuide
+
+            movieInfoStackView.translatesAutoresizingMaskIntoConstraints = false
+            movieInfoStackView.topAnchor.constraint(equalTo: frameLayoutGuide.topAnchor).isActive = true
+            movieInfoStackView.leadingAnchor.constraint(equalTo: contentLayoutGuide.leadingAnchor).isActive = true
+            movieInfoStackView.trailingAnchor.constraint(equalTo: contentLayoutGuide.trailingAnchor).isActive = true
+            movieInfoStackView.bottomAnchor.constraint(equalTo: frameLayoutGuide.bottomAnchor).isActive = true
+            
+            guard let movieDetail = MovieDetailViewModel.movieDetail,
+                  let runtime = movieDetail.runtime,
+                  let credits = MovieDetailViewModel.credits,
+                  let directorName = credits.crew.filter({ crew in crew.job == "Director" }).first?.name
+            else { return }
+            
+            movieInfoStackView.textSetting(title: "감독", content: directorName)
+            movieInfoStackView.textSetting(title: "상영 시간", content: "\(runtime)분")
+            
+            var results = movieDetail.releaseDates.results.filter { result in
+                result.iso31661 == "KR"
+            }
+            if results.isEmpty {
+                results = movieDetail.releaseDates.results
+            }
+            
+            let certification = results.first!.releaseDates.first!.certification
+            movieInfoStackView.textSetting(title: "연령 등급", content: certification)
+            
+            let genres: [String] = movieDetail.genres.map{ $0.name }
+            let genresToString: String = genres.joined(separator: ",")
+            movieInfoStackView.textSetting(title: "장르", content: genresToString)
+            movieInfoStackView.textSetting(title: "제작 국가", content: movieDetail.productionCountries.first!.name)
+            movieInfoStackView.textSetting(title: "제작 연도", content: movieDetail.releaseDate)
+            
         case .creditsCell:
             return
         case .commentGraphCell:
