@@ -16,15 +16,9 @@ class MovieDetailViewController: UIViewController {
     let movieDetailTableView: UITableView = UITableView(frame: .zero, style: .grouped)
     let stickyView: CustomNavigationBar = CustomNavigationBar()
     let header: MovieDetailHeaderView = MovieDetailHeaderView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.width))
-    let cosmosView: UIView = UIView()
-    let stackView: UIStackView = UIStackView()
-    let overView: UITextView = {
-        let textView: UITextView = UITextView()
-        textView.font = .systemFont(ofSize: 16, weight: .black)
-        return textView
-    }()
     var movieId: String = ""
     lazy var detailViewModel: MovieDetailViewModel = MovieDetailViewModel(movieId: movieId)
+    var director: String? = ""
     var count = 2
     
     override func viewDidLoad() {
@@ -56,6 +50,12 @@ class MovieDetailViewController: UIViewController {
             }
             self.detailViewModel.getPosterImage { posterImage in
                 self.header.setPosterImage(moviePosterImage: posterImage)
+            }
+        }
+        
+        detailViewModel.getCredits {
+            DispatchQueue.main.async {
+                self.movieDetailTableView.reloadData()
             }
         }
         
@@ -127,11 +127,14 @@ extension MovieDetailViewController: UITableViewDelegate, UITableViewDataSource,
                 return detailCell
             }
         } else if indexPath.section == 1 {
+            guard let detailMovie: MovieDetail = detailViewModel.getMovie() else { return cell }
             if indexPath.row == 0 {
                 var config = cell.defaultContentConfiguration()
-                guard let detailMovie = detailViewModel.getMovie() else { return cell }
                 config.text = detailMovie.overview
                 cell.contentConfiguration = config
+            } else if indexPath.row == 1 {
+                let defaultInfoStackCell: DetailSectionTableViewCell = DetailSectionTableViewCell(style: .default, reuseIdentifier: DetailSectionTableViewCell.identifier, type: .movieInfoStackCell)
+                return defaultInfoStackCell
             }
         }
         return cell

@@ -32,6 +32,9 @@
 		18C018C92886801300E6AE2C /* MovieGenres.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C018C82886801300E6AE2C /* MovieGenres.swift */; };
 		18C018CB288682D400E6AE2C /* ReviewFilterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C018CA288682D400E6AE2C /* ReviewFilterViewModel.swift */; };
 		18C018CD2886A7A500E6AE2C /* FilterTableViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C018CC2886A7A500E6AE2C /* FilterTableViewHeader.swift */; };
+		18C3C67428AF36DB002C2D38 /* MovieDefaultInfoCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C3C67328AF36DB002C2D38 /* MovieDefaultInfoCollectionViewCell.swift */; };
+		18C3C67628AF48E6002C2D38 /* Credits.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C3C67528AF48E6002C2D38 /* Credits.swift */; };
+		18C3C67828AF5879002C2D38 /* ReleaseDates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C3C67728AF5879002C2D38 /* ReleaseDates.swift */; };
 		18C584A12889817800C58278 /* SearchingTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C584A02889817800C58278 /* SearchingTableViewController.swift */; };
 		18C8026728ACCD9D0080B31E /* MovieCommentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C8026628ACCD9C0080B31E /* MovieCommentViewController.swift */; };
 		18E17961287805790060BCD9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18E17960287805790060BCD9 /* AppDelegate.swift */; };
@@ -67,6 +70,9 @@
 		18C018C82886801300E6AE2C /* MovieGenres.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieGenres.swift; sourceTree = "<group>"; };
 		18C018CA288682D400E6AE2C /* ReviewFilterViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewFilterViewModel.swift; sourceTree = "<group>"; };
 		18C018CC2886A7A500E6AE2C /* FilterTableViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterTableViewHeader.swift; sourceTree = "<group>"; };
+		18C3C67328AF36DB002C2D38 /* MovieDefaultInfoCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDefaultInfoCollectionViewCell.swift; sourceTree = "<group>"; };
+		18C3C67528AF48E6002C2D38 /* Credits.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Credits.swift; sourceTree = "<group>"; };
+		18C3C67728AF5879002C2D38 /* ReleaseDates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReleaseDates.swift; sourceTree = "<group>"; };
 		18C584A02889817800C58278 /* SearchingTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchingTableViewController.swift; sourceTree = "<group>"; };
 		18C8026628ACCD9C0080B31E /* MovieCommentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieCommentViewController.swift; sourceTree = "<group>"; };
 		18E1795D287805790060BCD9 /* MovieReviewApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MovieReviewApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -128,6 +134,8 @@
 				18AC2992287FA6990043B812 /* HomeViewModel.swift */,
 				18C018CA288682D400E6AE2C /* ReviewFilterViewModel.swift */,
 				18A4DBD8289955B400FBC346 /* MovieDetailViewModel.swift */,
+				18C3C67528AF48E6002C2D38 /* Credits.swift */,
+				18C3C67728AF5879002C2D38 /* ReleaseDates.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -136,6 +144,7 @@
 			isa = PBXGroup;
 			children = (
 				18BA247728A1074C0024B913 /* DetailSectionTableViewCell.swift */,
+				18C3C67328AF36DB002C2D38 /* MovieDefaultInfoCollectionViewCell.swift */,
 			);
 			name = Cell;
 			sourceTree = "<group>";
@@ -251,7 +260,9 @@
 				184272C9287D7A30004E1C9E /* TopTabView.swift in Sources */,
 				18AC2995287FB35C0043B812 /* ImageLoader.swift in Sources */,
 				18A2F729287EABEA00CA9947 /* MovieListCollectionViewCell.swift in Sources */,
+				18C3C67828AF5879002C2D38 /* ReleaseDates.swift in Sources */,
 				18A13F29288EA06E00A34538 /* MovieDetailViewController.swift in Sources */,
+				18C3C67628AF48E6002C2D38 /* Credits.swift in Sources */,
 				18ABB6592891319100BACD73 /* MovieDetailHeaderView.swift in Sources */,
 				18C8026728ACCD9D0080B31E /* MovieCommentViewController.swift in Sources */,
 				18C584A12889817800C58278 /* SearchingTableViewController.swift in Sources */,
@@ -263,6 +274,7 @@
 				18ABB8082897C37200E8AF7B /* MovieDetailSectionView.swift in Sources */,
 				18C018C92886801300E6AE2C /* MovieGenres.swift in Sources */,
 				18E17961287805790060BCD9 /* AppDelegate.swift in Sources */,
+				18C3C67428AF36DB002C2D38 /* MovieDefaultInfoCollectionViewCell.swift in Sources */,
 				18A2F730287EC8F400CA9947 /* Movie.swift in Sources */,
 				18AC2993287FA6990043B812 /* HomeViewModel.swift in Sources */,
 				18A4DBD9289955B400FBC346 /* MovieDetailViewModel.swift in Sources */,
