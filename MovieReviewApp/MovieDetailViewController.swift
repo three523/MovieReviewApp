@@ -56,12 +56,19 @@ class MovieDetailViewController: UIViewController {
             }
         }
         
+        detailViewModel.getReviews {
+            DispatchQueue.main.async {
+                self.movieDetailTableView.reloadData()
+            }
+        }
+        
         movieDetailTableView.tableHeaderView = header
         
         movieDetailTableView.delegate = self
         movieDetailTableView.dataSource = self
         
         movieDetailTableView.register(CreditsSummaryTableViewCell.self, forCellReuseIdentifier: CreditsSummaryTableViewCell.identifier)
+        movieDetailTableView.register(CommentTableViewCell.self, forCellReuseIdentifier: CommentTableViewCell.identifier)
         
         movieDetailTableView.sectionHeaderTopPadding = 10
         movieDetailTableView.rowHeight = UITableView.automaticDimension
@@ -103,7 +110,10 @@ extension MovieDetailViewController: UITableViewDelegate, UITableViewDataSource,
         case 0: return count
         case 1: return 2
         case 2: return 3
-        case 3: return 4
+        case 3:
+            guard let reviews = MovieDetailViewModel.reviews?.results else { return 0 }
+            if reviews.count > 3 { return 3 }
+            else { return reviews.count }
         case 4: return 1
         default: return 0
             
@@ -165,6 +175,13 @@ extension MovieDetailViewController: UITableViewDelegate, UITableViewDataSource,
             }
             
             return directorActorCell
+        } else if indexPath.section == 3 {
+            guard let commentCell: CommentTableViewCell = tableView.dequeueReusableCell(withIdentifier: CommentTableViewCell.identifier, for: indexPath) as? CommentTableViewCell else { return cell }
+            guard let reviews = MovieDetailViewModel.reviews?.results else { return cell }
+            let review: Review = reviews[indexPath.row]
+            commentCell.usernameLabel.text = review.authorDetails.username
+            commentCell.commentLabel.text = review.content
+            return commentCell
         }
         return cell
     }
@@ -214,7 +231,12 @@ extension MovieDetailViewController: UITableViewDelegate, UITableViewDataSource,
             let sectionView: MovieDetailSectionView = MovieDetailSectionView(frame: defaultFrame, sectionType: .defaultSection, textList: ["출연/제작"])
             return sectionView
         case 3:
-            let textList: [String] = ["코멘트","\(movieDetail.voteCount)"]
+            var textList: [String] = ["코멘트"]
+            guard let commentCount = MovieDetailViewModel.reviews?.results.count else {
+                textList.append("0")
+                return MovieDetailSectionView(frame: defaultFrame, sectionType: .twoLabelSection, textList: textList)
+            }
+            textList.append("\(commentCount)")
             let sectionView: MovieDetailSectionView = MovieDetailSectionView(frame: defaultFrame, sectionType: .twoLabelSection, textList: textList)
             return sectionView
         case 4:
