@@ -32,9 +32,6 @@ class MovieDetailViewController: UIViewController {
         let dismissAction: UIAction = UIAction { _ in self.dismiss(animated: true) }
         stickyView.leftButtonAction(action: dismissAction)
         
-        movieDetailTableView.rowHeight = UITableView.automaticDimension
-        movieDetailTableView.estimatedRowHeight = 70
-        
         detailViewModel.getMovieDetail {
             DispatchQueue.main.async {
                 self.movieDetailTableView.reloadData()
@@ -63,6 +60,10 @@ class MovieDetailViewController: UIViewController {
         
         movieDetailTableView.delegate = self
         movieDetailTableView.dataSource = self
+        
+        movieDetailTableView.register(CreditsSummaryTableViewCell.self, forCellReuseIdentifier: CreditsSummaryTableViewCell.identifier)
+        
+        movieDetailTableView.sectionHeaderTopPadding = 10
         movieDetailTableView.rowHeight = UITableView.automaticDimension
         movieDetailTableView.estimatedRowHeight = 50
         
@@ -77,6 +78,7 @@ class MovieDetailViewController: UIViewController {
         stickyView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         stickyView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         stickyView.heightAnchor.constraint(equalToConstant: 50).isActive = true
+                
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -109,7 +111,7 @@ extension MovieDetailViewController: UITableViewDelegate, UITableViewDataSource,
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        var cell = UITableViewCell()
+        let cell = UITableViewCell()
         if indexPath.section == 0 {
             let rowCount = tableView.numberOfRows(inSection: 0)
             if indexPath.row == 0 && rowCount == 2 {
@@ -136,8 +138,60 @@ extension MovieDetailViewController: UITableViewDelegate, UITableViewDataSource,
                 let defaultInfoStackCell: DetailSectionTableViewCell = DetailSectionTableViewCell(style: .default, reuseIdentifier: DetailSectionTableViewCell.identifier, type: .movieInfoStackCell)
                 return defaultInfoStackCell
             }
+        } else if indexPath.section == 2 {
+            guard let directorActorCell: CreditsSummaryTableViewCell = tableView.dequeueReusableCell(withIdentifier: CreditsSummaryTableViewCell.identifier, for: indexPath) as? CreditsSummaryTableViewCell else { return cell }
+            
+            if indexPath.row == 0 {
+                guard let director: Crew = MovieDetailViewModel.credits?.crew.filter({ crew in crew.job == "Director" }).first else { return cell }
+                directorActorCell.nameLabel.text = director.name
+                directorActorCell.jobLabel.text = director.job
+                guard let profilePath = director.profilePath else { return directorActorCell }
+                ImageLoader.loader.imageLoad(stringUrl: profilePath, size: .poster) { profileImage in
+                    DispatchQueue.main.async {
+                        directorActorCell.profileImageView.image = profileImage
+                    }
+                }
+            } else {
+                guard let casts: [Cast] = MovieDetailViewModel.credits?.cast else { return cell }
+                let cast: Cast = casts[indexPath.row]
+                directorActorCell.nameLabel.text = cast.name
+                directorActorCell.jobLabel.text = "배우 | \(cast.character)"
+                guard let profilePath = cast.profilePath else { return directorActorCell }
+                ImageLoader.loader.imageLoad(stringUrl: profilePath, size: .poster) { profileImage in
+                    DispatchQueue.main.async {
+                        directorActorCell.profileImageView.image = profileImage
+                    }
+                }
+            }
+            
+            return directorActorCell
         }
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        
+        if section == 2 || section == 3 {
+            
+            let btn: UIButton = UIButton()
+            
+            btn.setTitle("모두 보기", for: .normal)
+            btn.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
+            btn.backgroundColor = .lightGray
+            btn.setTitleColor(.systemPink, for: .highlighted)
+            btn.setTitleColor(.black, for: .normal)
+            
+            return btn
+        }
+        
+        return nil
+    }
+    
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        if section == 2 || section == 3 {
+            return 50
+        }
+        return 0
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {

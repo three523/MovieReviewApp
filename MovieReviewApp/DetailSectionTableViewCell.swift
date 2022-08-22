@@ -63,11 +63,13 @@ class DetailSectionTableViewCell: UITableViewCell {
             let view: DetailReviewSectionStackView = DetailReviewSectionStackView()
             contentView.addSubview(view)
             view.translatesAutoresizingMaskIntoConstraints = false
-            view.topAnchor.constraint(greaterThanOrEqualTo: contentView.topAnchor).isActive = true
+            view.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
             view.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true
             view.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20).isActive = true
             view.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20).isActive = true
-            view.heightAnchor.constraint(equalToConstant:  70).isActive = true
+            let viewHeightanchor: NSLayoutConstraint = view.heightAnchor.constraint(equalToConstant: 70)
+            viewHeightanchor.priority = UILayoutPriority(999)
+            viewHeightanchor.isActive = true
             guard let delegate = delegate else { return }
             let delegateAction: UIAction = UIAction{ action in
                 guard let btn = action.sender as? UIButton else { return }
