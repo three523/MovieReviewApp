@@ -14,6 +14,7 @@ class MovieDetailViewModel {
     static var movieDetail: MovieDetail? = nil
     static var credits: Credits? = nil
     static var movieReleaseDate: MovieReleaseDate? = nil
+    static var reviews: Reviews? = nil
     private let imageLoader: ImageLoader = ImageLoader()
     private var query: [String: String] = ["api_key": APIKEY, "language": "ko"]
     private var path: String = "movie/"
@@ -45,6 +46,24 @@ class MovieDetailViewModel {
         apiHandler.getJson(type: MovieReleaseDate.self, path: releasePath, query: query) { movieReleaseDate in
             MovieDetailViewModel.movieReleaseDate = movieReleaseDate
             completed()
+        }
+    }
+    
+    func getReviews(completed: @escaping() -> Void) {
+        let reviewsPath: String = path + movieId + "/reviews?"
+        apiHandler.getJson(type: Reviews.self, path: reviewsPath, query: query) { reviews in
+            if reviews.results.isEmpty {
+                let enQurey: [String: String] = ["api_key": APIKEY, "language": "en-US"]
+                self.apiHandler.getJson(type: Reviews.self, path: reviewsPath, query: enQurey) { reviews in
+                    MovieDetailViewModel.reviews = reviews
+                    print("en")
+                    completed()
+                }
+            } else {
+                MovieDetailViewModel.reviews = reviews
+                print("ko")
+                completed()
+            }
         }
     }
     
