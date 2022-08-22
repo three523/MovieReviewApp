@@ -18,6 +18,7 @@ class ImageLoader {
     private let shared: URLSession = URLSession.shared
     private let baseUrlString: String = "https://image.tmdb.org/t/p"
     private let cacheImages = NSCache<NSURL, UIImage>()
+    public static let loader: ImageLoader = ImageLoader()
     
     private func getImage(path: String, completed: @escaping (UIImage) -> Void) {
         guard let url: URL = URL(string: "\(baseUrlString)\(path)") else { return }
