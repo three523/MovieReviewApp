@@ -207,6 +207,17 @@ extension MovieDetailViewController: UITableViewDelegate, UITableViewDataSource,
             btn.setTitleColor(.systemPink, for: .highlighted)
             btn.setTitleColor(.black, for: .normal)
             
+            if section == 2 {
+                let ActorDirectorPresent: UIAction = UIAction { _ in
+                    let vc: UIViewController = ActorDirectorViewController()
+                    vc.modalPresentationStyle = .fullScreen
+                    self.present(vc, animated: true)
+                }
+                btn.addAction(ActorDirectorPresent, for: .touchUpInside)
+            } else {
+                //
+            }
+            
             return btn
         }
         
