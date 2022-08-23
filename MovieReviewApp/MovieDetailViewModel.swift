@@ -15,6 +15,7 @@ class MovieDetailViewModel {
     static var credits: Credits? = nil
     static var movieReleaseDate: MovieReleaseDate? = nil
     static var reviews: Reviews? = nil
+    static var similarMovies: SimilarMovies? = nil
     private let imageLoader: ImageLoader = ImageLoader()
     private var query: [String: String] = ["api_key": APIKEY, "language": "ko"]
     private var path: String = "movie/"
@@ -64,6 +65,14 @@ class MovieDetailViewModel {
                 print("ko")
                 completed()
             }
+        }
+    }
+    
+    func getSimilarMovies(completed: @escaping() -> Void) {
+        let similarPath: String = path + movieId + "/similar?"
+        apiHandler.getJson(type: SimilarMovies.self, path: similarPath, query: query) { similarMovies in
+            MovieDetailViewModel.similarMovies = similarMovies
+            completed()
         }
     }
     

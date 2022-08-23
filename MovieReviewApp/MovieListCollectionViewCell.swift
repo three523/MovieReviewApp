@@ -36,6 +36,9 @@ class MovieListCollectionViewCell: MovieDetailCollectionViewCell {
         contentView.addSubview(movieTitleLabel)
         contentView.addSubview(movieScoreLable)
         
+        moviePoster.clipsToBounds = true
+        moviePoster.layer.cornerRadius = 10
+        
         moviePoster.translatesAutoresizingMaskIntoConstraints = false
         moviePoster.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
         moviePoster.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true

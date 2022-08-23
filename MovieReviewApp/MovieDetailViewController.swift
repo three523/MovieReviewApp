@@ -62,6 +62,12 @@ class MovieDetailViewController: UIViewController {
             }
         }
         
+        detailViewModel.getSimilarMovies {
+            DispatchQueue.main.async {
+                self.movieDetailTableView.reloadData()
+            }
+        }
+        
         movieDetailTableView.tableHeaderView = header
         
         movieDetailTableView.delegate = self
@@ -182,6 +188,9 @@ extension MovieDetailViewController: UITableViewDelegate, UITableViewDataSource,
             commentCell.usernameLabel.text = review.authorDetails.username
             commentCell.commentLabel.text = review.content
             return commentCell
+        } else if indexPath.section == 4 {
+            let similarCell: SimilarTableViewCell = SimilarTableViewCell(style: .default, reuseIdentifier: SimilarTableViewCell.identifier)
+            return similarCell
         }
         return cell
     }

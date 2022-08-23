@@ -41,6 +41,8 @@
 		18C3C67828AF5879002C2D38 /* ReleaseDates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C3C67728AF5879002C2D38 /* ReleaseDates.swift */; };
 		18C584A12889817800C58278 /* SearchingTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C584A02889817800C58278 /* SearchingTableViewController.swift */; };
 		18C8026728ACCD9D0080B31E /* MovieCommentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C8026628ACCD9C0080B31E /* MovieCommentViewController.swift */; };
+		18CEB15028B473EE0067D598 /* SimilarTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18CEB14F28B473EE0067D598 /* SimilarTableViewCell.swift */; };
+		18CEB15428B477E70067D598 /* SimilarMovie.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18CEB15328B477E70067D598 /* SimilarMovie.swift */; };
 		18E17961287805790060BCD9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18E17960287805790060BCD9 /* AppDelegate.swift */; };
 		18E17963287805790060BCD9 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18E17962287805790060BCD9 /* SceneDelegate.swift */; };
 		18E17965287805790060BCD9 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18E17964287805790060BCD9 /* TabBarController.swift */; };
@@ -83,6 +85,8 @@
 		18C3C67728AF5879002C2D38 /* ReleaseDates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReleaseDates.swift; sourceTree = "<group>"; };
 		18C584A02889817800C58278 /* SearchingTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchingTableViewController.swift; sourceTree = "<group>"; };
 		18C8026628ACCD9C0080B31E /* MovieCommentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieCommentViewController.swift; sourceTree = "<group>"; };
+		18CEB14F28B473EE0067D598 /* SimilarTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimilarTableViewCell.swift; sourceTree = "<group>"; };
+		18CEB15328B477E70067D598 /* SimilarMovie.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimilarMovie.swift; sourceTree = "<group>"; };
 		18E1795D287805790060BCD9 /* MovieReviewApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MovieReviewApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		18E17960287805790060BCD9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		18E17962287805790060BCD9 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -140,6 +144,7 @@
 			isa = PBXGroup;
 			children = (
 				18A2F72F287EC8F400CA9947 /* Movie.swift */,
+				18CEB15328B477E70067D598 /* SimilarMovie.swift */,
 				18AC2992287FA6990043B812 /* HomeViewModel.swift */,
 				18C018CA288682D400E6AE2C /* ReviewFilterViewModel.swift */,
 				18A4DBD8289955B400FBC346 /* MovieDetailViewModel.swift */,
@@ -157,6 +162,7 @@
 				18C3C67328AF36DB002C2D38 /* MovieDefaultInfoCollectionViewCell.swift */,
 				18BF66D628B3833C00AE492D /* CreditsSummaryTableViewCell.swift */,
 				18BF66DE28B3BE7A00AE492D /* CommentTableViewCell.swift */,
+				18CEB14F28B473EE0067D598 /* SimilarTableViewCell.swift */,
 			);
 			name = Cell;
 			sourceTree = "<group>";
@@ -277,6 +283,7 @@
 				18C3C67628AF48E6002C2D38 /* Credits.swift in Sources */,
 				18ABB6592891319100BACD73 /* MovieDetailHeaderView.swift in Sources */,
 				18BF66DB28B3A26200AE492D /* TableFooterView.swift in Sources */,
+				18CEB15028B473EE0067D598 /* SimilarTableViewCell.swift in Sources */,
 				18C8026728ACCD9D0080B31E /* MovieCommentViewController.swift in Sources */,
 				18C584A12889817800C58278 /* SearchingTableViewController.swift in Sources */,
 				184272C3287D691E004E1C9E /* SearchViewController.swift in Sources */,
@@ -299,6 +306,7 @@
 				18C018CB288682D400E6AE2C /* ReviewFilterViewModel.swift in Sources */,
 				18A82FBE2881006C00791B03 /* FilterHeaderView.swift in Sources */,
 				18E17963287805790060BCD9 /* SceneDelegate.swift in Sources */,
+				18CEB15428B477E70067D598 /* SimilarMovie.swift in Sources */,
 				18A2F72D287EC86F00CA9947 /* APIKEY.swift in Sources */,
 				18A3B7A9289A1A11002709EB /* MovieDetailCell.swift in Sources */,
 				18BF66DD28B3B97A00AE492D /* Reviews.swift in Sources */,
