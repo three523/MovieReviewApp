@@ -7,9 +7,9 @@
 
 import UIKit
 
-class CommentTableViewCell: UITableViewCell {
+class ReviewTableViewCell: UITableViewCell {
     
-    static let identifier: String = "\(CommentTableViewCell.self)"
+    static let identifier: String = "\(ReviewTableViewCell.self)"
     let ratingView: UIView = UIView()
     let usernameLabel: UILabel = {
         let label: UILabel = UILabel()
@@ -48,8 +48,12 @@ class CommentTableViewCell: UITableViewCell {
         avatarImageView.translatesAutoresizingMaskIntoConstraints = false
         avatarImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -5).isActive = true
         avatarImageView.centerYAnchor.constraint(equalTo: usernameLabel.centerYAnchor).isActive = true
-        avatarImageView.heightAnchor.constraint(equalToConstant: 15).isActive = true
-        avatarImageView.widthAnchor.constraint(equalToConstant: 15).isActive = true
+        avatarImageView.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        avatarImageView.widthAnchor.constraint(equalToConstant: 30).isActive = true
+        
+        avatarImageView.layoutIfNeeded()
+        avatarImageView.clipsToBounds = true
+        avatarImageView.layer.cornerRadius = avatarImageView.frame.height / 2
         
         commentLabel.translatesAutoresizingMaskIntoConstraints = false
         

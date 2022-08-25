@@ -16,7 +16,7 @@ class TabBarController: UITabBarController {
         
         let vc1 = HomeViewController()
         let vc2 = SearchViewController()
-        let vc3 = ReviewViewController()
+        let vc3 = RatingViewController()
         let vc4 = MyProfileViewController()
         
         let vc5 = UINavigationController(rootViewController: vc2)

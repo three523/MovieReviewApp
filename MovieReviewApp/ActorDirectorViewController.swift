@@ -87,7 +87,7 @@ extension ActorDirectorViewController: UITableViewDelegate, UITableViewDataSourc
             guard let director = director else { return cell }
             cell.nameLabel.text = director.name
             guard let profilePath = director.profilePath else { return cell }
-            ImageLoader.loader.imageLoad(stringUrl: profilePath, size: .poster) { image in
+            ImageLoader.loader.tmdbImageLoad(stringUrl: profilePath, size: .poster) { image in
                 DispatchQueue.main.async {
                     cell.posterImageView.image = image
                 }
@@ -99,7 +99,7 @@ extension ActorDirectorViewController: UITableViewDelegate, UITableViewDataSourc
                 cell.nameLabel.text = cast.name
                 cell.subtitleLabel.text = cast.character
                 guard let profilePath = cast.profilePath else { return cell }
-                ImageLoader.loader.imageLoad(stringUrl: profilePath, size: .poster) { image in
+                ImageLoader.loader.tmdbImageLoad(stringUrl: profilePath, size: .poster) { image in
                     DispatchQueue.main.async {
                         cell.posterImageView.image = image
                     }

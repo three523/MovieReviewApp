@@ -54,7 +54,7 @@ class SimilarTableViewCell: UITableViewCell, UICollectionViewDelegate, UICollect
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         guard let similarMoviesCount = MovieDetailViewModel.similarMovies?.results.count else { return 0 }
-        return similarMoviesCount
+        return similarMoviesCount > 9 ? 9 : similarMoviesCount
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -68,7 +68,7 @@ class SimilarTableViewCell: UITableViewCell, UICollectionViewDelegate, UICollect
             cell.movieTitleLabel.text = similarMovie.title
             cell.movieScoreLable.text = "\(similarMovie.voteAverage)"
             
-            ImageLoader.loader.imageLoad(stringUrl: similarMovie.posterPath, size: .poster) { posterImage in
+            ImageLoader.loader.tmdbImageLoad(stringUrl: similarMovie.posterPath, size: .poster) { posterImage in
                 DispatchQueue.main.async {
                     cell.moviePoster.image = posterImage
                 }
