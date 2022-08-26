@@ -282,6 +282,32 @@ extension MovieDetailViewController: UITableViewDelegate, UITableViewDataSource,
             let commentVC: UIViewController = MovieCommentViewController()
             commentVC.modalPresentationStyle = .fullScreen
             present(commentVC, animated: true)
+        } else if indexPath.section == 2 {
+            guard let credits = MovieDetailViewModel.credits else { return }
+            let personVC: PersonDetailViewController = PersonDetailViewController()
+            personVC.modalPresentationStyle = .fullScreen
+            if indexPath.row == 0 {
+                guard let director = credits.crew.filter({ crew in crew.job == "Director" }).first else { return }
+                personVC.personId = "\(director.id)"
+                personVC.name = director.name
+                personVC.job = director.job
+                if let profilePath = director.profilePath {
+                    ImageLoader.loader.tmdbImageLoad(stringUrl: profilePath, size: .poster) { profileImage in
+                        personVC.profileImageView.image = profileImage
+                    }
+                }
+            } else {
+                let cast: Cast = credits.cast[indexPath.row]
+                personVC.personId = "\(cast.id)"
+                personVC.name = cast.name
+                personVC.job = "배우"
+                if let profilePath = cast.profilePath {
+                    ImageLoader.loader.tmdbImageLoad(stringUrl: profilePath, size: .poster) { profileImage in
+                        personVC.profileImageView.image = profileImage
+                    }
+                }
+            }
+            self.present(personVC, animated: true)
         }
     }
     
