@@ -63,7 +63,7 @@ class MovieListCollectionViewCell: MovieDetailCollectionViewCell {
             return
         }
         
-        ImageLoader().imageLoad(stringUrl: movie.posterPath, size: .poster) { image in
+        ImageLoader().tmdbImageLoad(stringUrl: movie.posterPath, size: .poster) { image in
             DispatchQueue.main.async {
                 self.moviePoster.image = image
             }

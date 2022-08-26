@@ -74,7 +74,7 @@ class MovieDetailViewController: UIViewController {
         movieDetailTableView.dataSource = self
         
         movieDetailTableView.register(CreditsSummaryTableViewCell.self, forCellReuseIdentifier: CreditsSummaryTableViewCell.identifier)
-        movieDetailTableView.register(CommentTableViewCell.self, forCellReuseIdentifier: CommentTableViewCell.identifier)
+        movieDetailTableView.register(ReviewTableViewCell.self, forCellReuseIdentifier: ReviewTableViewCell.identifier)
         
         movieDetailTableView.sectionHeaderTopPadding = 10
         movieDetailTableView.rowHeight = UITableView.automaticDimension
@@ -162,7 +162,7 @@ extension MovieDetailViewController: UITableViewDelegate, UITableViewDataSource,
                 directorActorCell.nameLabel.text = director.name
                 directorActorCell.jobLabel.text = director.job
                 guard let profilePath = director.profilePath else { return directorActorCell }
-                ImageLoader.loader.imageLoad(stringUrl: profilePath, size: .poster) { profileImage in
+                ImageLoader.loader.tmdbImageLoad(stringUrl: profilePath, size: .poster) { profileImage in
                     DispatchQueue.main.async {
                         directorActorCell.profileImageView.image = profileImage
                     }
@@ -173,21 +173,26 @@ extension MovieDetailViewController: UITableViewDelegate, UITableViewDataSource,
                 directorActorCell.nameLabel.text = cast.name
                 directorActorCell.jobLabel.text = "배우 | \(cast.character)"
                 guard let profilePath = cast.profilePath else { return directorActorCell }
-                ImageLoader.loader.imageLoad(stringUrl: profilePath, size: .poster) { profileImage in
+                ImageLoader.loader.tmdbImageLoad(stringUrl: profilePath, size: .poster) { profileImage in
                     DispatchQueue.main.async {
                         directorActorCell.profileImageView.image = profileImage
                     }
                 }
             }
-            
             return directorActorCell
         } else if indexPath.section == 3 {
-            guard let commentCell: CommentTableViewCell = tableView.dequeueReusableCell(withIdentifier: CommentTableViewCell.identifier, for: indexPath) as? CommentTableViewCell else { return cell }
+            guard let reviewCell: ReviewTableViewCell = tableView.dequeueReusableCell(withIdentifier: ReviewTableViewCell.identifier, for: indexPath) as? ReviewTableViewCell else { return cell }
             guard let reviews = MovieDetailViewModel.reviews?.results else { return cell }
             let review: Review = reviews[indexPath.row]
-            commentCell.usernameLabel.text = review.authorDetails.username
-            commentCell.commentLabel.text = review.content
-            return commentCell
+            reviewCell.usernameLabel.text = review.authorDetails.username
+            reviewCell.commentLabel.text = review.content
+            guard let avatarPath: String = review.authorDetails.avatarPath else { return cell }
+            ImageLoader.loader.profileImage(stringURL: avatarPath, size: .poster) { avatarImage in
+                DispatchQueue.main.async {
+                    reviewCell.avatarImageView.image = avatarImage
+                }
+            }
+            return reviewCell
         } else if indexPath.section == 4 {
             let similarCell: SimilarTableViewCell = SimilarTableViewCell(style: .default, reuseIdentifier: SimilarTableViewCell.identifier)
             return similarCell
@@ -203,9 +208,25 @@ extension MovieDetailViewController: UITableViewDelegate, UITableViewDataSource,
             
             btn.setTitle("모두 보기", for: .normal)
             btn.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
-            btn.backgroundColor = .lightGray
+            btn.backgroundColor = .systemGray5
             btn.setTitleColor(.systemPink, for: .highlighted)
             btn.setTitleColor(.black, for: .normal)
+            
+            if section == 2 {
+                let ActorDirectorPresentAction: UIAction = UIAction { _ in
+                    let vc: UIViewController = ActorDirectorViewController()
+                    vc.modalPresentationStyle = .fullScreen
+                    self.present(vc, animated: true)
+                }
+                btn.addAction(ActorDirectorPresentAction, for: .touchUpInside)
+            } else {
+                let commentPresentAction: UIAction = UIAction { _ in
+                    let vc: UIViewController = ReviewViewController()
+                    vc.modalPresentationStyle = .fullScreen
+                    self.present(vc, animated: true)
+                }
+                btn.addAction(commentPresentAction, for: .touchUpInside)
+            }
             
             return btn
         }
@@ -261,6 +282,32 @@ extension MovieDetailViewController: UITableViewDelegate, UITableViewDataSource,
             let commentVC: UIViewController = MovieCommentViewController()
             commentVC.modalPresentationStyle = .fullScreen
             present(commentVC, animated: true)
+        } else if indexPath.section == 2 {
+            guard let credits = MovieDetailViewModel.credits else { return }
+            let personVC: PersonDetailViewController = PersonDetailViewController()
+            personVC.modalPresentationStyle = .fullScreen
+            if indexPath.row == 0 {
+                guard let director = credits.crew.filter({ crew in crew.job == "Director" }).first else { return }
+                personVC.personId = "\(director.id)"
+                personVC.name = director.name
+                personVC.job = director.job
+                if let profilePath = director.profilePath {
+                    ImageLoader.loader.tmdbImageLoad(stringUrl: profilePath, size: .poster) { profileImage in
+                        personVC.profileImageView.image = profileImage
+                    }
+                }
+            } else {
+                let cast: Cast = credits.cast[indexPath.row]
+                personVC.personId = "\(cast.id)"
+                personVC.name = cast.name
+                personVC.job = "배우"
+                if let profilePath = cast.profilePath {
+                    ImageLoader.loader.tmdbImageLoad(stringUrl: profilePath, size: .poster) { profileImage in
+                        personVC.profileImageView.image = profileImage
+                    }
+                }
+            }
+            self.present(personVC, animated: true)
         }
     }
     

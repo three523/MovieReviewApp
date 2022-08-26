@@ -86,7 +86,7 @@ class MovieDetailViewModel {
             print("movieDetail or backdropPath is nil")
             return
         }
-        imageLoader.imageLoad(stringUrl: backdropImageUrl, size: .bacdrop) { backdropImage in
+        imageLoader.tmdbImageLoad(stringUrl: backdropImageUrl, size: .bacdrop) { backdropImage in
             completed(backdropImage)
         }
     }
@@ -97,7 +97,7 @@ class MovieDetailViewModel {
             print("movieDetail or posterPath is nil")
             return
         }
-        imageLoader.imageLoad(stringUrl: posterImageUrl, size: .poster) { posterImage in
+        imageLoader.tmdbImageLoad(stringUrl: posterImageUrl, size: .poster) { posterImage in
             completed(posterImage)
         }
     }

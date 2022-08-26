@@ -7,9 +7,9 @@
 
 import UIKit
 
-class CommentTableViewCell: UITableViewCell {
+class ReviewTableViewCell: UITableViewCell {
     
-    static let identifier: String = "\(CommentTableViewCell.self)"
+    static let identifier: String = "\(ReviewTableViewCell.self)"
     let ratingView: UIView = UIView()
     let usernameLabel: UILabel = {
         let label: UILabel = UILabel()
@@ -41,18 +41,23 @@ class CommentTableViewCell: UITableViewCell {
         contentView.addSubview(moreButton)
         
         usernameLabel.translatesAutoresizingMaskIntoConstraints = false
-        usernameLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10).isActive = true
+        usernameLabel.centerYAnchor.constraint(equalTo: avatarImageView.centerYAnchor).isActive = true
         usernameLabel.trailingAnchor.constraint(equalTo: avatarImageView.leadingAnchor, constant: -5).isActive = true
-        usernameLabel.bottomAnchor.constraint(equalTo: commentLabel.topAnchor, constant: -10).isActive = true
         
         avatarImageView.translatesAutoresizingMaskIntoConstraints = false
+        avatarImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10).isActive = true
         avatarImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -5).isActive = true
-        avatarImageView.centerYAnchor.constraint(equalTo: usernameLabel.centerYAnchor).isActive = true
-        avatarImageView.heightAnchor.constraint(equalToConstant: 15).isActive = true
-        avatarImageView.widthAnchor.constraint(equalToConstant: 15).isActive = true
+        let heightAnchor: NSLayoutConstraint = avatarImageView.heightAnchor.constraint(equalToConstant: 30)
+        heightAnchor.priority = UILayoutPriority(999)
+        heightAnchor.isActive = true
+        avatarImageView.widthAnchor.constraint(equalTo: avatarImageView.heightAnchor).isActive = true
+        
+        avatarImageView.layoutIfNeeded()
+        avatarImageView.clipsToBounds = true
+        avatarImageView.layer.cornerRadius = avatarImageView.frame.height / 2
         
         commentLabel.translatesAutoresizingMaskIntoConstraints = false
-        
+        commentLabel.topAnchor.constraint(equalTo: avatarImageView.bottomAnchor, constant: 5).isActive = true
         commentLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10).isActive = true
         commentLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10).isActive = true
         commentLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10).isActive = true
