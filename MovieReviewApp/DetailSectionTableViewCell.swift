@@ -81,8 +81,8 @@ class DetailSectionTableViewCell: UITableViewCell {
         case .overCell:
             return
         case .movieInfoCell:
-            let overViewLabel: UILabel = UILabel()
-            overViewLabel.lineBreakMode = .byClipping
+            let overViewLabel: MoreButtonLabel = MoreButtonLabel()
+            overViewLabel.numberOfLines = 3
             return
         case .movieInfoStackCell:
             let movieInfoStackView: MovieInfoStackView = MovieInfoStackView(frame: .zero, textListCount: 6)

@@ -34,6 +34,7 @@ class MovieDetailViewController: UIViewController {
         
         movieDetailTableView.rowHeight = UITableView.automaticDimension
         movieDetailTableView.estimatedRowHeight = 70
+        movieDetailTableView.register(OverviewTableViewCell.self, forCellReuseIdentifier: OverviewTableViewCell.identifier)
         
         detailViewModel.getMovieDetail {
             DispatchQueue.main.async {
@@ -88,7 +89,7 @@ class MovieDetailViewController: UIViewController {
     }
 }
 
-extension MovieDetailViewController: UITableViewDelegate, UITableViewDataSource, AddExpectationsProtocol {
+extension MovieDetailViewController: UITableViewDelegate, UITableViewDataSource, AddExpectationsProtocol, ReadmoreDelegate {
     
     func numberOfSections(in tableView: UITableView) -> Int {
         return 5
@@ -132,6 +133,10 @@ extension MovieDetailViewController: UITableViewDelegate, UITableViewDataSource,
                 var config = cell.defaultContentConfiguration()
                 config.text = detailMovie.overview
                 cell.contentConfiguration = config
+                guard let overviewCell = tableView.dequeueReusableCell(withIdentifier: OverviewTableViewCell.identifier, for: indexPath) as? OverviewTableViewCell else { return cell }
+                overviewCell.overviewLabel.text = detailMovie.overview
+                overviewCell.delegate = self
+                return overviewCell
             } else if indexPath.row == 1 {
                 let defaultInfoStackCell: DetailSectionTableViewCell = DetailSectionTableViewCell(style: .default, reuseIdentifier: DetailSectionTableViewCell.identifier, type: .movieInfoStackCell)
                 return defaultInfoStackCell
@@ -205,6 +210,12 @@ extension MovieDetailViewController: UITableViewDelegate, UITableViewDataSource,
         } else {
             return 50
         }
+    }
+    
+    func readmoreClick(label: MoreButtonLabel) {
+        movieDetailTableView.beginUpdates()
+        label.numberOfLines = 0
+        movieDetailTableView.endUpdates()
     }
     
 }

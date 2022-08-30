@@ -12,6 +12,8 @@
 		184272C5287D692B004E1C9E /* ReviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 184272C4287D692B004E1C9E /* ReviewViewController.swift */; };
 		184272C7287D6935004E1C9E /* MyProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 184272C6287D6935004E1C9E /* MyProfileViewController.swift */; };
 		184272C9287D7A30004E1C9E /* TopTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 184272C8287D7A30004E1C9E /* TopTabView.swift */; };
+		189F34B828BE5DEE00AD0A29 /* MoreButtonLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 189F34B728BE5DEE00AD0A29 /* MoreButtonLabel.swift */; };
+		189F34BA28BE5F7100AD0A29 /* OverviewTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 189F34B928BE5F7100AD0A29 /* OverviewTableViewCell.swift */; };
 		18A13F29288EA06E00A34538 /* MovieDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18A13F28288EA06E00A34538 /* MovieDetailViewController.swift */; };
 		18A2336F2892646100B1B7FB /* CustomNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18A2336E2892646100B1B7FB /* CustomNavigationBar.swift */; };
 		18A2F727287EABB000CA9947 /* HomeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18A2F726287EABB000CA9947 /* HomeTableViewCell.swift */; };
@@ -50,6 +52,8 @@
 		184272C4287D692B004E1C9E /* ReviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewViewController.swift; sourceTree = "<group>"; };
 		184272C6287D6935004E1C9E /* MyProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProfileViewController.swift; sourceTree = "<group>"; };
 		184272C8287D7A30004E1C9E /* TopTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopTabView.swift; sourceTree = "<group>"; };
+		189F34B728BE5DEE00AD0A29 /* MoreButtonLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreButtonLabel.swift; sourceTree = "<group>"; };
+		189F34B928BE5F7100AD0A29 /* OverviewTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverviewTableViewCell.swift; sourceTree = "<group>"; };
 		18A13F28288EA06E00A34538 /* MovieDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDetailViewController.swift; sourceTree = "<group>"; };
 		18A2336E2892646100B1B7FB /* CustomNavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomNavigationBar.swift; sourceTree = "<group>"; };
 		18A2F726287EABB000CA9947 /* HomeTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTableViewCell.swift; sourceTree = "<group>"; };
@@ -123,6 +127,7 @@
 				18ABB6582891319100BACD73 /* MovieDetailHeaderView.swift */,
 				18A2336E2892646100B1B7FB /* CustomNavigationBar.swift */,
 				18ABB8072897C37200E8AF7B /* MovieDetailSectionView.swift */,
+				189F34B728BE5DEE00AD0A29 /* MoreButtonLabel.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -145,6 +150,7 @@
 			children = (
 				18BA247728A1074C0024B913 /* DetailSectionTableViewCell.swift */,
 				18C3C67328AF36DB002C2D38 /* MovieDefaultInfoCollectionViewCell.swift */,
+				189F34B928BE5F7100AD0A29 /* OverviewTableViewCell.swift */,
 			);
 			name = Cell;
 			sourceTree = "<group>";
@@ -260,6 +266,7 @@
 				184272C9287D7A30004E1C9E /* TopTabView.swift in Sources */,
 				18AC2995287FB35C0043B812 /* ImageLoader.swift in Sources */,
 				18A2F729287EABEA00CA9947 /* MovieListCollectionViewCell.swift in Sources */,
+				189F34BA28BE5F7100AD0A29 /* OverviewTableViewCell.swift in Sources */,
 				18C3C67828AF5879002C2D38 /* ReleaseDates.swift in Sources */,
 				18A13F29288EA06E00A34538 /* MovieDetailViewController.swift in Sources */,
 				18C3C67628AF48E6002C2D38 /* Credits.swift in Sources */,
@@ -275,6 +282,7 @@
 				18C018C92886801300E6AE2C /* MovieGenres.swift in Sources */,
 				18E17961287805790060BCD9 /* AppDelegate.swift in Sources */,
 				18C3C67428AF36DB002C2D38 /* MovieDefaultInfoCollectionViewCell.swift in Sources */,
+				189F34B828BE5DEE00AD0A29 /* MoreButtonLabel.swift in Sources */,
 				18A2F730287EC8F400CA9947 /* Movie.swift in Sources */,
 				18AC2993287FA6990043B812 /* HomeViewModel.swift in Sources */,
 				18A4DBD9289955B400FBC346 /* MovieDetailViewModel.swift in Sources */,
