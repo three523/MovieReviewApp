@@ -67,6 +67,8 @@ class CustomNavigationBar: UIView {
         self.addSubview(titleLabel)
         self.addSubview(rightButton)
         self.layer.addSublayer(bottomBorder)
+        
+        print(titleLabel.isHidden)
     }
     
     private func autoLayoutSetting() {
@@ -121,5 +123,12 @@ class CustomNavigationBar: UIView {
     
     public func rightButtonPadding(insets: UIEdgeInsets) {
         rightButton.contentEdgeInsets = insets
+    }
+    
+    public func isStickyEnable(enable: Bool) {
+        if !enable {
+            titleLabel.isHidden = false
+            bottomBorder.isHidden = false
+        }
     }
 }

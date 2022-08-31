@@ -60,10 +60,27 @@ class MovieDetailViewController: UIViewController {
             }
         }
         
+        detailViewModel.getReviews {
+            DispatchQueue.main.async {
+                self.movieDetailTableView.reloadData()
+            }
+        }
+        
+        detailViewModel.getSimilarMovies {
+            DispatchQueue.main.async {
+                self.movieDetailTableView.reloadData()
+            }
+        }
+        
         movieDetailTableView.tableHeaderView = header
         
         movieDetailTableView.delegate = self
         movieDetailTableView.dataSource = self
+        
+        movieDetailTableView.register(CreditsSummaryTableViewCell.self, forCellReuseIdentifier: CreditsSummaryTableViewCell.identifier)
+        movieDetailTableView.register(ReviewTableViewCell.self, forCellReuseIdentifier: ReviewTableViewCell.identifier)
+        
+        movieDetailTableView.sectionHeaderTopPadding = 10
         movieDetailTableView.rowHeight = UITableView.automaticDimension
         movieDetailTableView.estimatedRowHeight = 50
         
@@ -78,6 +95,7 @@ class MovieDetailViewController: UIViewController {
         stickyView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         stickyView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         stickyView.heightAnchor.constraint(equalToConstant: 50).isActive = true
+                
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -102,7 +120,10 @@ extension MovieDetailViewController: UITableViewDelegate, UITableViewDataSource,
         case 0: return count
         case 1: return 2
         case 2: return 3
-        case 3: return 4
+        case 3:
+            guard let reviews = MovieDetailViewModel.reviews?.results else { return 0 }
+            if reviews.count > 3 { return 3 }
+            else { return reviews.count }
         case 4: return 1
         default: return 0
             
@@ -110,7 +131,7 @@ extension MovieDetailViewController: UITableViewDelegate, UITableViewDataSource,
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        var cell = UITableViewCell()
+        let cell = UITableViewCell()
         if indexPath.section == 0 {
             let rowCount = tableView.numberOfRows(inSection: 0)
             if indexPath.row == 0 && rowCount == 2 {
@@ -141,8 +162,91 @@ extension MovieDetailViewController: UITableViewDelegate, UITableViewDataSource,
                 let defaultInfoStackCell: DetailSectionTableViewCell = DetailSectionTableViewCell(style: .default, reuseIdentifier: DetailSectionTableViewCell.identifier, type: .movieInfoStackCell)
                 return defaultInfoStackCell
             }
+        } else if indexPath.section == 2 {
+            guard let directorActorCell: CreditsSummaryTableViewCell = tableView.dequeueReusableCell(withIdentifier: CreditsSummaryTableViewCell.identifier, for: indexPath) as? CreditsSummaryTableViewCell else { return cell }
+            
+            if indexPath.row == 0 {
+                guard let director: Crew = MovieDetailViewModel.credits?.crew.filter({ crew in crew.job == "Director" }).first else { return cell }
+                directorActorCell.nameLabel.text = director.name
+                directorActorCell.jobLabel.text = director.job
+                guard let profilePath = director.profilePath else { return directorActorCell }
+                ImageLoader.loader.tmdbImageLoad(stringUrl: profilePath, size: .poster) { profileImage in
+                    DispatchQueue.main.async {
+                        directorActorCell.profileImageView.image = profileImage
+                    }
+                }
+            } else {
+                guard let casts: [Cast] = MovieDetailViewModel.credits?.cast else { return cell }
+                let cast: Cast = casts[indexPath.row]
+                directorActorCell.nameLabel.text = cast.name
+                directorActorCell.jobLabel.text = "배우 | \(cast.character)"
+                guard let profilePath = cast.profilePath else { return directorActorCell }
+                ImageLoader.loader.tmdbImageLoad(stringUrl: profilePath, size: .poster) { profileImage in
+                    DispatchQueue.main.async {
+                        directorActorCell.profileImageView.image = profileImage
+                    }
+                }
+            }
+            return directorActorCell
+        } else if indexPath.section == 3 {
+            guard let reviewCell: ReviewTableViewCell = tableView.dequeueReusableCell(withIdentifier: ReviewTableViewCell.identifier, for: indexPath) as? ReviewTableViewCell else { return cell }
+            guard let reviews = MovieDetailViewModel.reviews?.results else { return cell }
+            let review: Review = reviews[indexPath.row]
+            reviewCell.usernameLabel.text = review.authorDetails.username
+            reviewCell.commentLabel.text = review.content
+            guard let avatarPath: String = review.authorDetails.avatarPath else { return cell }
+            ImageLoader.loader.profileImage(stringURL: avatarPath, size: .poster) { avatarImage in
+                DispatchQueue.main.async {
+                    reviewCell.avatarImageView.image = avatarImage
+                }
+            }
+            return reviewCell
+        } else if indexPath.section == 4 {
+            let similarCell: SimilarTableViewCell = SimilarTableViewCell(style: .default, reuseIdentifier: SimilarTableViewCell.identifier)
+            return similarCell
         }
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        
+        if section == 2 || section == 3 {
+            
+            let btn: UIButton = UIButton()
+            
+            btn.setTitle("모두 보기", for: .normal)
+            btn.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
+            btn.backgroundColor = .systemGray5
+            btn.setTitleColor(.systemPink, for: .highlighted)
+            btn.setTitleColor(.black, for: .normal)
+            
+            if section == 2 {
+                let ActorDirectorPresentAction: UIAction = UIAction { _ in
+                    let vc: UIViewController = ActorDirectorViewController()
+                    vc.modalPresentationStyle = .fullScreen
+                    self.present(vc, animated: true)
+                }
+                btn.addAction(ActorDirectorPresentAction, for: .touchUpInside)
+            } else {
+                let commentPresentAction: UIAction = UIAction { _ in
+                    let vc: UIViewController = ReviewViewController()
+                    vc.modalPresentationStyle = .fullScreen
+                    self.present(vc, animated: true)
+                }
+                btn.addAction(commentPresentAction, for: .touchUpInside)
+            }
+            
+            return btn
+        }
+        
+        return nil
+    }
+    
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        if section == 2 || section == 3 {
+            return 50
+        }
+        return 0
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -165,7 +269,12 @@ extension MovieDetailViewController: UITableViewDelegate, UITableViewDataSource,
             let sectionView: MovieDetailSectionView = MovieDetailSectionView(frame: defaultFrame, sectionType: .defaultSection, textList: ["출연/제작"])
             return sectionView
         case 3:
-            let textList: [String] = ["코멘트","\(movieDetail.voteCount)"]
+            var textList: [String] = ["코멘트"]
+            guard let commentCount = MovieDetailViewModel.reviews?.results.count else {
+                textList.append("0")
+                return MovieDetailSectionView(frame: defaultFrame, sectionType: .twoLabelSection, textList: textList)
+            }
+            textList.append("\(commentCount)")
             let sectionView: MovieDetailSectionView = MovieDetailSectionView(frame: defaultFrame, sectionType: .twoLabelSection, textList: textList)
             return sectionView
         case 4:
@@ -181,6 +290,32 @@ extension MovieDetailViewController: UITableViewDelegate, UITableViewDataSource,
             let commentVC: UIViewController = MovieCommentViewController()
             commentVC.modalPresentationStyle = .fullScreen
             present(commentVC, animated: true)
+        } else if indexPath.section == 2 {
+            guard let credits = MovieDetailViewModel.credits else { return }
+            let personVC: PersonDetailViewController = PersonDetailViewController()
+            personVC.modalPresentationStyle = .fullScreen
+            if indexPath.row == 0 {
+                guard let director = credits.crew.filter({ crew in crew.job == "Director" }).first else { return }
+                personVC.personId = "\(director.id)"
+                personVC.name = director.name
+                personVC.job = director.job
+                if let profilePath = director.profilePath {
+                    ImageLoader.loader.tmdbImageLoad(stringUrl: profilePath, size: .poster) { profileImage in
+                        personVC.profileImageView.image = profileImage
+                    }
+                }
+            } else {
+                let cast: Cast = credits.cast[indexPath.row]
+                personVC.personId = "\(cast.id)"
+                personVC.name = cast.name
+                personVC.job = "배우"
+                if let profilePath = cast.profilePath {
+                    ImageLoader.loader.tmdbImageLoad(stringUrl: profilePath, size: .poster) { profileImage in
+                        personVC.profileImageView.image = profileImage
+                    }
+                }
+            }
+            self.present(personVC, animated: true)
         }
     }
     

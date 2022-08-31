@@ -14,6 +14,8 @@ class MovieDetailViewModel {
     static var movieDetail: MovieDetail? = nil
     static var credits: Credits? = nil
     static var movieReleaseDate: MovieReleaseDate? = nil
+    static var reviews: Reviews? = nil
+    static var similarMovies: SimilarMovies? = nil
     private let imageLoader: ImageLoader = ImageLoader()
     private var query: [String: String] = ["api_key": APIKEY, "language": "ko"]
     private var path: String = "movie/"
@@ -48,6 +50,32 @@ class MovieDetailViewModel {
         }
     }
     
+    func getReviews(completed: @escaping() -> Void) {
+        let reviewsPath: String = path + movieId + "/reviews?"
+        apiHandler.getJson(type: Reviews.self, path: reviewsPath, query: query) { reviews in
+            if reviews.results.isEmpty {
+                let enQurey: [String: String] = ["api_key": APIKEY, "language": "en-US"]
+                self.apiHandler.getJson(type: Reviews.self, path: reviewsPath, query: enQurey) { reviews in
+                    MovieDetailViewModel.reviews = reviews
+                    print("en")
+                    completed()
+                }
+            } else {
+                MovieDetailViewModel.reviews = reviews
+                print("ko")
+                completed()
+            }
+        }
+    }
+    
+    func getSimilarMovies(completed: @escaping() -> Void) {
+        let similarPath: String = path + movieId + "/similar?"
+        apiHandler.getJson(type: SimilarMovies.self, path: similarPath, query: query) { similarMovies in
+            MovieDetailViewModel.similarMovies = similarMovies
+            completed()
+        }
+    }
+    
     func getMovie() -> MovieDetail? {
         return MovieDetailViewModel.movieDetail
     }
@@ -58,7 +86,7 @@ class MovieDetailViewModel {
             print("movieDetail or backdropPath is nil")
             return
         }
-        imageLoader.imageLoad(stringUrl: backdropImageUrl, size: .bacdrop) { backdropImage in
+        imageLoader.tmdbImageLoad(stringUrl: backdropImageUrl, size: .bacdrop) { backdropImage in
             completed(backdropImage)
         }
     }
@@ -69,7 +97,7 @@ class MovieDetailViewModel {
             print("movieDetail or posterPath is nil")
             return
         }
-        imageLoader.imageLoad(stringUrl: posterImageUrl, size: .poster) { posterImage in
+        imageLoader.tmdbImageLoad(stringUrl: posterImageUrl, size: .poster) { posterImage in
             completed(posterImage)
         }
     }

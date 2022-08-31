@@ -7,6 +7,7 @@
 
 import UIKit
 
+//TODO: Cell이 아님 위치및 이름 변경
 final class MovieInfoStackView: UIStackView {
     
     var maxCount: Int = 0

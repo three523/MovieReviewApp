@@ -1,231 +1,80 @@
 //
-//  ReviewViewController.swift
+//  CommentViewController.swift
 //  MovieReviewApp
 //
-//  Created by apple on 2022/07/12.
+//  Created by apple on 2022/08/23.
 //
 
 import UIKit
 
-class ReviewViewController: UIViewController, UICollectionViewDataSource,  UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
-        
-    lazy var cellMoveStackView: CellMoveStackView = {
-        let sv: CellMoveStackView = CellMoveStackView(frame: .zero, collectionView: collectionView)
-        let textList: [String] = ["영화", "드라마", "책", "웹툰"]
-        sv.addButtonList(textList: textList)
-        return sv
+class ReviewViewController: UIViewController {
+    
+    let customNavigationView: CustomNavigationBar = CustomNavigationBar()
+    let reviewFlowLayout: UICollectionViewFlowLayout = {
+        let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
+        layout.minimumLineSpacing = 10
+        return layout
     }()
-    lazy var filterHeaderView: FilterHeaderView = FilterHeaderView(frame: .zero, vc: self)
-    lazy var collectionView: UICollectionView = {
-        let flowLayout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
-        flowLayout.scrollDirection = .horizontal
-        flowLayout.minimumInteritemSpacing = 0
-        flowLayout.minimumLineSpacing = 0
-        let cv = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
-        cv.dataSource = self
-        cv.delegate = self
-        cv.register(ReviewListCVCell.self, forCellWithReuseIdentifier: ReviewListCVCell.identifier)
-        cv.isPagingEnabled = true
-        cv.showsHorizontalScrollIndicator = false
-        return cv
-    }()
-    let reviewViewModel: ReviewFilterViewModel = ReviewFilterViewModel()
+    lazy var reviewCollectionView: UICollectionView = UICollectionView(frame: .zero, collectionViewLayout: reviewFlowLayout)
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        viewSetting()
-        // Do any additional setup after loading the view.
-    }
-    
-    func viewSetting() {
+        view.addSubview(customNavigationView)
+        view.addSubview(reviewCollectionView)
         
-        view.addSubview(cellMoveStackView)
-        view.addSubview(filterHeaderView)
-        view.addSubview(collectionView)
+        reviewCollectionView.delegate = self
+        reviewCollectionView.dataSource = self
+        reviewCollectionView.register(ReviewListCollectionViewCell.self, forCellWithReuseIdentifier: ReviewListCollectionViewCell.identifier)
+        reviewCollectionView.contentInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
         
-        let safeArea = view.safeAreaLayoutGuide
+        customNavigationView.translatesAutoresizingMaskIntoConstraints = false
+        customNavigationView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+        customNavigationView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        customNavigationView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         
-        cellMoveStackView.backgroundColor = .gray
-        cellMoveStackView.translatesAutoresizingMaskIntoConstraints = false
-        cellMoveStackView.topAnchor.constraint(equalTo: safeArea.topAnchor).isActive = true
-        cellMoveStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        cellMoveStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        cellMoveStackView.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        customNavigationView.setMainTitle(title: "코멘트")
+        customNavigationView.leftButtonSetImage(image: UIImage(systemName: "chevron.backward")!)
+        let dismissAction: UIAction = UIAction { _ in self.dismiss(animated: true) }
+        customNavigationView.leftButtonAction(action: dismissAction)
+        customNavigationView.isStickyEnable(enable: false)
         
-        filterHeaderView.backgroundColor = .lightGray
-        filterHeaderView.translatesAutoresizingMaskIntoConstraints = false
-        filterHeaderView.topAnchor.constraint(equalTo: cellMoveStackView.bottomAnchor, constant: 2).isActive = true
-        filterHeaderView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        filterHeaderView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        filterHeaderView.heightAnchor.constraint(equalToConstant: 50).isActive = true
-        
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-        collectionView.topAnchor.constraint(equalTo: filterHeaderView.bottomAnchor).isActive = true
-        collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(getMovieFilterList(_:)), name: Notification.Name("MovieFilterName"), object: nil)
+        reviewCollectionView.translatesAutoresizingMaskIntoConstraints = false
+        reviewCollectionView.topAnchor.constraint(equalTo: customNavigationView.bottomAnchor).isActive = true
+        reviewCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        reviewCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        reviewCollectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         
     }
-    
-    @objc func getMovieFilterList(_ notification: Notification) {
-        guard let indexPath = notification.object as? [Int] else { return }
-        let section = indexPath[0]
-        let index = indexPath[1]
-        var findDataName = ""
-        var findDataPath = ""
-        if section == 0 {
-            findDataName = movieFilterList[index]["name"]!
-            findDataPath = movieFilterList[index]["path"]!
-        } else {
-            findDataName = genres[index]["name"]!
-            findDataPath = "discover/movie?"
-        }
-        reviewViewModel.movieList(findData: findDataName, path: findDataPath, section: section) { _ in 
-            DispatchQueue.main.async {
-                self.collectionView.reloadData()
-            }
-        }
-    }
-    
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let count = cellMoveStackView.stackViewButtonCount()
-        cellMoveStackView.barLeadingAnchor?.constant = scrollView.contentOffset.x / CGFloat(count)
-    }
-    
-    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        let index = collectionView.indexPathsForVisibleItems[0].item
-        cellMoveStackView.setButtonTitleColor(index: index)
-        
-    }
+
+}
+
+extension ReviewViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 4
+        guard let reviewCount = MovieDetailViewModel.reviews?.results.count else { return 0 }
+        return  3 < reviewCount ? 3 : reviewCount
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ReviewListCVCell.identifier, for: indexPath) as! ReviewListCVCell
-        cell.movieList = reviewViewModel.getMovieList()
-        if indexPath.item == 0 { cell.backgroundColor = .cyan }
-        else if indexPath.item == 1 { cell.backgroundColor = .green }
-        else if indexPath.item == 2 { cell.backgroundColor = .red }
-        else { cell.backgroundColor = .link }
+        guard let reviewCell = collectionView.dequeueReusableCell(withReuseIdentifier: ReviewListCollectionViewCell.identifier, for: indexPath) as? ReviewListCollectionViewCell else { return UICollectionViewCell() }
         
-        if reviewViewModel.getCount() != 0 { cell.tableViewReload() }
-        return cell
+        guard let reviews = MovieDetailViewModel.reviews?.results else { return UICollectionViewCell() }
+        let review: Review = reviews[indexPath.row]
+        reviewCell.nameLabel.text = review.authorDetails.username
+        reviewCell.contentLable.text = review.content
+        
+        guard let profilePath = review.authorDetails.avatarPath else { return reviewCell }
+        ImageLoader.loader.profileImage(stringURL: profilePath, size: .poster) { image in
+            DispatchQueue.main.async {
+                reviewCell.profileImageView.image = image
+            }
+        }
+        return reviewCell
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: collectionView.frame.width, height: collectionView.frame.height)
-    }
-
-}
-
-class ReviewListCVCell: UICollectionViewCell, UITableViewDelegate, UITableViewDataSource {
-    
-    static let identifier: String = "\(ReviewListCVCell.self)"
-    lazy var reviewListTableView: UITableView = {
-        let tb = UITableView(frame: contentView.frame, style: .plain)
-        tb.delegate = self
-        tb.dataSource = self
-        tb.register(ReviewListTBCell.self, forCellReuseIdentifier: ReviewListTBCell.identifier)
-        tb.rowHeight = 100
-        return tb
-    }()
-    var movieList: [MovieInfo]? = nil
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        contentView.addSubview(reviewListTableView)
+        return CGSize(width: collectionView.frame.width - 20, height: (view.frame.height/3.5).rounded(.down))
     }
     
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        guard let count = movieList?.count else {
-            return 0
-        }
-        return count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: ReviewListTBCell.identifier, for: indexPath) as! ReviewListTBCell
-        guard let movieList = movieList else {
-            return UITableViewCell()
-        }
-        let movieDetail = movieList[indexPath.row]
-        cell.setupViews(titleText: movieDetail.title, yearText: movieDetail.releaseDate)
-        
-        return cell
-    }
-    
-    func tableViewReload() {
-        reviewListTableView.reloadData()
-    }
-}
-
-class ReviewListTBCell: UITableViewCell {
-    static let identifier: String = "\(ReviewListTBCell.self)"
-    
-    let poster: UIImageView = UIImageView()
-    let title: UILabel = {
-        let lb = UILabel()
-        lb.textAlignment = .left
-        lb.font = UIFont(name: "AvenirNext-Medium", size: 15)
-        lb.numberOfLines = 0
-        lb.sizeToFit()
-        return lb
-    }()
-    let year: UILabel = {
-        let lb = UILabel()
-        lb.textAlignment = .left
-        lb.font = UIFont(name: "AvenirNext-Medium", size: 13)
-        lb.numberOfLines = 0
-        lb.sizeToFit()
-        return lb
-    }()
-    var movieDetail: MovieInfo? = nil
-    let starView: UIView = UIView()
-    
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    func setupViews(titleText: String, yearText: String) {
-        addSubview(poster)
-        addSubview(title)
-        addSubview(year)
-        addSubview(starView)
-        
-        poster.translatesAutoresizingMaskIntoConstraints = false
-        poster.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10).isActive = true
-        poster.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10).isActive = true
-        poster.widthAnchor.constraint(equalToConstant: 50).isActive = true
-        poster.heightAnchor.constraint(equalToConstant: 70).isActive = true
-        poster.image = UIImage(systemName: "x.circle")
-        
-        title.translatesAutoresizingMaskIntoConstraints = false
-        title.topAnchor.constraint(equalTo: poster.topAnchor).isActive = true
-        title.leadingAnchor.constraint(equalTo: poster.trailingAnchor, constant: 10).isActive = true
-        title.text = titleText
-        title.sizeToFit()
-        
-        year.translatesAutoresizingMaskIntoConstraints = false
-        year.topAnchor.constraint(equalTo: title.bottomAnchor).isActive = true
-        year.leadingAnchor.constraint(equalTo: title.leadingAnchor).isActive = true
-        year.text = yearText
-        year.sizeToFit()
-        
-        starView.translatesAutoresizingMaskIntoConstraints = false
-        starView.topAnchor.constraint(equalTo: year.bottomAnchor).isActive = true
-        starView.leadingAnchor.constraint(equalTo: year.leadingAnchor).isActive = true
-    }
 }

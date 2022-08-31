@@ -36,6 +36,9 @@ class MovieListCollectionViewCell: MovieDetailCollectionViewCell {
         contentView.addSubview(movieTitleLabel)
         contentView.addSubview(movieScoreLable)
         
+        moviePoster.clipsToBounds = true
+        moviePoster.layer.cornerRadius = 10
+        
         moviePoster.translatesAutoresizingMaskIntoConstraints = false
         moviePoster.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
         moviePoster.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
@@ -60,7 +63,7 @@ class MovieListCollectionViewCell: MovieDetailCollectionViewCell {
             return
         }
         
-        ImageLoader().imageLoad(stringUrl: movie.posterPath, size: .poster) { image in
+        ImageLoader().tmdbImageLoad(stringUrl: movie.posterPath, size: .poster) { image in
             DispatchQueue.main.async {
                 self.moviePoster.image = image
             }
