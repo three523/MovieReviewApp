@@ -91,8 +91,6 @@ class MovieDetailViewController: UIViewController {
         stickyView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         stickyView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         stickyView.heightAnchor.constraint(equalToConstant: 50).isActive = true
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(presentVC(notification:)), name: Notification.Name("MovieSelected"), object: nil)
                 
     }
     
@@ -185,6 +183,7 @@ extension MovieDetailViewController: UITableViewDelegate, UITableViewDataSource,
         } else if indexPath.section == 3 {
             guard let reviewCell: ReviewTableViewCell = tableView.dequeueReusableCell(withIdentifier: ReviewTableViewCell.identifier, for: indexPath) as? ReviewTableViewCell else { return cell }
             guard let reviews = MovieDetailViewModel.reviews?.results else { return cell }
+            print(indexPath)
             let review: Review = reviews[indexPath.row]
             reviewCell.usernameLabel.text = review.authorDetails.username
             reviewCell.commentLabel.text = review.content
@@ -197,6 +196,7 @@ extension MovieDetailViewController: UITableViewDelegate, UITableViewDataSource,
             return reviewCell
         } else if indexPath.section == 4 {
             let similarCell: SimilarTableViewCell = SimilarTableViewCell(style: .default, reuseIdentifier: SimilarTableViewCell.identifier)
+            similarCell.currentVC = self
             return similarCell
         }
         return cell
@@ -332,14 +332,6 @@ extension MovieDetailViewController: UITableViewDelegate, UITableViewDataSource,
             movieDetailTableView.deleteRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
             movieDetailTableView.endUpdates()
         }
-    }
-    
-    @objc func presentVC(notification: Notification) {
-        guard let movieId = notification.object as? Int else { return }
-        let movieDetailVC = MovieDetailViewController()
-        movieDetailVC.movieId = String(movieId)
-        movieDetailVC.modalPresentationStyle = .fullScreen
-        self.present(movieDetailVC, animated: true)
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {

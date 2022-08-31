@@ -18,7 +18,7 @@ class SearchViewController: UIViewController, SearchBeginOrEndDelegate {
     private let defaultLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 16, weight: .semibold)
-        label.text = "상영중인 영화"
+        label.text = "인기있는 영화"
         return label
     }()
     private let recentlyMoviesCollectionView: UICollectionView = {
@@ -29,12 +29,28 @@ class SearchViewController: UIViewController, SearchBeginOrEndDelegate {
         cv.showsHorizontalScrollIndicator = false
         return cv
     }()
+    let searchViewModel: SearchViewModel = SearchViewModel()
+    private var recentVisibleTopAnchor: NSLayoutConstraint? = nil
+    private var recentHiddenTopAnchor: NSLayoutConstraint? = nil
+    lazy var isRecentlyListVisible: Bool = false {
+        didSet {
+            if isRecentlyListVisible {
+                recentlyCollectionHeaderView.isHidden = !isRecentlyListVisible
+                recentlyMoviesCollectionView.isHidden = !isRecentlyListVisible
+                recentVisibleTopAnchor?.isActive = true
+            } else {
+                recentlyCollectionHeaderView.isHidden = !isRecentlyListVisible
+                recentlyMoviesCollectionView.isHidden = !isRecentlyListVisible
+                recentHiddenTopAnchor?.isActive = true
+            }
+        }
+    }
     
     private let recentlyCollectionHeaderView: RecentlyHeaderView = RecentlyHeaderView(frame: .zero, labelText: "최근 본 작품", buttonText: "모두 삭제")
     
     private var searchBarController: UISearchController?
     
-    private let tableViewCellHeight: CGFloat = 100
+    private let tableViewCellHeight: CGFloat = (UIScreen.main.bounds.height / 7).rounded(.down)
     
     private var searchingTableViewHeightAnchor: NSLayoutConstraint = NSLayoutConstraint()
     private var collectionViewHeightAnchor: NSLayoutConstraint = NSLayoutConstraint()
@@ -61,6 +77,13 @@ class SearchViewController: UIViewController, SearchBeginOrEndDelegate {
         defaultTableView.dataSource = self
         defaultTableView.register(SearchDefaultTableViewCell.self, forCellReuseIdentifier: SearchDefaultTableViewCell.identifier)
         defaultTableView.isScrollEnabled = false
+        
+        //MARK: 봤던 영화나 드라마 체크기능을 만들면 메서드로 생성
+        isRecentlyListVisible = false
+        
+        searchViewModel.getPopularMovie {
+            self.defaultTableView.reloadData()
+        }
         
         viewSetting()
         
@@ -117,7 +140,9 @@ class SearchViewController: UIViewController, SearchBeginOrEndDelegate {
         
         
         defaultLabel.translatesAutoresizingMaskIntoConstraints = false
-        defaultLabel.topAnchor.constraint(equalTo: recentlyMoviesCollectionView.bottomAnchor, constant: 20).isActive = true
+        recentVisibleTopAnchor = defaultLabel.topAnchor.constraint(equalTo: recentlyMoviesCollectionView.bottomAnchor, constant: 20)
+        recentHiddenTopAnchor = defaultLabel.topAnchor.constraint(equalTo: contentLayoutGuide.topAnchor, constant: 10)
+        recentHiddenTopAnchor?.isActive = true
         defaultLabel.leadingAnchor.constraint(equalTo: frameLayoutGuide.leadingAnchor, constant: 10).isActive = true
         
         defaultTableView.translatesAutoresizingMaskIntoConstraints = false
@@ -173,7 +198,19 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
             cell.contentConfiguration = config
             return cell
         }
-        let cell = tableView.dequeueReusableCell(withIdentifier: SearchDefaultTableViewCell.identifier, for: indexPath) as! SearchDefaultTableViewCell
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: SearchDefaultTableViewCell.identifier, for: indexPath) as? SearchDefaultTableViewCell,
+              let movieList = searchViewModel.getPopularMovieList() else { return UITableViewCell() }
+        if !(movieList.count < indexPath.row) {
+            let movie: MovieInfo = movieList[indexPath.row]
+            cell.title.text = movie.title
+            cell.year.text = String(movie.releaseDate.prefix(4))
+            ImageLoader.loader.tmdbImageLoad(stringUrl: movieList[indexPath.row].posterPath, size: .poster) { image in
+                DispatchQueue.main.async {
+                    cell.poster.image = image
+                }
+            }
+        }
+        
         return cell
     }
     
@@ -266,6 +303,7 @@ class SearchDefaultTableViewCell: UITableViewCell {
         lb.textAlignment = .left
         lb.font = UIFont(name: "AvenirNext-Medium", size: 13)
         lb.text = "2022"
+        lb.textColor = .systemGray
         lb.numberOfLines = 0
         lb.sizeToFit()
         return lb
@@ -280,12 +318,14 @@ class SearchDefaultTableViewCell: UITableViewCell {
         contentView.addSubview(year)
         
         poster.image = UIImage(systemName: "person.circle")
+        poster.clipsToBounds = true
+        poster.layer.cornerRadius = 10
         
         poster.translatesAutoresizingMaskIntoConstraints = false
         poster.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 5).isActive = true
         poster.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 5).isActive = true
         poster.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -5).isActive = true
-        poster.widthAnchor.constraint(equalToConstant: 50).isActive = true
+        poster.widthAnchor.constraint(equalTo: poster.heightAnchor, multiplier: 0.7).isActive = true
         
         title.translatesAutoresizingMaskIntoConstraints = false
         title.leadingAnchor.constraint(equalTo: poster.trailingAnchor, constant: 10).isActive = true
