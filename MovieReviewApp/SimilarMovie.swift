@@ -12,13 +12,14 @@ struct SimilarMovies: Decodable {
 }
 
 struct SimilarMovie: Decodable {
+    let id: Int
     let posterPath: String
     let title: String
     let voteAverage: Double
     
     enum CodingKeys: String, CodingKey {
         case posterPath = "poster_path"
-        case title
+        case id, title
         case voteAverage = "vote_average"
     }
 }

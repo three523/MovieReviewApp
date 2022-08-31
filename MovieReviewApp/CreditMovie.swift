@@ -13,6 +13,7 @@ struct CreditMovies: Decodable {
 }
 
 struct CreditCastMovie: Decodable {
+    let id: Int
     let originalTitle: String
     let overview: String?
     let posterPath: String?
@@ -21,7 +22,7 @@ struct CreditCastMovie: Decodable {
     let voteAverage: Double
     
     enum CodingKeys: String, CodingKey {
-        case overview, title
+        case id, overview, title
         case originalTitle = "original_title"
         case posterPath = "poster_path"
         case releaseDate = "release_date"
@@ -30,6 +31,7 @@ struct CreditCastMovie: Decodable {
 }
 
 struct CreditCrewMovie: Decodable {
+    let id: Int
     let originalTitle: String
     let overview: String?
     let posterPath: String?
@@ -39,7 +41,7 @@ struct CreditCrewMovie: Decodable {
     let job: String
     
     enum CodingKeys: String, CodingKey {
-        case overview, title, job
+        case id, overview, title, job
         case originalTitle = "original_title"
         case posterPath = "poster_path"
         case releaseDate = "release_date"

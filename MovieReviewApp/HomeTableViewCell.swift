@@ -59,7 +59,6 @@ class HomeTableViewCell: UITableViewCell, UICollectionViewDelegate, UICollection
     
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
