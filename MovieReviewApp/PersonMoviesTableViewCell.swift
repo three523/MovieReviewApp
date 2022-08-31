@@ -10,6 +10,7 @@ import UIKit
 class PersonMoviesTableViewCell: UITableViewCell {
     
     static let identifier: String = "\(PersonMoviesTableViewCell.self)"
+    var movieId: Int = 0
     let posterImageView: UIImageView = {
         let imageView: UIImageView = UIImageView(image: UIImage(systemName: "xmark"))
         imageView.clipsToBounds = true
@@ -18,6 +19,7 @@ class PersonMoviesTableViewCell: UITableViewCell {
     }()
     let movieTitleLabel: UILabel = {
         let label: UILabel = UILabel()
+        label.numberOfLines = 2
         label.font = .systemFont(ofSize: 16, weight: .medium)
         label.textColor = .black
         return label
@@ -52,6 +54,7 @@ class PersonMoviesTableViewCell: UITableViewCell {
         textAreaStackView.translatesAutoresizingMaskIntoConstraints = false
         textAreaStackView.centerYAnchor.constraint(equalTo: posterImageView.centerYAnchor).isActive = true
         textAreaStackView.leadingAnchor.constraint(equalTo: posterImageView.trailingAnchor, constant: 10).isActive = true
+        textAreaStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10).isActive = true
         
     }
     

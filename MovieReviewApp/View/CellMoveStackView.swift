@@ -96,9 +96,7 @@ class CellMoveStackView: UIStackView {
             if let btn = self.arrangedSubviews[index] as? UIButton {
                 btn.isSelected = false
                 if btn == senderBtn {
-                    
                     collectionView.scrollToItem(at: IndexPath(item: index, section: 0), at: .bottom, animated: true)
-                    
                 }
             }
         }

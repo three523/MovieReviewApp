@@ -91,6 +91,8 @@ class MovieDetailViewController: UIViewController {
         stickyView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         stickyView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         stickyView.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(presentVC(notification:)), name: Notification.Name("MovieSelected"), object: nil)
                 
     }
     
@@ -309,6 +311,7 @@ extension MovieDetailViewController: UITableViewDelegate, UITableViewDataSource,
             }
             self.present(personVC, animated: true)
         }
+        
     }
     
     func addCell() {
@@ -329,6 +332,14 @@ extension MovieDetailViewController: UITableViewDelegate, UITableViewDataSource,
             movieDetailTableView.deleteRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
             movieDetailTableView.endUpdates()
         }
+    }
+    
+    @objc func presentVC(notification: Notification) {
+        guard let movieId = notification.object as? Int else { return }
+        let movieDetailVC = MovieDetailViewController()
+        movieDetailVC.movieId = String(movieId)
+        movieDetailVC.modalPresentationStyle = .fullScreen
+        self.present(movieDetailVC, animated: true)
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {

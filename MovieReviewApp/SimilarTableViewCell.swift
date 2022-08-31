@@ -65,6 +65,7 @@ class SimilarTableViewCell: UITableViewCell, UICollectionViewDelegate, UICollect
         if indexPath.row <= similarMovies.count {
             let similarMovie: SimilarMovie = similarMovies[indexPath.row]
             
+            cell.movieId = similarMovie.id
             cell.movieTitleLabel.text = similarMovie.title
             cell.movieScoreLable.text = "\(similarMovie.voteAverage)"
             
@@ -75,6 +76,12 @@ class SimilarTableViewCell: UITableViewCell, UICollectionViewDelegate, UICollect
             }
         }
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard let cell = collectionView.cellForItem(at: indexPath) as? MovieListCollectionViewCell,
+        let movieId = cell.movieId else { return }
+        NotificationCenter.default.post(name: Notification.Name("MovieSelected"), object: movieId)
     }
     
     override func systemLayoutSizeFitting(_ targetSize: CGSize, withHorizontalFittingPriority horizontalFittingPriority: UILayoutPriority, verticalFittingPriority: UILayoutPriority) -> CGSize {
