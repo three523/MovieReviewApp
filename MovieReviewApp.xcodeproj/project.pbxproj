@@ -12,6 +12,8 @@
 		184272C5287D692B004E1C9E /* RatingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 184272C4287D692B004E1C9E /* RatingViewController.swift */; };
 		184272C7287D6935004E1C9E /* MyProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 184272C6287D6935004E1C9E /* MyProfileViewController.swift */; };
 		184272C9287D7A30004E1C9E /* TopTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 184272C8287D7A30004E1C9E /* TopTabView.swift */; };
+		189F34B828BE5DEE00AD0A29 /* MoreButtonLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 189F34B728BE5DEE00AD0A29 /* MoreButtonLabel.swift */; };
+		189F34BA28BE5F7100AD0A29 /* OverviewTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 189F34B928BE5F7100AD0A29 /* OverviewTableViewCell.swift */; };
 		18A13F29288EA06E00A34538 /* MovieDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18A13F28288EA06E00A34538 /* MovieDetailViewController.swift */; };
 		18A167EA28B5FB9500D15BB1 /* ReviewListCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18A167E928B5FB9500D15BB1 /* ReviewListCollectionViewCell.swift */; };
 		18A167EC28B7644B00D15BB1 /* CreditMovie.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18A167EB28B7644B00D15BB1 /* CreditMovie.swift */; };
@@ -65,6 +67,8 @@
 		184272C4287D692B004E1C9E /* RatingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingViewController.swift; sourceTree = "<group>"; };
 		184272C6287D6935004E1C9E /* MyProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProfileViewController.swift; sourceTree = "<group>"; };
 		184272C8287D7A30004E1C9E /* TopTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopTabView.swift; sourceTree = "<group>"; };
+		189F34B728BE5DEE00AD0A29 /* MoreButtonLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreButtonLabel.swift; sourceTree = "<group>"; };
+		189F34B928BE5F7100AD0A29 /* OverviewTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverviewTableViewCell.swift; sourceTree = "<group>"; };
 		18A13F28288EA06E00A34538 /* MovieDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDetailViewController.swift; sourceTree = "<group>"; };
 		18A167E928B5FB9500D15BB1 /* ReviewListCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewListCollectionViewCell.swift; sourceTree = "<group>"; };
 		18A167EB28B7644B00D15BB1 /* CreditMovie.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreditMovie.swift; sourceTree = "<group>"; };
@@ -156,6 +160,7 @@
 				18ABB6582891319100BACD73 /* MovieDetailHeaderView.swift */,
 				18A2336E2892646100B1B7FB /* CustomNavigationBar.swift */,
 				18ABB8072897C37200E8AF7B /* MovieDetailSectionView.swift */,
+				189F34B728BE5DEE00AD0A29 /* MoreButtonLabel.swift */,
 				18BF66DA28B3A26200AE492D /* TableFooterView.swift */,
 			);
 			path = View;
@@ -183,6 +188,7 @@
 			children = (
 				18BA247728A1074C0024B913 /* DetailSectionTableViewCell.swift */,
 				18C3C67328AF36DB002C2D38 /* MovieDefaultInfoCollectionViewCell.swift */,
+				189F34B928BE5F7100AD0A29 /* OverviewTableViewCell.swift */,
 				18A167F128B7869A00D15BB1 /* PersonMoviesTableViewCell.swift */,
 				18CEB15928B4B4460067D598 /* ActorDirectorTableViewCell.swift */,
 				18A65E4528B8C33F00D132D9 /* PersonDetailCollectionViewCell.swift */,
@@ -308,6 +314,7 @@
 				18A167EC28B7644B00D15BB1 /* CreditMovie.swift in Sources */,
 				18AC2995287FB35C0043B812 /* ImageLoader.swift in Sources */,
 				18A2F729287EABEA00CA9947 /* MovieListCollectionViewCell.swift in Sources */,
+				189F34BA28BE5F7100AD0A29 /* OverviewTableViewCell.swift in Sources */,
 				18C3C67828AF5879002C2D38 /* ReleaseDates.swift in Sources */,
 				18A13F29288EA06E00A34538 /* MovieDetailViewController.swift in Sources */,
 				18C3C67628AF48E6002C2D38 /* Credits.swift in Sources */,
@@ -331,6 +338,7 @@
 				18E17961287805790060BCD9 /* AppDelegate.swift in Sources */,
 				18BF66D728B3833C00AE492D /* CreditsSummaryTableViewCell.swift in Sources */,
 				18C3C67428AF36DB002C2D38 /* MovieDefaultInfoCollectionViewCell.swift in Sources */,
+				189F34B828BE5DEE00AD0A29 /* MoreButtonLabel.swift in Sources */,
 				18A2F730287EC8F400CA9947 /* Movie.swift in Sources */,
 				18AC2993287FA6990043B812 /* HomeViewModel.swift in Sources */,
 				18A4DBD9289955B400FBC346 /* MovieDetailViewModel.swift in Sources */,
