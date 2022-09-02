@@ -62,8 +62,8 @@ class MovieListCollectionViewCell: MovieDetailCollectionViewCell {
         guard let movie = movie else {
             return
         }
-        
-        ImageLoader().tmdbImageLoad(stringUrl: movie.posterPath, size: .poster) { image in
+        guard let posterPath = movie.posterPath else { return }
+        ImageLoader().tmdbImageLoad(stringUrl: posterPath, size: .poster) { image in
             DispatchQueue.main.async {
                 self.moviePoster.image = image
             }

@@ -7,11 +7,12 @@
 
 import UIKit
 
-protocol SearchBeginOrEndDelegate: AnyObject {
+protocol SearchBarDelegate: AnyObject {
     func searchBeginOrEnd() -> Void
+    func setSearchBarText(text: String) -> Void
 }
 
-class SearchViewController: UIViewController, SearchBeginOrEndDelegate {
+class SearchViewController: UIViewController, SearchBarDelegate {
     
     private let scrollView: UIScrollView = UIScrollView()
     private let defaultTableView: UITableView = UITableView(frame: .zero, style: .plain)
@@ -61,11 +62,11 @@ class SearchViewController: UIViewController, SearchBeginOrEndDelegate {
         super.viewDidLoad()
         
         let searchingVC: SearchingTableViewController = SearchingTableViewController()
-        searchingVC.searchBeginOrEndDelegate = self
+        searchingVC.searchBarDelegate = self
         searchBarController = UISearchController(searchResultsController: searchingVC)
         searchBarController!.searchResultsUpdater = searchingVC
         searchBarController?.searchBar.delegate = searchingVC
-        
+                
         searchingTableView.delegate = self
         searchingTableView.dataSource = self
                 
@@ -102,13 +103,6 @@ class SearchViewController: UIViewController, SearchBeginOrEndDelegate {
         
         view.addSubview(scrollView)
         view.addSubview(searchingTableView)
-        
-        searchingTableView.translatesAutoresizingMaskIntoConstraints = false
-        searchingTableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 70).isActive = true
-        searchingTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        searchingTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        searchingTableViewHeightAnchor = searchingTableView.heightAnchor.constraint(equalToConstant: 0)
-        searchingTableViewHeightAnchor.isActive = true
         
         scrollView.addSubview(recentlyCollectionHeaderView)
         scrollView.addSubview(recentlyMoviesCollectionView)
@@ -152,6 +146,14 @@ class SearchViewController: UIViewController, SearchBeginOrEndDelegate {
         defaultTableView.heightAnchor.constraint(equalToConstant: 10*tableViewCellHeight).isActive = true
         defaultTableView.bottomAnchor.constraint(equalTo: contentLayoutGuide.bottomAnchor).isActive = true
         
+        defaultLabel.layoutIfNeeded()
+        searchingTableView.translatesAutoresizingMaskIntoConstraints = false
+        searchingTableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+        searchingTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        searchingTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        searchingTableViewHeightAnchor = searchingTableView.heightAnchor.constraint(equalToConstant: 0)
+        searchingTableViewHeightAnchor.isActive = true
+        
     }
     
     func searchBeginOrEnd() {
@@ -163,6 +165,14 @@ class SearchViewController: UIViewController, SearchBeginOrEndDelegate {
             searchingTableViewHeightAnchor.constant = 0
             recentlyCollectionHeaderView.setText(labelText: "최근에 본 영화", buttonText: "모두 삭제")
         }
+    }
+    
+    func setSearchBarText(text: String) {
+        guard let searchBar = searchBarController?.searchBar else { return }
+        searchBar.text = text
+        searchBeginOrEnd()
+        searchBar.endEditing(false)
+        
     }
 }
 
@@ -204,7 +214,9 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
             let movie: MovieInfo = movieList[indexPath.row]
             cell.title.text = movie.title
             cell.year.text = String(movie.releaseDate.prefix(4))
-            ImageLoader.loader.tmdbImageLoad(stringUrl: movieList[indexPath.row].posterPath, size: .poster) { image in
+            
+            guard let posterPath = movieList[indexPath.row].posterPath else { return cell }
+            ImageLoader.loader.tmdbImageLoad(stringUrl: posterPath, size: .poster) { image in
                 DispatchQueue.main.async {
                     cell.poster.image = image
                 }
