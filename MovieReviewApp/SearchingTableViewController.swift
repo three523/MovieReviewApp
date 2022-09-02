@@ -9,7 +9,8 @@ import UIKit
 
 class SearchingTableViewController: UIViewController, UISearchBarDelegate ,UISearchResultsUpdating {
     
-    weak var searchBeginOrEndDelegate: SearchBeginOrEndDelegate?
+    let searchViewModel: SearchViewModel = SearchViewModel()
+    weak var searchBarDelegate: SearchBarDelegate?
     private let collectionView: UICollectionView = {
         let flowLayout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
         flowLayout.scrollDirection = .horizontal
@@ -74,11 +75,18 @@ class SearchingTableViewController: UIViewController, UISearchBarDelegate ,UISea
     }
         
     func updateSearchResults(for searchController: UISearchController) {
-//        print(searchController.searchBar.text)
+        guard let text = searchController.searchBar.text else { return }
+        if !text.isEmpty {
+            searchViewModel.getSearchMovie(mediaType: .movie, inputType: .ko, search: text) {
+                DispatchQueue.main.async {
+                    self.searchRecentlyTableView.reloadData()
+                }
+            }
+        }
     }
     
     func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
-        guard let searchBeginOrEndDelegate = searchBeginOrEndDelegate else {
+        guard let searchBeginOrEndDelegate = searchBarDelegate else {
             return false
         }
         print("begin")
@@ -88,7 +96,7 @@ class SearchingTableViewController: UIViewController, UISearchBarDelegate ,UISea
     }
     
     func searchBarShouldEndEditing(_ searchBar: UISearchBar) -> Bool {
-        guard let searchBeginOrEndDelegate = searchBeginOrEndDelegate else {
+        guard let searchBeginOrEndDelegate = searchBarDelegate else {
             return false
         }
         searchBeginOrEndDelegate.searchBeginOrEnd()
@@ -106,19 +114,36 @@ class SearchingTableViewController: UIViewController, UISearchBarDelegate ,UISea
 extension SearchingTableViewController: UITableViewDelegate, UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10
+        guard let searchListCount = searchViewModel.getSearchMovieList()?.count else { return 0 }
+        return searchListCount
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = UITableViewCell()
-
+        
+        guard let searchMovieList = searchViewModel.getSearchMovieList() else { return cell }
+        
         var config = cell.defaultContentConfiguration()
         config.image = UIImage(systemName: "magnifyingglass")
-        config.text = "test"
+                    
+        if indexPath.row < searchMovieList.count {
+            config.text = searchMovieList[indexPath.row].title
+        } else {
+            config.text = ""
+            print("indexPath Range Over")
+        }
         cell.contentConfiguration = config
         
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        guard let searchMovieList = searchViewModel.getSearchMovieList() else { return }
+        let movieTitle = searchMovieList[indexPath.row].title
+        
+        searchBarDelegate?.setSearchBarText(text: movieTitle)
     }
 }
 

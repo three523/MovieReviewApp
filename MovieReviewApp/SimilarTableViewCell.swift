@@ -20,6 +20,7 @@ class SimilarTableViewCell: UITableViewCell, UICollectionViewDelegate, UICollect
         let cv: UICollectionView = UICollectionView(frame: .zero, collectionViewLayout: similarLayout)
         return cv
     }()
+    weak var currentVC: UIViewController? = nil
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -80,15 +81,14 @@ class SimilarTableViewCell: UITableViewCell, UICollectionViewDelegate, UICollect
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let cell = collectionView.cellForItem(at: indexPath) as? MovieListCollectionViewCell,
-        let movieId = cell.movieId else { return }
-        NotificationCenter.default.post(name: Notification.Name("MovieSelected"), object: movieId)
+        let currentVC = currentVC else { return }
+        cell.currentVC = currentVC
+        cell.presentMovieDetail()
     }
     
     override func systemLayoutSizeFitting(_ targetSize: CGSize, withHorizontalFittingPriority horizontalFittingPriority: UILayoutPriority, verticalFittingPriority: UILayoutPriority) -> CGSize {
         similarCollectionView.layoutIfNeeded()
         similarCollectionView.frame = CGRect(x: 0, y: 0, width: targetSize.width , height: targetSize.height)
-
-        print(similarLayout.collectionViewContentSize)
         
         return similarLayout.collectionViewContentSize
     }

@@ -41,27 +41,10 @@ class PersonDetailCollectionViewCell: UICollectionViewCell {
         personMoviesTableView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).isActive = true
         personMoviesTableView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true
         
-        NotificationCenter.default.addObserver(self, selector: #selector(getHeightConstant(notification:)), name: Notification.Name("PersonListHeightConstant"), object: nil)
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-    
-    @objc func getHeightConstant(notification: Notification) {
-//        guard let constant = notification.object as? CGFloat else { return }
-//        guard let originSize = collectionViewOriginSize else { return }
-//        let maxHeight = UIScreen.main.bounds.height - (UIApplication.shared.statusBarFrame.height + mediaFilterView.bounds.height + creditFilterView.bounds.height)
-//        let minHeight = originSize
-//        let resultHeight = originSize + constant
-//
-//        if resultHeight > maxHeight {
-//            collectionViewHeightAnchor?.constant = maxHeight
-//        } else if resultHeight >= minHeight {
-//            collectionViewHeightAnchor?.constant = resultHeight
-//        } else {
-//            collectionViewHeightAnchor?.constant = minHeight
-//        }
     }
 }
 
