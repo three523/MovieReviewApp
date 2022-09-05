@@ -209,7 +209,6 @@ class SearchContentCell: UICollectionViewCell, UITableViewDelegate, UITableViewD
     }()
     public var movieList: [MovieInfo] = [MovieInfo]() {
         didSet {
-            print("tableReload")
             self.tableView.reloadData()
         }
     }
@@ -271,6 +270,19 @@ class SearchContentCell: UICollectionViewCell, UITableViewDelegate, UITableViewD
             return 60
         }
     }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard movieList.count > indexPath.row else { return }
+        let selectedMovieId: String = String(movieList[indexPath.row].id)
+        var topVC: UIViewController? = UIApplication.shared.windows.first?.rootViewController
+        while((topVC!.presentedViewController) != nil) {
+            topVC = topVC!.presentedViewController
+        }
+        let detailVC: MovieDetailViewController = MovieDetailViewController()
+        detailVC.modalPresentationStyle = .fullScreen
+        detailVC.movieId = selectedMovieId
+        topVC?.present(detailVC, animated: true)
+    }
 }
 
 class CustomScopeBar: UIStackView {
@@ -315,6 +327,7 @@ class CustomScopeBar: UIStackView {
 class SearchPersonCell: UICollectionViewCell, UITableViewDelegate, UITableViewDataSource {
     
     static let identifier: String = "\(SearchPersonCell.self)"
+    var movieId: String = ""
     let personListTableView: UITableView = UITableView()
     override init(frame: CGRect) {
         super.init(frame: frame)
