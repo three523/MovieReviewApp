@@ -172,7 +172,6 @@ class SearchViewController: UIViewController, SearchBarDelegate {
         searchBar.text = text
         searchBeginOrEnd()
         searchBar.endEditing(false)
-        
     }
 }
 
@@ -196,7 +195,7 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
         if tableView == searchingTableView {
             return 10
         } else {
-            return 10
+            return searchViewModel.getPopularMovieCount()
         }
     }
     
@@ -210,7 +209,8 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
         }
         guard let cell = tableView.dequeueReusableCell(withIdentifier: SearchDefaultTableViewCell.identifier, for: indexPath) as? SearchDefaultTableViewCell,
               let movieList = searchViewModel.getPopularMovieList() else { return UITableViewCell() }
-        if !(movieList.count < indexPath.row) {
+        
+        if movieList.count > indexPath.row {
             let movie: MovieInfo = movieList[indexPath.row]
             cell.title.text = movie.title
             cell.year.text = String(movie.releaseDate.prefix(4))

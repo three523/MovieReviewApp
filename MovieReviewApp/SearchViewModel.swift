@@ -12,31 +12,28 @@ enum MediaType: String {
     case tv = "tv?"
 }
 
-enum InputType: String {
-    case en = "en-US"
-    case ko = "ko"
-}
+
 
 class SearchViewModel {
     private let shared: URLSession = URLSession.shared
     private let apiHandler: ApiHandler = ApiHandler()
     private var popularMovies: [MovieInfo]? = nil
     private var searchMovies: [MovieInfo]? = nil
-    private var query: [String: String] = ["api_key": APIKEY]
+    private var query: [String: String] = ["api_key": APIKEY, "language": "ko"]
     private var path: String = "search/"
     
     func getPopularMovie( completed: @escaping () -> Void ) {
         let popularPath: String = "movie/popular?"
-        apiHandler.getJson(type: MovieList.self ,path: popularPath, query: ["api_key": APIKEY, "language": "ko"]) { movieList in
+        apiHandler.getJson(type: MovieList.self ,path: popularPath, query: query) { movieList in
             self.popularMovies = movieList.results
             completed()
         }
     }
     
-    func getSearchMovie(mediaType: MediaType, inputType: InputType, search: String, completed: @escaping () -> Void ) {
+    func getSearchMovie(mediaType: MediaType, search: String, completed: @escaping () -> Void ) {
         let searchPath: String = path + mediaType.rawValue
-        query["language"] = inputType.rawValue
-        query["query"] = search
+        let searchQuery = search.replacingOccurrences(of: " ", with: "+")
+        query["query"] = searchQuery
         apiHandler.getJson(type: MovieList.self, path: searchPath, query: query) { movies in
             self.searchMovies = movies.results
             completed()
@@ -47,7 +44,17 @@ class SearchViewModel {
         return popularMovies
     }
     
+    func getPopularMovieCount() -> Int {
+        guard let popularMovies = popularMovies else { return 0 }
+        return popularMovies.count
+    }
+    
     func getSearchMovieList() -> [MovieInfo]? {
         return searchMovies
+    }
+    
+    func getSearchMovieCount() -> Int {
+        guard let searchMovies = searchMovies else { return 0 }
+        return searchMovies.count
     }
 }

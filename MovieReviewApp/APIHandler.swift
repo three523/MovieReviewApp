@@ -16,7 +16,8 @@ class ApiHandler {
         let fullPath: String = self.baseUrl + path + query.map{ k, v in "\(k)=\(v)" }.joined(separator: "&")
         print("path: \(path), query: \(query)")
         print("fullPath: \(fullPath)")
-        guard let url = URL(string: fullPath) else {
+        guard let encoded = fullPath.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
+              let url = URL(string: encoded) else {
             print("url is nil")
             return
         }

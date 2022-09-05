@@ -34,6 +34,7 @@ class SearchingTableViewController: UIViewController, UISearchBarDelegate ,UISea
             collectionView.isHidden = !newValue
         }
     }
+    var currentSearchBarText: String = ""
     
     let count: [UIColor] = [UIColor.red,UIColor.blue,UIColor.gray]
 
@@ -77,7 +78,7 @@ class SearchingTableViewController: UIViewController, UISearchBarDelegate ,UISea
     func updateSearchResults(for searchController: UISearchController) {
         guard let text = searchController.searchBar.text else { return }
         if !text.isEmpty {
-            searchViewModel.getSearchMovie(mediaType: .movie, inputType: .ko, search: text) {
+            searchViewModel.getSearchMovie(mediaType: .movie, search: text) {
                 DispatchQueue.main.async {
                     self.searchRecentlyTableView.reloadData()
                 }
@@ -107,6 +108,13 @@ class SearchingTableViewController: UIViewController, UISearchBarDelegate ,UISea
     func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
         print("didEnd")
         isEnded = !isEnded
+        guard let text = searchBar.text else { return }
+        self.currentSearchBarText = text
+        searchViewModel.getSearchMovie(mediaType: .movie, search: text) {
+            DispatchQueue.main.async {
+                self.collectionView.reloadData()
+            }
+        }
     }
 
 }
@@ -157,6 +165,8 @@ extension SearchingTableViewController: UICollectionViewDelegate, UICollectionVi
         if indexPath.item == 0 {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SearchContentCell.identifier, for: indexPath) as! SearchContentCell
             cell.index = indexPath.item
+            guard let movieList = searchViewModel.getSearchMovieList() else { return cell }
+            cell.movieList = movieList
             return cell
         } else if indexPath.item == 1 {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SearchPersonCell.identifier, for: indexPath) as! SearchPersonCell
@@ -197,6 +207,12 @@ class SearchContentCell: UICollectionViewCell, UITableViewDelegate, UITableViewD
         scope.addButtonList(textList: ["인기", "영화", "TV", "웹툰"])
         return scope
     }()
+    public var movieList: [MovieInfo] = [MovieInfo]() {
+        didSet {
+            print("tableReload")
+            self.tableView.reloadData()
+        }
+    }
     var index: Int = 0
     
     private let tableView: UITableView = UITableView()
@@ -229,11 +245,22 @@ class SearchContentCell: UICollectionViewCell, UITableViewDelegate, UITableViewD
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10
+        return movieList.isEmpty ? 0 : movieList.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: SearchDefaultTableViewCell.identifier, for: indexPath) as! SearchDefaultTableViewCell
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: SearchDefaultTableViewCell.identifier, for: indexPath) as? SearchDefaultTableViewCell else { return UITableViewCell() }
+        if !movieList.isEmpty && movieList.count > indexPath.row {
+            let movieInfo: MovieInfo = movieList[indexPath.row]
+            cell.title.text = movieInfo.title
+            cell.year.text = String(movieInfo.releaseDate.prefix(4))
+            guard let posterPath = movieInfo.posterPath else { return cell }
+            ImageLoader.loader.tmdbImageLoad(stringUrl: posterPath, size: .poster) { posterImage in
+                DispatchQueue.main.async {
+                    cell.poster.image = posterImage
+                }
+            }
+        }
         return cell
     }
     
