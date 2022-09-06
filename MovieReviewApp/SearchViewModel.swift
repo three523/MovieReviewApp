@@ -20,6 +20,7 @@ class SearchViewModel {
     private var popularMovies: [MovieInfo]? = nil
     private var searchMovies: [MovieInfo]? = nil
     private var searchPersons: [SearchPersonResult]? = nil
+    private var searchTVs: [TVSearchResult]? = nil
     private var query: [String: String] = ["api_key": APIKEY, "language": "ko"]
     private var path: String = "search/"
     
@@ -35,9 +36,16 @@ class SearchViewModel {
         let searchPath: String = path + mediaType.rawValue
         let searchQuery = search.replacingOccurrences(of: " ", with: "+")
         query["query"] = searchQuery
-        apiHandler.getJson(type: MovieList.self, path: searchPath, query: query) { movies in
-            self.searchMovies = movies.results
-            completed()
+        if mediaType == .movie{
+            apiHandler.getJson(type: MovieList.self, path: searchPath, query: query) { movies in
+                self.searchMovies = movies.results
+                completed()
+            }
+        } else {
+            apiHandler.getJson(type: TV.self, path: searchPath, query: query) { tvList in
+                self.searchTVs = tvList.results
+                completed()
+            }
         }
     }
     
@@ -66,6 +74,15 @@ class SearchViewModel {
     func getSearchMovieCount() -> Int {
         guard let searchMovies = searchMovies else { return 0 }
         return searchMovies.count
+    }
+    
+    func getSearchTVList() -> [TVSearchResult]? {
+        return searchTVs
+    }
+    
+    func getSearchTVCount() -> Int {
+        guard let searchTVs = searchTVs else { return 0 }
+        return searchTVs.count
     }
     
     func getSearchPersonList() -> [SearchPersonResult]? {

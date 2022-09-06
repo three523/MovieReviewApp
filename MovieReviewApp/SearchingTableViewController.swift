@@ -189,6 +189,7 @@ extension SearchingTableViewController: UICollectionViewDelegate, UICollectionVi
             cell.index = indexPath.item
             guard let movieList = searchViewModel.getSearchMovieList() else { return cell }
             cell.movieList = movieList
+            cell.searchText = currentSearchBarText
             return cell
         } else if indexPath.item == 1 {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SearchPersonCell.identifier, for: indexPath) as? SearchPersonCell else {
@@ -261,14 +262,16 @@ class SearchContentCell: UICollectionViewCell, UITableViewDelegate, UITableViewD
     static let identifier: String = "\(SearchContentCell.self)"
     private let scopeBar: CustomScopeBar = {
         let scope: CustomScopeBar = CustomScopeBar()
-        scope.addButtonList(textList: ["인기", "영화", "TV", "웹툰"])
+        scope.addButtonList(textList: ["영화", "TV"])
         return scope
     }()
+    public var searchText: String = ""
     public var movieList: [MovieInfo] = [MovieInfo]() {
         didSet {
             self.tableView.reloadData()
         }
     }
+    private var searchViewModel: SearchViewModel = SearchViewModel()
     var index: Int = 0
     
     private let tableView: UITableView = UITableView()
@@ -294,6 +297,23 @@ class SearchContentCell: UICollectionViewCell, UITableViewDelegate, UITableViewD
         tableView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
         tableView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).isActive = true
         tableView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true
+        
+        let movieButtonAction: UIAction = UIAction { _ in
+            self.searchViewModel.getSearchMovie(mediaType: .movie, search: self.searchText) {
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                }
+            }
+        }
+        let tvButtonAction: UIAction = UIAction { _ in
+            self.searchViewModel.getSearchMovie(mediaType: .tv, search: self.searchText) {
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                }
+            }
+        }
+        scopeBar.addAction(index: 0, action: movieButtonAction)
+        scopeBar.addAction(index: 1, action: tvButtonAction)
     }
     
     required init?(coder: NSCoder) {
@@ -301,22 +321,45 @@ class SearchContentCell: UICollectionViewCell, UITableViewDelegate, UITableViewD
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return movieList.isEmpty ? 0 : movieList.count
+        guard let mediaType = scopeBar.getSelectedButton() else { return 0 }
+        if mediaType == .movie {
+            return movieList.isEmpty ? 0 : movieList.count
+        } else {
+            guard let tvList = searchViewModel.getSearchTVList() else { return 0 }
+            return tvList.isEmpty ? 0 : tvList.count
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: SearchDefaultTableViewCell.identifier, for: indexPath) as? SearchDefaultTableViewCell else { return UITableViewCell() }
-        if !movieList.isEmpty && movieList.count > indexPath.row {
-            let movieInfo: MovieInfo = movieList[indexPath.row]
-            cell.title.text = movieInfo.title
-            cell.year.text = String(movieInfo.releaseDate.prefix(4))
-            guard let posterPath = movieInfo.posterPath else { return cell }
-            ImageLoader.loader.tmdbImageLoad(stringUrl: posterPath, size: .poster) { posterImage in
-                DispatchQueue.main.async {
-                    cell.poster.image = posterImage
+        guard let mediaType = scopeBar.getSelectedButton() else { return cell }
+        
+        if mediaType == .movie {
+            if !movieList.isEmpty && movieList.count > indexPath.row {
+                let movieInfo: MovieInfo = movieList[indexPath.row]
+                cell.title.text = movieInfo.title
+                cell.year.text = String(movieInfo.releaseDate.prefix(4))
+                guard let posterPath = movieInfo.posterPath else { return cell }
+                ImageLoader.loader.tmdbImageLoad(stringUrl: posterPath, size: .poster) { posterImage in
+                    DispatchQueue.main.async {
+                        cell.poster.image = posterImage
+                    }
+                }
+            }
+        } else {
+            guard let tvList = searchViewModel.getSearchTVList() else { return cell }
+            if !tvList.isEmpty && tvList.count > indexPath.row {
+                let tvInfo: TVSearchResult = tvList[indexPath.row]
+                cell.title.text = tvInfo.name
+                guard let posterPath = tvInfo.posterPath else { return cell }
+                ImageLoader.loader.tmdbImageLoad(stringUrl: posterPath, size: .poster) { posterImage in
+                    DispatchQueue.main.async {
+                        cell.poster.image = posterImage
+                    }
                 }
             }
         }
+        
         return cell
     }
     
@@ -360,6 +403,9 @@ class CustomScopeBar: UIStackView {
         textList.forEach { buttonText in
             addButton(buttonText: buttonText)
         }
+        guard let button = self.arrangedSubviews[0] as? UIButton else { return }
+        button.isSelected = true
+        button.backgroundColor = .black
     }
     
     private func addButton(buttonText: String) {
@@ -385,6 +431,25 @@ class CustomScopeBar: UIStackView {
         button.addAction(action, for: .touchUpInside)
         
         self.addArrangedSubview(button)
+    }
+    
+    public func addAction(index: Int, action: UIAction) {
+        if self.arrangedSubviews.count > index {
+            guard let button = self.arrangedSubviews[index] as? UIButton else { return }
+            button.addAction(action, for: .touchUpInside)
+        }
+    }
+    
+    public func getSelectedButton() -> MediaType? {
+        if self.arrangedSubviews.isEmpty { return .none }
+        for i in 0..<self.arrangedSubviews.count {
+            guard let button = self.arrangedSubviews[i] as? UIButton else { return .none }
+            if button.isSelected {
+                if i == 0 { return .movie }
+                else { return .tv }
+            }
+        }
+        return .none
     }
 }
 
