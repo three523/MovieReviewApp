@@ -19,6 +19,7 @@ class SearchViewModel {
     private let apiHandler: ApiHandler = ApiHandler()
     private var popularMovies: [MovieInfo]? = nil
     private var searchMovies: [MovieInfo]? = nil
+    private var searchPersons: [SearchPersonResult]? = nil
     private var query: [String: String] = ["api_key": APIKEY, "language": "ko"]
     private var path: String = "search/"
     
@@ -40,6 +41,15 @@ class SearchViewModel {
         }
     }
     
+    func getSearchPerson(search: String, completed: @escaping () -> Void ) {
+        let searchPath: String = path + "person?"
+        query["query"] = search
+        apiHandler.getJson(type: SearchPerson.self, path: searchPath, query: query) { personList in
+            self.searchPersons = personList.results
+            completed()
+        }
+    }
+    
     func getPopularMovieList() -> [MovieInfo]? {
         return popularMovies
     }
@@ -56,5 +66,20 @@ class SearchViewModel {
     func getSearchMovieCount() -> Int {
         guard let searchMovies = searchMovies else { return 0 }
         return searchMovies.count
+    }
+    
+    func getSearchPersonList() -> [SearchPersonResult]? {
+        guard let searchPersons = searchPersons else {
+            print("searh person nil")
+            return nil
+        }
+        return searchPersons
+    }
+    
+    func getSearchPersonCount() -> Int {
+        guard let searchPersons = searchPersons else {
+            return 0
+        }
+        return searchPersons.count
     }
 }

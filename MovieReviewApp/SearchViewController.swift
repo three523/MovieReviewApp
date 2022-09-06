@@ -83,7 +83,9 @@ class SearchViewController: UIViewController, SearchBarDelegate {
         isRecentlyListVisible = false
         
         searchViewModel.getPopularMovie {
-            self.defaultTableView.reloadData()
+            DispatchQueue.main.async {
+                self.defaultTableView.reloadData()
+            }
         }
         
         viewSetting()
