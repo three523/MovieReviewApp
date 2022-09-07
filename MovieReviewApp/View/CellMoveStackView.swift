@@ -84,11 +84,16 @@ class CellMoveStackView: UIStackView {
     }
     
     func setButtonTitleColor(index: Int) {
+        if index >= arrangedSubviews.count {
+            print("index over")
+            return
+        }
         for buttonIndex in 0..<self.arrangedSubviews.count {
             if let btn = self.arrangedSubviews[buttonIndex] as? UIButton {
                 btn.isSelected = index == buttonIndex ? true : false
             }
         }
+        NotificationCenter.default.post(name: Notification.Name(rawValue: "CellMovieIndex"), object: index)
     }
     
     @objc func cellMove(senderBtn: UIButton) {
@@ -101,5 +106,13 @@ class CellMoveStackView: UIStackView {
             }
         }
         senderBtn.isSelected = true
+    }
+    
+    func buttonAddAction(index: Int, action: UIAction) {
+        let subviews = self.arrangedSubviews
+        if subviews.count > index {
+            guard let button = subviews[index] as? UIButton else { return }
+            button.addAction(action, for: .touchUpInside)
+        }
     }
 }

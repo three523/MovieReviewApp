@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		180CE3CE28C73013000FACF8 /* SearchPerson.swift in Sources */ = {isa = PBXBuildFile; fileRef = 180CE3CD28C73013000FACF8 /* SearchPerson.swift */; };
+		180CE3D028C76EDE000FACF8 /* TV.swift in Sources */ = {isa = PBXBuildFile; fileRef = 180CE3CF28C76EDE000FACF8 /* TV.swift */; };
 		184272C1287D690B004E1C9E /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 184272C0287D690B004E1C9E /* HomeViewController.swift */; };
 		184272C3287D691E004E1C9E /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 184272C2287D691E004E1C9E /* SearchViewController.swift */; };
 		184272C5287D692B004E1C9E /* RatingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 184272C4287D692B004E1C9E /* RatingViewController.swift */; };
@@ -64,6 +66,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		180CE3CD28C73013000FACF8 /* SearchPerson.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchPerson.swift; sourceTree = "<group>"; };
+		180CE3CF28C76EDE000FACF8 /* TV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TV.swift; sourceTree = "<group>"; };
 		184272C0287D690B004E1C9E /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		184272C2287D691E004E1C9E /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		184272C4287D692B004E1C9E /* RatingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingViewController.swift; sourceTree = "<group>"; };
@@ -175,6 +179,7 @@
 			children = (
 				18A2F72F287EC8F400CA9947 /* Movie.swift */,
 				18CEB15328B477E70067D598 /* SimilarMovie.swift */,
+				180CE3CF28C76EDE000FACF8 /* TV.swift */,
 				18AC2992287FA6990043B812 /* HomeViewModel.swift */,
 				18C018CA288682D400E6AE2C /* ReviewFilterViewModel.swift */,
 				18A4DBD8289955B400FBC346 /* MovieDetailViewModel.swift */,
@@ -184,6 +189,7 @@
 				18BF66DC28B3B97A00AE492D /* Reviews.swift */,
 				18A167EB28B7644B00D15BB1 /* CreditMovie.swift */,
 				18C369BC28BF404E00BCFC99 /* SearchViewModel.swift */,
+				180CE3CD28C73013000FACF8 /* SearchPerson.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -314,6 +320,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				18A2F732287ECBEA00CA9947 /* APIHandler.swift in Sources */,
+				180CE3D028C76EDE000FACF8 /* TV.swift in Sources */,
 				18A167F028B76BF600D15BB1 /* PersonViewModel.swift in Sources */,
 				184272C9287D7A30004E1C9E /* TopTabView.swift in Sources */,
 				18A167EA28B5FB9500D15BB1 /* ReviewListCollectionViewCell.swift in Sources */,
@@ -348,6 +355,7 @@
 				189F34B828BE5DEE00AD0A29 /* MoreButtonLabel.swift in Sources */,
 				18A2F730287EC8F400CA9947 /* Movie.swift in Sources */,
 				18AC2993287FA6990043B812 /* HomeViewModel.swift in Sources */,
+				180CE3CE28C73013000FACF8 /* SearchPerson.swift in Sources */,
 				18A4DBD9289955B400FBC346 /* MovieDetailViewModel.swift in Sources */,
 				18A2F727287EABB000CA9947 /* HomeTableViewCell.swift in Sources */,
 				18BA247828A1074C0024B913 /* DetailSectionTableViewCell.swift in Sources */,

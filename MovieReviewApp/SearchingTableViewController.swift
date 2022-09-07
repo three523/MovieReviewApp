@@ -73,6 +73,25 @@ class SearchingTableViewController: UIViewController, UISearchBarDelegate ,UISea
         collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(cellMovieIndexNotification(notification:)), name: Notification.Name(rawValue: "CellMovieIndex"), object: nil)
+        
+        let contentButtonAction: UIAction = UIAction { _ in
+            self.searchViewModel.getSearchMovie(mediaType: .movie, search: self.currentSearchBarText) {
+                DispatchQueue.main.async {
+                    self.collectionView.reloadData()
+                }
+            }
+        }
+        let personButtonAction: UIAction = UIAction { _ in
+            self.searchViewModel.getSearchPerson(search: self.currentSearchBarText) {
+                DispatchQueue.main.async {
+                    self.collectionView.reloadData()
+                }
+            }
+        }
+        cellMoveStackView.buttonAddAction(index: 0, action: contentButtonAction)
+        cellMoveStackView.buttonAddAction(index: 1, action: personButtonAction)
     }
         
     func updateSearchResults(for searchController: UISearchController) {
@@ -163,16 +182,28 @@ extension SearchingTableViewController: UICollectionViewDelegate, UICollectionVi
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if indexPath.item == 0 {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SearchContentCell.identifier, for: indexPath) as! SearchContentCell
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SearchContentCell.identifier, for: indexPath) as? SearchContentCell else {
+                print("SearchContentCell nil")
+                return UICollectionViewCell()
+            }
             cell.index = indexPath.item
             guard let movieList = searchViewModel.getSearchMovieList() else { return cell }
             cell.movieList = movieList
+            cell.searchText = currentSearchBarText
             return cell
         } else if indexPath.item == 1 {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SearchPersonCell.identifier, for: indexPath) as! SearchPersonCell
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SearchPersonCell.identifier, for: indexPath) as? SearchPersonCell else {
+                print("SearchPersonCell nil")
+                return UICollectionViewCell()
+            }
+            guard let personList = searchViewModel.getSearchPersonList()  else { return cell }
+            cell.personResults = personList
             return cell
         }else {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SearchCollectionCell.identifier, for: indexPath) as! SearchCollectionCell
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SearchCollectionCell.identifier, for: indexPath) as? SearchCollectionCell else {
+                print("SearchCollectionCell nil")
+                return UICollectionViewCell()
+            }
             return cell
         }
     }
@@ -192,9 +223,36 @@ extension SearchingTableViewController: UICollectionViewDelegate, UICollectionVi
     }
     
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        let index = collectionView.indexPathsForVisibleItems[0].item
-        cellMoveStackView.setButtonTitleColor(index: index)
-        
+        guard let barLeadingAnchor = cellMoveStackView.barLeadingAnchor else { return }
+        if cellMoveStackView.arrangedSubviews.isEmpty { return }
+        let constant = barLeadingAnchor.constant
+        let buttonSzie: CGFloat = cellMoveStackView.arrangedSubviews[0].frame.width
+        if constant < (buttonSzie / 2) {
+            cellMoveStackView.setButtonTitleColor(index: 0)
+        } else if constant < (buttonSzie + (buttonSzie/2)) {
+            cellMoveStackView.setButtonTitleColor(index: 1)
+        } else {
+            cellMoveStackView.setButtonTitleColor(index: 2)
+        }
+    }
+    
+    @objc func cellMovieIndexNotification(notification: Notification) {
+        guard let index = notification.object as? Int else { return }
+        if index == 0 {
+            searchViewModel.getSearchMovie(mediaType: .movie, search: currentSearchBarText) {
+                DispatchQueue.main.async {
+                    self.collectionView.reloadData()
+                }
+            }
+        } else if index == 1 {
+            searchViewModel.getSearchPerson(search: currentSearchBarText) {
+                DispatchQueue.main.async {
+                    self.collectionView.reloadData()
+                }
+            }
+        } else {
+            print("get collection List")
+        }
     }
     
 }
@@ -204,14 +262,16 @@ class SearchContentCell: UICollectionViewCell, UITableViewDelegate, UITableViewD
     static let identifier: String = "\(SearchContentCell.self)"
     private let scopeBar: CustomScopeBar = {
         let scope: CustomScopeBar = CustomScopeBar()
-        scope.addButtonList(textList: ["인기", "영화", "TV", "웹툰"])
+        scope.addButtonList(textList: ["영화", "TV"])
         return scope
     }()
+    public var searchText: String = ""
     public var movieList: [MovieInfo] = [MovieInfo]() {
         didSet {
             self.tableView.reloadData()
         }
     }
+    private var searchViewModel: SearchViewModel = SearchViewModel()
     var index: Int = 0
     
     private let tableView: UITableView = UITableView()
@@ -237,6 +297,23 @@ class SearchContentCell: UICollectionViewCell, UITableViewDelegate, UITableViewD
         tableView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
         tableView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).isActive = true
         tableView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true
+        
+        let movieButtonAction: UIAction = UIAction { _ in
+            self.searchViewModel.getSearchMovie(mediaType: .movie, search: self.searchText) {
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                }
+            }
+        }
+        let tvButtonAction: UIAction = UIAction { _ in
+            self.searchViewModel.getSearchMovie(mediaType: .tv, search: self.searchText) {
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                }
+            }
+        }
+        scopeBar.addAction(index: 0, action: movieButtonAction)
+        scopeBar.addAction(index: 1, action: tvButtonAction)
     }
     
     required init?(coder: NSCoder) {
@@ -244,22 +321,45 @@ class SearchContentCell: UICollectionViewCell, UITableViewDelegate, UITableViewD
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return movieList.isEmpty ? 0 : movieList.count
+        guard let mediaType = scopeBar.getSelectedButton() else { return 0 }
+        if mediaType == .movie {
+            return movieList.isEmpty ? 0 : movieList.count
+        } else {
+            guard let tvList = searchViewModel.getSearchTVList() else { return 0 }
+            return tvList.isEmpty ? 0 : tvList.count
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: SearchDefaultTableViewCell.identifier, for: indexPath) as? SearchDefaultTableViewCell else { return UITableViewCell() }
-        if !movieList.isEmpty && movieList.count > indexPath.row {
-            let movieInfo: MovieInfo = movieList[indexPath.row]
-            cell.title.text = movieInfo.title
-            cell.year.text = String(movieInfo.releaseDate.prefix(4))
-            guard let posterPath = movieInfo.posterPath else { return cell }
-            ImageLoader.loader.tmdbImageLoad(stringUrl: posterPath, size: .poster) { posterImage in
-                DispatchQueue.main.async {
-                    cell.poster.image = posterImage
+        guard let mediaType = scopeBar.getSelectedButton() else { return cell }
+        
+        if mediaType == .movie {
+            if !movieList.isEmpty && movieList.count > indexPath.row {
+                let movieInfo: MovieInfo = movieList[indexPath.row]
+                cell.title.text = movieInfo.title
+                cell.year.text = String(movieInfo.releaseDate.prefix(4))
+                guard let posterPath = movieInfo.posterPath else { return cell }
+                ImageLoader.loader.tmdbImageLoad(stringUrl: posterPath, size: .poster) { posterImage in
+                    DispatchQueue.main.async {
+                        cell.poster.image = posterImage
+                    }
+                }
+            }
+        } else {
+            guard let tvList = searchViewModel.getSearchTVList() else { return cell }
+            if !tvList.isEmpty && tvList.count > indexPath.row {
+                let tvInfo: TVSearchResult = tvList[indexPath.row]
+                cell.title.text = tvInfo.name
+                guard let posterPath = tvInfo.posterPath else { return cell }
+                ImageLoader.loader.tmdbImageLoad(stringUrl: posterPath, size: .poster) { posterImage in
+                    DispatchQueue.main.async {
+                        cell.poster.image = posterImage
+                    }
                 }
             }
         }
+        
         return cell
     }
     
@@ -303,16 +403,26 @@ class CustomScopeBar: UIStackView {
         textList.forEach { buttonText in
             addButton(buttonText: buttonText)
         }
+        guard let button = self.arrangedSubviews[0] as? UIButton else { return }
+        button.isSelected = true
+        button.backgroundColor = .black
     }
     
     private func addButton(buttonText: String) {
         let action: UIAction = UIAction { action in
-            guard let btn = action.sender as? UIButton else { return }
-            btn.isSelected = !btn.isSelected
-            btn.backgroundColor = btn.isSelected ? .black : .white
+            guard let currentBtn = action.sender as? UIButton else { return }
+            let subviews = self.arrangedSubviews
+            subviews.forEach { view in
+                guard let btn = view as? UIButton else { return }
+                btn.isSelected = false
+                btn.backgroundColor = .white
+            }
+            currentBtn.isSelected = true
+            currentBtn.backgroundColor = .black
         }
         let button: UIButton = UIButton()
         button.setTitle(buttonText, for: .normal)
+        button.setTitleColor(.black, for: .normal)
         button.setTitleColor(.white, for: .selected)
         button.backgroundColor = .white
         button.layer.borderColor = UIColor.gray.cgColor
@@ -322,12 +432,37 @@ class CustomScopeBar: UIStackView {
         
         self.addArrangedSubview(button)
     }
+    
+    public func addAction(index: Int, action: UIAction) {
+        if self.arrangedSubviews.count > index {
+            guard let button = self.arrangedSubviews[index] as? UIButton else { return }
+            button.addAction(action, for: .touchUpInside)
+        }
+    }
+    
+    public func getSelectedButton() -> MediaType? {
+        if self.arrangedSubviews.isEmpty { return .none }
+        for i in 0..<self.arrangedSubviews.count {
+            guard let button = self.arrangedSubviews[i] as? UIButton else { return .none }
+            if button.isSelected {
+                if i == 0 { return .movie }
+                else { return .tv }
+            }
+        }
+        return .none
+    }
 }
 
 class SearchPersonCell: UICollectionViewCell, UITableViewDelegate, UITableViewDataSource {
     
     static let identifier: String = "\(SearchPersonCell.self)"
-    var movieId: String = ""
+    var personResults: [SearchPersonResult]? = nil {
+        didSet {
+            DispatchQueue.main.async {
+                self.personListTableView.reloadData()
+            }
+        }
+    }
     let personListTableView: UITableView = UITableView()
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -342,6 +477,7 @@ class SearchPersonCell: UICollectionViewCell, UITableViewDelegate, UITableViewDa
         
         personListTableView.delegate = self
         personListTableView.dataSource = self
+        personListTableView.register(ActorDirectorTableViewCell.self, forCellReuseIdentifier: ActorDirectorTableViewCell.identifier)
     }
     
     required init?(coder: NSCoder) {
@@ -349,18 +485,30 @@ class SearchPersonCell: UICollectionViewCell, UITableViewDelegate, UITableViewDa
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10
+        guard let personCount = personResults?.count else { return 0 }
+        return personCount
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell()
-        var config = cell.defaultContentConfiguration()
-        config.text = "이름"
-        config.secondaryText = "배우 | 영화제목"
-        config.image = UIImage(systemName: "person.circle")
-        cell.contentConfiguration = config
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: ActorDirectorTableViewCell.identifier, for: indexPath) as? ActorDirectorTableViewCell,
+              let personResults = personResults else { return UITableViewCell() }
+        if personResults.count > indexPath.row {
+            let person = personResults[indexPath.row]
+            cell.nameLabel.text = person.name
+            cell.subtitleLabel.text = person.department
+            guard let profilePath = person.profilePath else { return cell }
+            ImageLoader.loader.profileImage(stringURL: profilePath, size: .poster) { profileImage in
+                DispatchQueue.main.async {
+                    cell.posterImageView.image = profileImage
+                }
+            }
+        }
         
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UIScreen.main.bounds.height / 10
     }
 }
 

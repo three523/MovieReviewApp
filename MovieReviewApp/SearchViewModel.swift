@@ -19,6 +19,8 @@ class SearchViewModel {
     private let apiHandler: ApiHandler = ApiHandler()
     private var popularMovies: [MovieInfo]? = nil
     private var searchMovies: [MovieInfo]? = nil
+    private var searchPersons: [SearchPersonResult]? = nil
+    private var searchTVs: [TVSearchResult]? = nil
     private var query: [String: String] = ["api_key": APIKEY, "language": "ko"]
     private var path: String = "search/"
     
@@ -34,8 +36,24 @@ class SearchViewModel {
         let searchPath: String = path + mediaType.rawValue
         let searchQuery = search.replacingOccurrences(of: " ", with: "+")
         query["query"] = searchQuery
-        apiHandler.getJson(type: MovieList.self, path: searchPath, query: query) { movies in
-            self.searchMovies = movies.results
+        if mediaType == .movie{
+            apiHandler.getJson(type: MovieList.self, path: searchPath, query: query) { movies in
+                self.searchMovies = movies.results
+                completed()
+            }
+        } else {
+            apiHandler.getJson(type: TV.self, path: searchPath, query: query) { tvList in
+                self.searchTVs = tvList.results
+                completed()
+            }
+        }
+    }
+    
+    func getSearchPerson(search: String, completed: @escaping () -> Void ) {
+        let searchPath: String = path + "person?"
+        query["query"] = search
+        apiHandler.getJson(type: SearchPerson.self, path: searchPath, query: query) { personList in
+            self.searchPersons = personList.results
             completed()
         }
     }
@@ -56,5 +74,29 @@ class SearchViewModel {
     func getSearchMovieCount() -> Int {
         guard let searchMovies = searchMovies else { return 0 }
         return searchMovies.count
+    }
+    
+    func getSearchTVList() -> [TVSearchResult]? {
+        return searchTVs
+    }
+    
+    func getSearchTVCount() -> Int {
+        guard let searchTVs = searchTVs else { return 0 }
+        return searchTVs.count
+    }
+    
+    func getSearchPersonList() -> [SearchPersonResult]? {
+        guard let searchPersons = searchPersons else {
+            print("searh person nil")
+            return nil
+        }
+        return searchPersons
+    }
+    
+    func getSearchPersonCount() -> Int {
+        guard let searchPersons = searchPersons else {
+            return 0
+        }
+        return searchPersons.count
     }
 }

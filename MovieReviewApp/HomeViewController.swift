@@ -99,7 +99,9 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         else if indexPath.section == 1 { cell.movieList = homeViewModel.getTopratedMovieList() }
         else { cell.movieList = homeViewModel.getUpcomingMovieList() }
         
-        if !(homeViewModel.moviesIsEmpty()) { cell.collectionViewReloadData() }
+        if !(homeViewModel.moviesIsEmpty()) {
+            cell.collectionViewReloadData()
+        }
         return cell
     }
     

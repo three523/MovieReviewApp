@@ -42,9 +42,12 @@ class MovieDetailViewController: UIViewController {
             }
             let movieDetail: MovieDetail = self.detailViewModel.getMovie()!
             let releaseDate: String = movieDetail.releaseDate
-            let productionCountrie: String = movieDetail.productionCountries[0].name
+            var subText: String = "\(releaseDate)"
+            if !movieDetail.productionCountries.isEmpty {
+                subText += "∙\(movieDetail.productionCountries[0].name)"
+            }
             let geres: [String] = movieDetail.genres.map{ $0.name }
-            let subText: String = "\(releaseDate)∙\(productionCountrie)∙\(geres.joined(separator: "/"))"
+            subText += "∙\(geres.joined(separator: "/"))"
             self.header.setTitle(mainText: movieDetail.title, subText: subText)
             self.detailViewModel.getBackdropImage { backdropImage in
                 self.header.setBackdropImage(backdropImage: backdropImage)
