@@ -37,7 +37,6 @@ class FilterTableViewHeader: UIView {
         mainLabel.center = self.center
         
         self.addSubview(mainLabel)
-        
     }
     
     func setAction(action: UIAction) {

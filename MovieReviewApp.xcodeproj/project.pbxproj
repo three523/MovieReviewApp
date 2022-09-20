@@ -51,6 +51,9 @@
 		18C3C67828AF5879002C2D38 /* ReleaseDates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C3C67728AF5879002C2D38 /* ReleaseDates.swift */; };
 		18C584A12889817800C58278 /* SearchingTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C584A02889817800C58278 /* SearchingTableViewController.swift */; };
 		18C8026728ACCD9D0080B31E /* MovieCommentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C8026628ACCD9C0080B31E /* MovieCommentViewController.swift */; };
+		18CA204928D815FF008C720B /* AuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18CA204828D815FF008C720B /* AuthViewController.swift */; };
+		18CA204B28D835D5008C720B /* OtherLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18CA204A28D835D5008C720B /* OtherLoginViewController.swift */; };
+		18CA204D28D86791008C720B /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18CA204C28D86791008C720B /* LoginViewController.swift */; };
 		18CEB15028B473EE0067D598 /* SimilarTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18CEB14F28B473EE0067D598 /* SimilarTableViewCell.swift */; };
 		18CEB15428B477E70067D598 /* SimilarMovie.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18CEB15328B477E70067D598 /* SimilarMovie.swift */; };
 		18CEB15628B4A0020067D598 /* ActorDirectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18CEB15528B4A0020067D598 /* ActorDirectorViewController.swift */; };
@@ -108,6 +111,9 @@
 		18C3C67728AF5879002C2D38 /* ReleaseDates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReleaseDates.swift; sourceTree = "<group>"; };
 		18C584A02889817800C58278 /* SearchingTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchingTableViewController.swift; sourceTree = "<group>"; };
 		18C8026628ACCD9C0080B31E /* MovieCommentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieCommentViewController.swift; sourceTree = "<group>"; };
+		18CA204828D815FF008C720B /* AuthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewController.swift; sourceTree = "<group>"; };
+		18CA204A28D835D5008C720B /* OtherLoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OtherLoginViewController.swift; sourceTree = "<group>"; };
+		18CA204C28D86791008C720B /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		18CEB14F28B473EE0067D598 /* SimilarTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimilarTableViewCell.swift; sourceTree = "<group>"; };
 		18CEB15328B477E70067D598 /* SimilarMovie.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimilarMovie.swift; sourceTree = "<group>"; };
 		18CEB15528B4A0020067D598 /* ActorDirectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActorDirectorViewController.swift; sourceTree = "<group>"; };
@@ -150,6 +156,9 @@
 				18A2F728287EABEA00CA9947 /* MovieListCollectionViewCell.swift */,
 				18C8026628ACCD9C0080B31E /* MovieCommentViewController.swift */,
 				18A167ED28B76BAF00D15BB1 /* PersonDetailViewController.swift */,
+				18CA204C28D86791008C720B /* LoginViewController.swift */,
+				18CA204A28D835D5008C720B /* OtherLoginViewController.swift */,
+				18CA204828D815FF008C720B /* AuthViewController.swift */,
 			);
 			name = ViewController;
 			sourceTree = "<group>";
@@ -313,6 +322,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				18CA204B28D835D5008C720B /* OtherLoginViewController.swift in Sources */,
 				18A2F732287ECBEA00CA9947 /* APIHandler.swift in Sources */,
 				180CE3D028C76EDE000FACF8 /* TV.swift in Sources */,
 				18A167F028B76BF600D15BB1 /* PersonViewModel.swift in Sources */,
@@ -338,6 +348,7 @@
 				184272C7287D6935004E1C9E /* MyProfileViewController.swift in Sources */,
 				184272C5287D692B004E1C9E /* RatingViewController.swift in Sources */,
 				18CEB15628B4A0020067D598 /* ActorDirectorViewController.swift in Sources */,
+				18CA204928D815FF008C720B /* AuthViewController.swift in Sources */,
 				18A2336F2892646100B1B7FB /* CustomNavigationBar.swift in Sources */,
 				18ABB8082897C37200E8AF7B /* MovieDetailSectionView.swift in Sources */,
 				18A167EE28B76BAF00D15BB1 /* PersonDetailViewController.swift in Sources */,
@@ -354,6 +365,7 @@
 				18A82FC2288146F100791B03 /* FilterViewController.swift in Sources */,
 				18A167F228B7869A00D15BB1 /* PersonMoviesTableViewCell.swift in Sources */,
 				18C018CD2886A7A500E6AE2C /* FilterTableViewHeader.swift in Sources */,
+				18CA204D28D86791008C720B /* LoginViewController.swift in Sources */,
 				18C018CB288682D400E6AE2C /* ReviewFilterViewModel.swift in Sources */,
 				18A82FBE2881006C00791B03 /* FilterHeaderView.swift in Sources */,
 				18E17963287805790060BCD9 /* SceneDelegate.swift in Sources */,
