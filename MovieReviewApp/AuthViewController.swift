@@ -6,6 +6,9 @@
 //
 
 import UIKit
+import CryptoKit
+import AuthenticationServices
+import FirebaseAuth
 
 class AuthViewController: UIViewController {
     
@@ -43,6 +46,30 @@ class AuthViewController: UIViewController {
         st.spacing = 10
         return st
     }()
+    let appleLoginButton: LoginButton = {
+        let button: LoginButton = LoginButton()
+        button.setTitle("Apple로 계속하기", for: .normal)
+        button.setTitleColor(UIColor.white, for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 19)
+        button.setImage(UIImage(named: "AppleLoginLogo"), for: .normal)
+        button.backgroundColor = .black
+        button.clipsToBounds = true
+        button.layer.cornerRadius = 5
+        return button
+    }()
+    
+    //MARK: 카카오 로고 이미지는 깨지는 관계로 변경의 필요성이 있음
+    let kakaoLoginButton: LoginButton = {
+        let button: LoginButton = LoginButton()
+        button.setTitle("카카오로 계속하기", for: .normal)
+        button.setTitleColor(UIColor.black, for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 19)
+        button.setImage(UIImage(named: "KakaoLogin"), for: .normal)
+        button.backgroundColor = UIColor(rgb: 0xFEE500)
+        button.clipsToBounds = true
+        button.layer.cornerRadius = 5
+        return button
+    }()
     let otherButton: UIButton = {
         let btn: UIButton = UIButton()
         btn.setTitle("옵션 더 보기", for: .normal)
@@ -51,6 +78,8 @@ class AuthViewController: UIViewController {
         btn.titleLabel?.font = .systemFont(ofSize: 14, weight: .regular)
         return btn
     }()
+    
+    var currentNonce: String?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -99,7 +128,25 @@ class AuthViewController: UIViewController {
         signStackView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 10).isActive = true
         signStackView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 10).isActive = true
         signStackView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -10).isActive = true
-        signStackView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -10).isActive = true
+        
+        signStackView.addArrangedSubview(appleLoginButton)
+        appleLoginButton.heightAnchor.constraint(equalToConstant: 44).isActive = true
+        appleLoginButton.layoutIfNeeded()
+        guard let appleLogoView = appleLoginButton.imageView else { return }
+        
+        appleLoginButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: 5, bottom: 0, right: appleLoginButton.frame.width - appleLogoView.frame.height)
+        
+        appleLoginButton.titleEdgeInsets = UIEdgeInsets(top: 0, left: -round(appleLogoView.frame.width+5), bottom: 0, right: 0)
+        appleLoginButton.addTarget(self, action: #selector(clickAppleLogin), for: .touchUpInside)
+        
+        signStackView.addArrangedSubview(kakaoLoginButton)
+        signStackView.layoutIfNeeded()
+        kakaoLoginButton.layoutIfNeeded()
+        guard let kakaoLogoView = kakaoLoginButton.imageView else { return }
+        print(kakaoLoginButton.frame,kakaoLogoView.frame)
+        kakaoLoginButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: (kakaoLoginButton.frame.width - kakaoLogoView.frame.width) - 10)
+        
+        kakaoLoginButton.titleEdgeInsets = UIEdgeInsets(top: 0, left: -kakaoLogoView.frame.width, bottom: 0, right: 0)
         
         signStackView.addArrangedSubview(otherButton)
         otherButton.addAction(UIAction(handler: { _ in
@@ -107,18 +154,111 @@ class AuthViewController: UIViewController {
             otherLoginVC.modalPresentationStyle = .overFullScreen
             self.present(otherLoginVC, animated: false)
         }), for: .touchUpInside)
+        
+    }
+   
+    @objc func clickAppleLogin() {
+        
+        let nonce = randomNonceString()
+        currentNonce = nonce
+        let request = ASAuthorizationAppleIDProvider().createRequest()
+        request.requestedScopes = [.fullName, .email]
+        request.nonce = sha256(nonce)
+        
+        let appleAuthVC = ASAuthorizationController(authorizationRequests: [request])
+        appleAuthVC.delegate = self as? ASAuthorizationControllerDelegate
+        appleAuthVC.presentationContextProvider = self as? ASAuthorizationControllerPresentationContextProviding
+        appleAuthVC.performRequests()
     }
     
-    
+}
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+extension AuthViewController: ASAuthorizationControllerDelegate, ASAuthorizationControllerPresentationContextProviding {
+    func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
+        return self.view.window!
     }
-    */
+    
+    func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
+        if let appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential {
+            guard let idToken = appleIDCredential.identityToken,
+                  let tokenStr = String(data: idToken, encoding: .utf8) else { return }
+                        
+            guard let code = appleIDCredential.authorizationCode else { return }
+            let codeStr = String(data: code, encoding: .utf8)
+            
+            guard let nonce = currentNonce else { return }
+            
+            print("nonce: \(nonce)")
+            
+            let user = appleIDCredential.user
+        
+            print(appleIDCredential.fullName)
+            
+            print(appleIDCredential.email)
+            
+            let credential = OAuthProvider.credential(withProviderID: "apple.com", idToken: tokenStr, rawNonce: nonce)
+            
+            Auth.auth().signIn(with: credential) { (authResult, error) in
+                if let error = error {
+                    print("error")
+                    print(error.localizedDescription)
+                    return
+                } else {
+                    print("success")
+                    print(authResult?.user.email)
+                    print(authResult?.user.displayName)
+                }
+            }
+        }
+    }
+    
+    func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
+        print(error.localizedDescription)
+    }
+    
+    func randomNonceString(length: Int = 32) -> String {
+        precondition(length > 0)
+        let charset: [Character] =
+            Array("0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._")
+          var result = ""
+          var remainingLength = length
 
+          while remainingLength > 0 {
+            let randoms: [UInt8] = (0 ..< 16).map { _ in
+              var random: UInt8 = 0
+              let errorCode = SecRandomCopyBytes(kSecRandomDefault, 1, &random)
+              if errorCode != errSecSuccess {
+                fatalError(
+                  "Unable to generate nonce. SecRandomCopyBytes failed with OSStatus \(errorCode)"
+                )
+              }
+              return random
+            }
+
+            randoms.forEach { random in
+              if remainingLength == 0 {
+                return
+              }
+
+              if random < charset.count {
+                result.append(charset[Int(random)])
+                remainingLength -= 1
+              }
+            }
+          }
+
+          return result
+    }
+    
+    @available(iOS 13, *)
+    private func sha256(_ input: String) -> String {
+      let inputData = Data(input.utf8)
+      let hashedData = SHA256.hash(data: inputData)
+      let hashString = hashedData.compactMap {
+        String(format: "%02x", $0)
+      }.joined()
+
+      return hashString
+    }
+    
 }

@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 enum Position {
     case top,bottom
@@ -14,7 +15,7 @@ enum Position {
 class LoginViewController: UIViewController, UITextFieldDelegate {
 
     let navigationBar: UINavigationBar = UINavigationBar()
-    let emaliTextField: UITextField = {
+    let emailTextField: UITextField = {
         let textField: UITextField = UITextField()
         textField.font = .systemFont(ofSize: 16, weight: .regular)
         textField.placeholder = "이메일"
@@ -48,6 +49,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         button.setTitleColor(UIColor.systemGray2, for: .normal)
         button.backgroundColor = .systemGray5
         button.contentEdgeInsets = UIEdgeInsets(top: 5, left: 10, bottom: 5, right: 10)
+//        button.isEnabled = false
         return button
     }()
     
@@ -57,20 +59,20 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         
         addNavigationBar()
         
-        view.addSubview(emaliTextField)
+        view.addSubview(emailTextField)
         view.addSubview(passwordTextField)
         view.addSubview(footerView)
         footerView.addSubview(forgotPasswordButton)
         footerView.addSubview(loginButton)
         
-        emaliTextField.translatesAutoresizingMaskIntoConstraints = false
-        emaliTextField.topAnchor.constraint(equalTo: navigationBar.bottomAnchor, constant: 10).isActive = true
-        emaliTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10).isActive = true
-        emaliTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = true
-        emaliTextField.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        emailTextField.translatesAutoresizingMaskIntoConstraints = false
+        emailTextField.topAnchor.constraint(equalTo: navigationBar.bottomAnchor, constant: 10).isActive = true
+        emailTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10).isActive = true
+        emailTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = true
+        emailTextField.heightAnchor.constraint(equalToConstant: 50).isActive = true
         
         passwordTextField.translatesAutoresizingMaskIntoConstraints = false
-        passwordTextField.topAnchor.constraint(equalTo: emaliTextField.bottomAnchor, constant: 10).isActive = true
+        passwordTextField.topAnchor.constraint(equalTo: emailTextField.bottomAnchor, constant: 10).isActive = true
         passwordTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10).isActive = true
         passwordTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = true
         passwordTextField.heightAnchor.constraint(equalToConstant: 50).isActive = true
@@ -92,15 +94,17 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         footerView.layoutIfNeeded()
         footerView.layer.addSublayer(addBorder(targetFrame: footerView.frame, position: .top))
         
-        emaliTextField.layoutIfNeeded()
-        emaliTextField.layer.addSublayer(addBorder(targetFrame: emaliTextField.frame, position: .bottom))
+        emailTextField.layoutIfNeeded()
+        emailTextField.layer.addSublayer(addBorder(targetFrame: emailTextField.frame, position: .bottom))
         
         passwordTextField.layoutIfNeeded()
         passwordTextField.layer.addSublayer(addBorder(targetFrame: passwordTextField.frame, position: .bottom))
         passwordTextField.enablePasswordToggle()
         
-        emaliTextField.delegate = self
+        emailTextField.delegate = self
         passwordTextField.delegate = self
+        
+        loginButton.addTarget(self, action: #selector(loginClick), for: .touchUpInside)
     }
     
     func addNavigationBar() {
@@ -134,6 +138,18 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     
     @objc func closeClick() {
         self.dismiss(animated: true)
+    }
+    
+    @objc func loginClick() {
+        guard let email: String = emailTextField.text else { return }
+        guard let password = passwordTextField.text else { return }
+        Auth.auth().signIn(withEmail: email, password: password) { (user, error) in
+            if let user = user {  
+                print("login success")
+            } else{
+                print("login fail")
+            }
+        }
     }
 
 }
