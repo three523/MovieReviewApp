@@ -199,13 +199,18 @@ class AuthViewController: UIViewController {
                                         print("error: \(error)")
                                     } else {
                                         print("me success")
-                                    
+                                        
+                                        let signupVC: SignupViewController = SignupViewController()
+                                        signupVC.modalPresentationStyle = .fullScreen
                                         if let nickname = user?.kakaoAccount?.profile?.nickname {
                                             print(nickname)
+                                            signupVC.name = nickname
                                         }
                                         if let email = user?.kakaoAccount?.email {
                                             print(email)
+                                            signupVC.email = email
                                         }
+                                        self.present(signupVC, animated: false)
                                     }
                                 }
                             }
