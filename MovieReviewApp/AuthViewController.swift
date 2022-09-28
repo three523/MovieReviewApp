@@ -9,6 +9,9 @@ import UIKit
 import CryptoKit
 import AuthenticationServices
 import FirebaseAuth
+import KakaoSDKAuth
+import KakaoSDKUser
+import KakaoSDKCommon
 
 class AuthViewController: UIViewController {
     
@@ -147,6 +150,7 @@ class AuthViewController: UIViewController {
         kakaoLoginButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: (kakaoLoginButton.frame.width - kakaoLogoView.frame.width) - 10)
         
         kakaoLoginButton.titleEdgeInsets = UIEdgeInsets(top: 0, left: -kakaoLogoView.frame.width, bottom: 0, right: 0)
+        kakaoLoginButton.addTarget(self, action: #selector(clickKakaoLogin), for: .touchUpInside)
         
         signStackView.addArrangedSubview(otherButton)
         otherButton.addAction(UIAction(handler: { _ in
@@ -169,6 +173,47 @@ class AuthViewController: UIViewController {
         appleAuthVC.delegate = self as? ASAuthorizationControllerDelegate
         appleAuthVC.presentationContextProvider = self as? ASAuthorizationControllerPresentationContextProviding
         appleAuthVC.performRequests()
+    }
+    
+    @objc func clickKakaoLogin() {
+        UserApi.shared.loginWithKakaoAccount { oauthToken, error in
+            if let error = error {
+                print("error: \(error)")
+            } else {
+                print("loginWithKakaoAccount success")
+                UserApi.shared.me { user, error in
+                    let nonce = self.randomNonceString()
+                    self.currentNonce = nonce
+                    var scopes = [String]()
+                    if user?.kakaoAccount?.profileNeedsAgreement == true { scopes.append("profile") }
+                    if user?.kakaoAccount?.emailNeedsAgreement == true { scopes.append("account_email") }
+                    scopes.append("openid")
+                    
+                    if scopes.count > 0 {
+                        UserApi.shared.loginWithKakaoAccount(scopes: scopes, nonce: nonce) { _, error in
+                            if let error = error {
+                                print("error \(error)")
+                            } else {
+                                UserApi.shared.me { user, error in
+                                    if let error = error {
+                                        print("error: \(error)")
+                                    } else {
+                                        print("me success")
+                                    
+                                        if let nickname = user?.kakaoAccount?.profile?.nickname {
+                                            print(nickname)
+                                        }
+                                        if let email = user?.kakaoAccount?.email {
+                                            print(email)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
     
 }
