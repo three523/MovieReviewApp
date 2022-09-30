@@ -14,11 +14,14 @@
 		184272C5287D692B004E1C9E /* RatingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 184272C4287D692B004E1C9E /* RatingViewController.swift */; };
 		184272C7287D6935004E1C9E /* MyProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 184272C6287D6935004E1C9E /* MyProfileViewController.swift */; };
 		184272C9287D7A30004E1C9E /* TopTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 184272C8287D7A30004E1C9E /* TopTabView.swift */; };
+		186DC95128E6CCA50083EA28 /* SettingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 186DC95028E6CCA50083EA28 /* SettingTableViewCell.swift */; };
+		186DC95328E6D4390083EA28 /* MySettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 186DC95228E6D4390083EA28 /* MySettingViewController.swift */; };
 		186E321C28E1CA1900EA18BC /* AuthServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 186E321B28E1CA1900EA18BC /* AuthServices.swift */; };
 		186E321E28E307F000EA18BC /* LoginButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 186E321D28E307F000EA18BC /* LoginButton.swift */; };
 		186E322028E3419000EA18BC /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 186E321F28E3419000EA18BC /* UIColor.swift */; };
 		189863C728E4003100C08881 /* LoginAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 189863C628E4003100C08881 /* LoginAuth.swift */; };
 		189863C928E429B700C08881 /* SignupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 189863C828E429B700C08881 /* SignupViewController.swift */; };
+		189EC36628E5847400023218 /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 189EC36528E5847400023218 /* SettingViewController.swift */; };
 		189F34B828BE5DEE00AD0A29 /* MoreButtonLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 189F34B728BE5DEE00AD0A29 /* MoreButtonLabel.swift */; };
 		189F34BA28BE5F7100AD0A29 /* OverviewTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 189F34B928BE5F7100AD0A29 /* OverviewTableViewCell.swift */; };
 		18A13F29288EA06E00A34538 /* MovieDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18A13F28288EA06E00A34538 /* MovieDetailViewController.swift */; };
@@ -97,12 +100,15 @@
 		184272C4287D692B004E1C9E /* RatingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingViewController.swift; sourceTree = "<group>"; };
 		184272C6287D6935004E1C9E /* MyProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProfileViewController.swift; sourceTree = "<group>"; };
 		184272C8287D7A30004E1C9E /* TopTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopTabView.swift; sourceTree = "<group>"; };
+		186DC95028E6CCA50083EA28 /* SettingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingTableViewCell.swift; sourceTree = "<group>"; };
+		186DC95228E6D4390083EA28 /* MySettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MySettingViewController.swift; sourceTree = "<group>"; };
 		186E321A28E1C87D00EA18BC /* MovieReviewApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MovieReviewApp.entitlements; sourceTree = "<group>"; };
 		186E321B28E1CA1900EA18BC /* AuthServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthServices.swift; sourceTree = "<group>"; };
 		186E321D28E307F000EA18BC /* LoginButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginButton.swift; sourceTree = "<group>"; };
 		186E321F28E3419000EA18BC /* UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
 		189863C628E4003100C08881 /* LoginAuth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginAuth.swift; sourceTree = "<group>"; };
 		189863C828E429B700C08881 /* SignupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupViewController.swift; sourceTree = "<group>"; };
+		189EC36528E5847400023218 /* SettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
 		189F34B728BE5DEE00AD0A29 /* MoreButtonLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreButtonLabel.swift; sourceTree = "<group>"; };
 		189F34B928BE5F7100AD0A29 /* OverviewTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverviewTableViewCell.swift; sourceTree = "<group>"; };
 		18A13F28288EA06E00A34538 /* MovieDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDetailViewController.swift; sourceTree = "<group>"; };
@@ -204,6 +210,8 @@
 				18C584A02889817800C58278 /* SearchingTableViewController.swift */,
 				184272C4287D692B004E1C9E /* RatingViewController.swift */,
 				184272C6287D6935004E1C9E /* MyProfileViewController.swift */,
+				189EC36528E5847400023218 /* SettingViewController.swift */,
+				186DC95228E6D4390083EA28 /* MySettingViewController.swift */,
 				18A2F726287EABB000CA9947 /* HomeTableViewCell.swift */,
 				18A2F728287EABEA00CA9947 /* MovieListCollectionViewCell.swift */,
 				18C8026628ACCD9C0080B31E /* MovieCommentViewController.swift */,
@@ -274,6 +282,7 @@
 				18BF66DE28B3BE7A00AE492D /* ReviewTableViewCell.swift */,
 				18A167E928B5FB9500D15BB1 /* ReviewListCollectionViewCell.swift */,
 				18CEB14F28B473EE0067D598 /* SimilarTableViewCell.swift */,
+				186DC95028E6CCA50083EA28 /* SettingTableViewCell.swift */,
 			);
 			name = Cell;
 			sourceTree = "<group>";
@@ -507,7 +516,10 @@
 				18C3C67628AF48E6002C2D38 /* Credits.swift in Sources */,
 				18ABB6592891319100BACD73 /* MovieDetailHeaderView.swift in Sources */,
 				18BF66DB28B3A26200AE492D /* TableFooterView.swift in Sources */,
+				189EC36628E5847400023218 /* SettingViewController.swift in Sources */,
 				18CEB15028B473EE0067D598 /* SimilarTableViewCell.swift in Sources */,
+				186DC95328E6D4390083EA28 /* MySettingViewController.swift in Sources */,
+				186DC95128E6CCA50083EA28 /* SettingTableViewCell.swift in Sources */,
 				18C8026728ACCD9D0080B31E /* MovieCommentViewController.swift in Sources */,
 				18C584A12889817800C58278 /* SearchingTableViewController.swift in Sources */,
 				184272C3287D691E004E1C9E /* SearchViewController.swift in Sources */,
