@@ -9,15 +9,19 @@ import UIKit
 import FirebaseAuth
 
 class TabBarController: UITabBarController {
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         if Auth.auth().currentUser == nil {
             let authVC = AuthViewController()
             authVC.modalPresentationStyle = .fullScreen
             self.present(authVC, animated: false)
+            print("test")
         }
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
         
         self.tabBar.backgroundColor = .white
         

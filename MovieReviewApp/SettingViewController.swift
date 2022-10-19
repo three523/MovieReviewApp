@@ -10,7 +10,6 @@ import UIKit
 class SettingViewController: UIViewController {
     let settingTableView: UITableView = UITableView(frame: .zero, style: .grouped)
     var tableList: [[String]] = []
-    var tableAction: [[()->Void]] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -58,16 +57,11 @@ extension SettingViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.row == 0 {
-//            let mySettingVC = SettingViewController()
-//            mySettingVC.modalPresentationStyle = .fullScreen
-//            mySettingVC.title = "내 설정"
-//            mySettingVC.tableList = [["이메일","비밀번호 설정","프로필 변경"],["관심없어요 관리"],["로그아웃"],["평가내역 초기화","탈퇴하기"]]
-//            let action: ()-> Void = { [weak self] in
-//                self?.navigationController?.pushViewController(UIViewController(), animated: true)
-//            }
-//            mySettingVC.tableAction = [[action]]
-//            navigationController?.pushViewController(mySettingVC, animated: true)
-            tableAction[0][0]()
+            let mySettingVC = MySettingViewController()
+            mySettingVC.modalPresentationStyle = .fullScreen
+            mySettingVC.title = "내 설정"
+            mySettingVC.tableList = [["이메일","비밀번호 설정","프로필 변경"],["관심없어요 관리"],["로그아웃"],["평가내역 초기화","탈퇴하기"]]
+            navigationController?.pushViewController(mySettingVC, animated: true)
         }
     }
     

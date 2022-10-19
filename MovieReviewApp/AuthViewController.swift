@@ -213,7 +213,7 @@ class AuthViewController: UIViewController {
                                             print(email)
                                             signupVC.email = email
                                         }
-                                        self.present(signupVC, animated: false)
+                                        self.dismiss(animated: true)
                                     }
                                 }
                             }
@@ -260,6 +260,7 @@ extension AuthViewController: ASAuthorizationControllerDelegate, ASAuthorization
                     print("success")
                     print(authResult?.user.email)
                     print(authResult?.user.displayName)
+                    self.dismiss(animated: true)
                 }
             }
         }

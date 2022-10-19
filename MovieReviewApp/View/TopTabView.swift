@@ -37,6 +37,15 @@ class TopTabView: UIStackView {
         
     }
     
+    func addTwoLineButton(btnList: [TwolineButton]) {
+        btnList.forEach { twoLineBtn in
+            if self.arrangedSubviews.count != 0 {
+                addSeparator()
+            }
+            self.addArrangedSubview(twoLineBtn)
+        }
+    }
+    
     @objc func setTextColor(clickBtn: UIButton) {
         for view in self.arrangedSubviews {
             if let btn = view as? UIButton {
@@ -50,7 +59,7 @@ class TopTabView: UIStackView {
     
     private func addSeparator() {
         let line = UIView()
-        line.backgroundColor = .gray
+        line.backgroundColor = .systemGray3
         line.widthAnchor.constraint(equalToConstant: 1).isActive = true
         self.addArrangedSubview(line)
         line.heightAnchor.constraint(equalTo: self.heightAnchor, multiplier: 0.5).isActive = true

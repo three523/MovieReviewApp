@@ -19,6 +19,15 @@ class SettingTableViewCell: UITableViewCell {
         imageView.tintColor = .systemGray3
         return imageView
     }()
+    let emailLabel: UILabel = {
+        let label: UILabel = UILabel()
+        label.font = .systemFont(ofSize: 14, weight: .regular)
+        label.textColor = .systemGray5
+        return label
+    }()
+    var nameLabelBottom: NSLayoutConstraint? = nil
+    var nameLabelCenterY: NSLayoutConstraint? = nil
+    
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -28,13 +37,28 @@ class SettingTableViewCell: UITableViewCell {
         
         settingNameLabel.translatesAutoresizingMaskIntoConstraints = false
         settingNameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10).isActive = true
-        settingNameLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
+        nameLabelCenterY = settingNameLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
+        nameLabelBottom = settingNameLabel.bottomAnchor.constraint(equalTo: centerYAnchor)
+        nameLabelCenterY?.isActive = true
         
         forwardImageView.translatesAutoresizingMaskIntoConstraints = false
         forwardImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10).isActive = true
         forwardImageView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
         forwardImageView.heightAnchor.constraint(equalTo: contentView.heightAnchor, multiplier: 0.4).isActive = true
         forwardImageView.widthAnchor.constraint(equalTo: forwardImageView.heightAnchor, multiplier: 0.7).isActive = true
+    }
+    
+    func setEmail(email: String) {
+        contentView.addSubview(emailLabel)
+        
+        emailLabel.translatesAutoresizingMaskIntoConstraints = false
+        emailLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10).isActive = true
+        emailLabel.topAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
+        
+        emailLabel.text = email
+        
+        nameLabelCenterY?.isActive = false
+        nameLabelBottom?.isActive = true
     }
     
     required init?(coder: NSCoder) {
