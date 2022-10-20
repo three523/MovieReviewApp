@@ -22,11 +22,11 @@ class CircleIconImageView: UIView {
         self.imageSize = imageSize
         self.inset = inset
         
-        self.backgroundColor = .systemGray5
+        self.backgroundColor = .systemGray6
         self.clipsToBounds = true
         imageView.image = image
-        imageView.backgroundColor = .systemGray5
-        imageView.tintColor = .systemGray2
+        imageView.backgroundColor = .systemGray6
+        imageView.tintColor = .systemGray3
         
         viewAdd()
         autoLayoutSetting()

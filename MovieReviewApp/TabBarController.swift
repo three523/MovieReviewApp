@@ -10,15 +10,15 @@ import FirebaseAuth
 
 class TabBarController: UITabBarController {
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        if Auth.auth().currentUser == nil {
-            let authVC = AuthViewController()
-            authVC.modalPresentationStyle = .fullScreen
-            self.present(authVC, animated: false)
-            print("test")
-        }
-    }
+//    override func viewDidAppear(_ animated: Bool) {
+//        super.viewDidAppear(animated)
+//        if Auth.auth().currentUser == nil {
+//            let authVC = AuthViewController()
+//            authVC.modalPresentationStyle = .fullScreen
+//            self.present(authVC, animated: false)
+//            print("test")
+//        }
+//    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,20 +26,16 @@ class TabBarController: UITabBarController {
         self.tabBar.backgroundColor = .white
         
         let vc1 = HomeViewController()
-        let vc2 = SearchViewController()
+        let vc2 = UINavigationController(rootViewController: SearchViewController())
         let vc3 = RatingViewController()
-        let vc4 = MyProfileViewController()
-        
-        let vc5 = UINavigationController(rootViewController: vc2)
-        let vc6 = UINavigationController(rootViewController: vc4)
+        let vc4 = UINavigationController(rootViewController: MyProfileViewController())
         
         vc1.title = "홈"
-        vc5.tabBarItem.title = "검색"
+        vc2.tabBarItem.title = "검색"
         vc3.title = "평가"
-//        vc4.title = "나의 정보"
-        vc6.tabBarItem.title = "나의 정보"
+        vc4.tabBarItem.title = "나의 정보"
         
-        self.setViewControllers([vc1, vc5, vc3, vc6], animated: false)
+        self.setViewControllers([vc1, vc2, vc3, vc4], animated: false)
         
         guard let items = self.tabBar.items else { return }
         

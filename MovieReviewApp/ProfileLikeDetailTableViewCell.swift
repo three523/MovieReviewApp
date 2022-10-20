@@ -20,7 +20,7 @@ class ProfileLikeDetailTableViewCell: UITableViewCell {
     private let likeCountLabel: UILabel = {
         let label: UILabel = UILabel()
         label.font = .systemFont(ofSize: 16, weight: .regular)
-        label.textColor = .systemGray5
+        label.textColor = .systemGray3
         label.text = ""
         return label
     }()
@@ -58,7 +58,7 @@ class ProfileLikeDetailTableViewCell: UITableViewCell {
         
         likeCountLabel.translatesAutoresizingMaskIntoConstraints = false
         likeCountLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
-        likeCountLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10).isActive = true
+        likeCountLabel.leadingAnchor.constraint(equalTo: titleLabel.trailingAnchor, constant: 10).isActive = true
         
         frontArrowImageView.translatesAutoresizingMaskIntoConstraints = false
         frontArrowImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10).isActive = true

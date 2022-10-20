@@ -65,12 +65,6 @@ class ProfileInfoTableViewCell: UITableViewCell {
     }()
     let followerStr: String = "0"
     let followingStr: String = "0"
-    let settingButton: UIButton = {
-        let button: UIButton = UIButton()
-        button.setBackgroundImage(UIImage(systemName: "gearshape.fill"), for: .normal)
-        button.tintColor = .black
-        return button
-    }()
     let profileChangeButton: UIButton = {
         let button: UIButton = UIButton()
         button.setTitle("프로필 수정", for: .normal)
@@ -111,7 +105,6 @@ class ProfileInfoTableViewCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
-        settingButton.addTarget(self, action: #selector(clickSetting), for: .touchUpInside)
         viewAdd()
         viewAutolaoutSetting()
         
@@ -128,7 +121,6 @@ class ProfileInfoTableViewCell: UITableViewCell {
         contentView.addSubview(profileImageView)
         contentView.addSubview(nickNameLabel)
         contentView.addSubview(followStackView)
-        contentView.addSubview(settingButton)
         contentView.addSubview(profileChangeButton)
         contentView.addSubview(lineView)
         contentView.addSubview(myActivityStackView)
@@ -149,14 +141,9 @@ class ProfileInfoTableViewCell: UITableViewCell {
     }
     
     func viewAutolaoutSetting() {
-        settingButton.translatesAutoresizingMaskIntoConstraints = false
-        settingButton.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10).isActive = true
-        settingButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20).isActive = true
-        settingButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
-        settingButton.widthAnchor.constraint(equalTo: settingButton.heightAnchor).isActive = true
         
         profileImageView.translatesAutoresizingMaskIntoConstraints = false
-        profileImageView.topAnchor.constraint(equalTo: settingButton.bottomAnchor, constant: 10).isActive = true
+        profileImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10).isActive = true
         profileImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20).isActive = true
         profileImageView.widthAnchor.constraint(equalToConstant: 80).isActive = true
         profileImageView.heightAnchor.constraint(equalTo: profileImageView.widthAnchor).isActive = true
@@ -195,14 +182,6 @@ class ProfileInfoTableViewCell: UITableViewCell {
         super.setSelected(selected, animated: animated)
 
         // Configure the view for the selected state
-    }
-    
-    @objc func clickSetting() {
-        let settginVC = SettingViewController()
-        settginVC.modalPresentationStyle = .fullScreen
-        settginVC.title = "설정"
-        settginVC.tableList = [["내 설정","서비스 설정","SNS 설정"]]
-        navigationController?.pushViewController(settginVC, animated: true)
     }
 
 }
