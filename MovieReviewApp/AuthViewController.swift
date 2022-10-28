@@ -166,11 +166,12 @@ class AuthViewController: UIViewController {
    
     @objc func clickAppleLogin() {
         
-        let nonce = randomNonceString()
+        let nonce = FBAuth.randomNonceString()
         currentNonce = nonce
+        
         let request = ASAuthorizationAppleIDProvider().createRequest()
         request.requestedScopes = [.fullName, .email]
-        request.nonce = sha256(nonce)
+        request.nonce = FBAuth.sha256(nonce)
         
         let appleAuthVC = ASAuthorizationController(authorizationRequests: [request])
         appleAuthVC.delegate = self as? ASAuthorizationControllerDelegate
@@ -179,47 +180,20 @@ class AuthViewController: UIViewController {
     }
     
     @objc func clickKakaoLogin() {
-        UserApi.shared.loginWithKakaoAccount { oauthToken, error in
-            if let error = error {
-                print("error: \(error)")
-            } else {
-                print("loginWithKakaoAccount success")
-                UserApi.shared.me { user, error in
-                    let nonce = self.randomNonceString()
-                    self.currentNonce = nonce
-                    var scopes = [String]()
-                    if user?.kakaoAccount?.profileNeedsAgreement == true { scopes.append("profile") }
-                    if user?.kakaoAccount?.emailNeedsAgreement == true { scopes.append("account_email") }
-                    scopes.append("openid")
-                    
-                    if scopes.count > 0 {
-                        UserApi.shared.loginWithKakaoAccount(scopes: scopes, nonce: nonce) { _, error in
-                            if let error = error {
-                                print("error \(error)")
-                            } else {
-                                UserApi.shared.me { user, error in
-                                    if let error = error {
-                                        print("error: \(error)")
-                                    } else {
-                                        print("me success")
-                                        
-                                        let signupVC: SignupViewController = SignupViewController()
-                                        signupVC.modalPresentationStyle = .fullScreen
-                                        if let nickname = user?.kakaoAccount?.profile?.nickname {
-                                            print(nickname)
-                                            signupVC.name = nickname
-                                        }
-                                        if let email = user?.kakaoAccount?.email {
-                                            print(email)
-                                            signupVC.email = email
-                                        }
-                                        self.dismiss(animated: true)
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+        let signupVC: SignupViewController = SignupViewController()
+        signupVC.modalPresentationStyle = .fullScreen
+        
+        FBAuth.signInWithKakao { result in
+            switch result {
+            case .success(let user):
+                let username = user.kakaoAccount?.profile?.nickname ?? ""
+                let email = user.kakaoAccount?.email ?? ""
+                signupVC.name = username
+                signupVC.email = email
+                
+                self.present(signupVC, animated: false)
+            case .failure(let error):
+                print(error)
             }
         }
     }
@@ -235,32 +209,22 @@ extension AuthViewController: ASAuthorizationControllerDelegate, ASAuthorization
         if let appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential {
             guard let idToken = appleIDCredential.identityToken,
                   let tokenStr = String(data: idToken, encoding: .utf8) else { return }
-                        
+            
+            //TODO: UserDefaults가 아니라 kechain으로 변경
+            
             guard let code = appleIDCredential.authorizationCode else { return }
             let codeStr = String(data: code, encoding: .utf8)
             
             guard let nonce = currentNonce else { return }
             
-            print("nonce: \(nonce)")
-            
-            let user = appleIDCredential.user
-        
-            print(appleIDCredential.fullName)
-            
-            print(appleIDCredential.email)
-            
-            let credential = OAuthProvider.credential(withProviderID: "apple.com", idToken: tokenStr, rawNonce: nonce)
-            
-            Auth.auth().signIn(with: credential) { (authResult, error) in
-                if let error = error {
-                    print("error")
-                    print(error.localizedDescription)
-                    return
-                } else {
-                    print("success")
-                    print(authResult?.user.email)
-                    print(authResult?.user.displayName)
+            FBAuth.signInWithApple(idTokenString: tokenStr, nonce: nonce) { result in
+                switch result {
+                case .success(let authResult):
+                    print(authResult.user.email)
+                    print(authResult.user.displayName)
                     self.dismiss(animated: true)
+                case .failure(let err):
+                    print(err.localizedDescription)
                 }
             }
         }

@@ -9,6 +9,7 @@ target 'MovieReviewApp' do
 pod 'FirebaseCore'
 pod 'FirebaseAuth'
 pod 'Firebase/Core'
+pod 'Firebase/Database'
 pod 'KakaoSDKCommon'
 pod 'KakaoSDKAuth'
 pod 'KakaoSDKUser'

@@ -7,6 +7,7 @@
 
 import UIKit
 import FirebaseAuth
+import FirebaseDatabase
 
 class MySettingViewController: UIViewController {
     
@@ -67,6 +68,8 @@ extension MySettingViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.section == 2 && indexPath.row == 0 {
             signOutAlert()
+        } else if indexPath.section == 3 && indexPath.row == 1 {
+            deleteAccount()
         }
     }
     
@@ -87,5 +90,62 @@ extension MySettingViewController: UITableViewDelegate, UITableViewDataSource {
         alert.addAction(successAction)
         
         self.present(alert, animated: true)
+    }
+    
+    private func deleteAccount() {
+        let deleteAccounteAlert = UIAlertController(title: "정말 떠나시는 건가요?", message: "무비리뷰에 기록하신 모든 내용이 영구적 삭제되어요. 더 이상 내 취향에 맞는 작품들을 알기도 여려워지구요. 근데 이런걸 떠나서 그냥 가지 않으셨으면 좋겠어요. 소원입니다.", preferredStyle: .alert)
+        
+        let deleteAccountAction = UIAlertAction(title: "삭제", style: .destructive) { _ in
+            guard let currentUser = Auth.auth().currentUser else {
+                print("CurrentUser nil")
+                return
+            }
+//            currentUser.reauthenticate(with: )
+            print("current user check")
+            let ref = Database.database().reference()
+            ref.child(currentUser.uid).removeValue()
+//            currentUser.delete { error in
+//                if let error = error {
+//                    print(error)
+//                } else {
+//                    print("user delete")
+//                    self.navigationController?.popToRootViewController(animated: false)
+//                }
+//            }
+            
+//            self.reauth {
+//                currentUser.delete { error in
+//                    if let error = error {
+//                        print(error)
+//                    } else {
+//                        print("user delete")
+//                        self.navigationController?.popToRootViewController(animated: false)
+//                    }
+//                }
+//            }
+        }
+        let deleteAccountCancelAction = UIAlertAction(title: "취소", style: .destructive)
+        
+        deleteAccounteAlert.addAction(deleteAccountCancelAction)
+        deleteAccounteAlert.addAction(deleteAccountAction)
+
+        
+        self.present(deleteAccounteAlert, animated: true)
+
+    }
+    
+    private func reauth(completed: @escaping () -> Void) {
+        print("re auth")
+        guard let idToken = UserDefaults.standard.string(forKey: "idToken"),
+        let rawNonce = UserDefaults.standard.string(forKey: "rawNonce") else { return }
+        print("UserDefaults")
+        let credential = OAuthProvider.credential(withProviderID: "apple.com", idToken: idToken, rawNonce: nil)
+        Auth.auth().currentUser?.reauthenticate(with: credential) { authResult, error in
+            if let error = error {
+                print(error)
+            } else {
+                print("re-auth")
+            }
+        }
     }
 }
