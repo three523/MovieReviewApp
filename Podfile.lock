@@ -104,6 +104,11 @@ PODS:
   - KakaoSDKCommon/Network (2.11.2):
     - Alamofire (~> 5.1)
     - KakaoSDKCommon/Common (= 2.11.2)
+  - KakaoSDKTalk (2.11.2):
+    - KakaoSDKTemplate (= 2.11.2)
+    - KakaoSDKUser (= 2.11.2)
+  - KakaoSDKTemplate (2.11.2):
+    - KakaoSDKCommon/Common (= 2.11.2)
   - KakaoSDKUser (2.11.2):
     - KakaoSDKAuth (= 2.11.2)
   - leveldb-library (1.22.1)
@@ -121,6 +126,7 @@ DEPENDENCIES:
   - FirebaseCore
   - KakaoSDKAuth
   - KakaoSDKCommon
+  - KakaoSDKTalk
   - KakaoSDKUser
 
 SPEC REPOS:
@@ -140,6 +146,8 @@ SPEC REPOS:
     - GTMSessionFetcher
     - KakaoSDKAuth
     - KakaoSDKCommon
+    - KakaoSDKTalk
+    - KakaoSDKTemplate
     - KakaoSDKUser
     - leveldb-library
     - nanopb
@@ -161,11 +169,13 @@ SPEC CHECKSUMS:
   GTMSessionFetcher: ffbb25ec00ebcb5201adab0a56d808f6f1902d9f
   KakaoSDKAuth: 98f90fb67b2c2015cc94066a4489d54bb2f2a68e
   KakaoSDKCommon: 83fef177bcad9a8f9cb728f92e04a464882d3a82
+  KakaoSDKTalk: d2f935783388f200f97b6be6a0edb17321b8da6e
+  KakaoSDKTemplate: 19ce588aa1899731978c5358b409fd5e607ee457
   KakaoSDKUser: bf7b02e23257199995cdd03d59feb716416d14d6
   leveldb-library: 50c7b45cbd7bf543c81a468fe557a16ae3db8729
   nanopb: b552cce312b6c8484180ef47159bc0f65a1f0431
   PromisesObjC: ab77feca74fa2823e7af4249b8326368e61014cb
 
-PODFILE CHECKSUM: e280f4ea0acada6a1e6e71aaa200b588405ae63a
+PODFILE CHECKSUM: db17c141c278b682275d49a1fb4a63ddfacd2b7e
 
 COCOAPODS: 1.11.3

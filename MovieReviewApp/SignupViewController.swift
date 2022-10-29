@@ -162,14 +162,22 @@ class SignupViewController: UIViewController {
     @objc func SignupClick() {
         guard let email: String = emailTextField.text else { return }
         guard let password = passwordTextField.text else { return }
-        Auth.auth().createUser(withEmail: email, password: password) { result, error in
-            if let error = error {
-                print(error)
-            } else {
-                print(result)
+        FBAuth.createUserWithPassword(email: email, password: password) { result in
+            switch result {
+            case.success(_):
+                print("createSuccess")
+                FBAuth.signInWithPassword(email: email, password: password) { result in
+                    switch result {
+                    case .success(_):
+                        self.dismiss(animated: false)
+                    case .failure(let error):
+                        print(error)
+                    }
+                }
+            case .failure(let error):
+                print(error.localizedDescription)
             }
         }
-        
     }
     
     @objc func textChange() {

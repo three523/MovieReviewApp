@@ -183,19 +183,34 @@ class AuthViewController: UIViewController {
         let signupVC: SignupViewController = SignupViewController()
         signupVC.modalPresentationStyle = .fullScreen
         
-        FBAuth.signInWithKakao { result in
+        let nonce = FBAuth.randomNonceString()
+        currentNonce = nonce
+        FBAuth.signInWithKakaoTalk(nonce: nonce) { result in
             switch result {
             case .success(let user):
                 let username = user.kakaoAccount?.profile?.nickname ?? ""
                 let email = user.kakaoAccount?.email ?? ""
                 signupVC.name = username
                 signupVC.email = email
-                
+
                 self.present(signupVC, animated: false)
             case .failure(let error):
                 print(error)
             }
         }
+//        FBAuth.signInWithKakao { result in
+//            switch result {
+//            case .success(let user):
+//                let username = user.kakaoAccount?.profile?.nickname ?? ""
+//                let email = user.kakaoAccount?.email ?? ""
+//                signupVC.name = username
+//                signupVC.email = email
+//
+//                self.present(signupVC, animated: false)
+//            case .failure(let error):
+//                print(error)
+//            }
+//        }
     }
     
 }

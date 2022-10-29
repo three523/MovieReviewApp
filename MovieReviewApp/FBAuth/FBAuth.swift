@@ -14,12 +14,54 @@ import KakaoSDKCommon
 
 
 struct FBAuth {
+    
+    static func createUserWithPassword(email: String, password: String, completeion: @escaping(Result<Bool,Error>) -> ()) {
+        Auth.auth().createUser(withEmail: email, password: password) { result, error in
+            if let error = error {
+                completeion(.failure(error))
+            } else {
+                completeion(.success(true))
+            }
+        }
+    }
+    
     static func authenticate(authCredential: AuthCredential, completed: @escaping(Result<Bool,Error>) -> ()) {
         Auth.auth().signIn(with: authCredential) { (authResult, error) in
             if let error = error {
                 completed(.failure(error))
             } else {
                 completed(.success(true))
+            }
+        }
+    }
+    
+    static func signInWithPassword(email: String, password: String, completion: @escaping (Result<Bool,Error>) -> ()) {
+        Auth.auth().signIn(withEmail: email, password: password) { _, error in
+            if let error = error {
+                completion(.failure(error))
+            } else {
+                completion(.success(true))
+            }
+        }
+    }
+    
+    static func signInWithKakaoTalk(nonce: String, completion: @escaping (Result<KakaoSDKUser.User,Error>) -> ()) {
+        UserApi.shared.loginWithKakaoTalk(nonce: nonce) {_,error in
+            
+            if let error = error {
+                completion(.failure(error))
+            } else {
+                UserApi.shared.me { user, error in
+                    if let error = error {
+                        completion(.failure(error))
+                    } else {
+                        guard let user = user else {
+                            completion(.failure(SignInWithKakaoAuthError.noAuthUserData))
+                            return
+                        }
+                        completion(.success(user))
+                    }
+                }
             }
         }
     }

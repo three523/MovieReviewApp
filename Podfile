@@ -13,4 +13,5 @@ pod 'Firebase/Database'
 pod 'KakaoSDKCommon'
 pod 'KakaoSDKAuth'
 pod 'KakaoSDKUser'
+pod 'KakaoSDKTalk'
 end
