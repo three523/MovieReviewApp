@@ -198,19 +198,6 @@ class AuthViewController: UIViewController {
                 print(error)
             }
         }
-//        FBAuth.signInWithKakao { result in
-//            switch result {
-//            case .success(let user):
-//                let username = user.kakaoAccount?.profile?.nickname ?? ""
-//                let email = user.kakaoAccount?.email ?? ""
-//                signupVC.name = username
-//                signupVC.email = email
-//
-//                self.present(signupVC, animated: false)
-//            case .failure(let error):
-//                print(error)
-//            }
-//        }
     }
     
 }
@@ -224,9 +211,7 @@ extension AuthViewController: ASAuthorizationControllerDelegate, ASAuthorization
         if let appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential {
             guard let idToken = appleIDCredential.identityToken,
                   let tokenStr = String(data: idToken, encoding: .utf8) else { return }
-            
-            //TODO: UserDefaults가 아니라 kechain으로 변경
-            
+                        
             guard let code = appleIDCredential.authorizationCode else { return }
             let codeStr = String(data: code, encoding: .utf8)
             
@@ -247,51 +232,6 @@ extension AuthViewController: ASAuthorizationControllerDelegate, ASAuthorization
     
     func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
         print(error.localizedDescription)
-    }
-    
-    func randomNonceString(length: Int = 32) -> String {
-        precondition(length > 0)
-        let charset: [Character] =
-            Array("0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._")
-          var result = ""
-          var remainingLength = length
-
-          while remainingLength > 0 {
-            let randoms: [UInt8] = (0 ..< 16).map { _ in
-              var random: UInt8 = 0
-              let errorCode = SecRandomCopyBytes(kSecRandomDefault, 1, &random)
-              if errorCode != errSecSuccess {
-                fatalError(
-                  "Unable to generate nonce. SecRandomCopyBytes failed with OSStatus \(errorCode)"
-                )
-              }
-              return random
-            }
-
-            randoms.forEach { random in
-              if remainingLength == 0 {
-                return
-              }
-
-              if random < charset.count {
-                result.append(charset[Int(random)])
-                remainingLength -= 1
-              }
-            }
-          }
-
-          return result
-    }
-    
-    @available(iOS 13, *)
-    private func sha256(_ input: String) -> String {
-      let inputData = Data(input.utf8)
-      let hashedData = SHA256.hash(data: inputData)
-      let hashString = hashedData.compactMap {
-        String(format: "%02x", $0)
-      }.joined()
-
-      return hashString
     }
     
 }
