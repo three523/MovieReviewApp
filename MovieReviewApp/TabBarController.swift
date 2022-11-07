@@ -25,7 +25,7 @@ class TabBarController: UITabBarController {
         
         self.tabBar.backgroundColor = .white
         
-        let vc1 = HomeViewController()
+        let vc1 = UINavigationController(rootViewController: HomeViewController())
         let vc2 = UINavigationController(rootViewController: SearchViewController())
         let vc3 = RatingViewController()
         let vc4 = UINavigationController(rootViewController: MyProfileViewController())

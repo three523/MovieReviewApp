@@ -113,20 +113,21 @@ class DetailSectionTableViewCell: UITableViewCell {
             guard let movieDetail = MovieDetailViewModel.movieDetail,
                   let runtime = movieDetail.runtime,
                   let credits = MovieDetailViewModel.credits,
-                  let directorName = credits.crew.filter({ crew in crew.job == "Director" }).first?.name
+                  let directorName = credits.crew.filter({ crew in crew.job == "Director" }).first?.name,
+                  let releaseDates = movieDetail.releaseDates.results
             else { return }
             
             movieInfoStackView.textSetting(title: "감독", content: directorName)
             movieInfoStackView.textSetting(title: "상영 시간", content: "\(runtime)분")
             
-            var results = movieDetail.releaseDates.results.filter { result in
+            var results = releaseDates.filter { result in
                 result.iso31661 == "KR"
             }
             if results.isEmpty {
-                results = movieDetail.releaseDates.results
+                results = releaseDates
             }
             
-            let certification = results.first!.releaseDates.first!.certification
+            let certification = results.first?.releaseDates?.first?.certification ?? ""
             movieInfoStackView.textSetting(title: "연령 등급", content: certification)
             
             let genres: [String] = movieDetail.genres.map{ $0.name }

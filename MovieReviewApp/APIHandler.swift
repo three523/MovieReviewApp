@@ -34,6 +34,8 @@ class ApiHandler {
                 let json: T = try jsonEncoder.decode(T.self, from: data)
                 completed(json)
             } catch let e {
+                print(fullPath)
+                print(T.self)
                 print(e.localizedDescription)
             }
 

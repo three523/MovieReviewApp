@@ -125,6 +125,11 @@ class CustomNavigationBar: UIView {
         rightButton.contentEdgeInsets = insets
     }
     
+    public func buttonSetTintColor(color: UIColor) {
+        rightButton.tintColor = color
+        leftButton.tintColor = color
+    }
+    
     public func isStickyEnable(enable: Bool) {
         if !enable {
             titleLabel.isHidden = false

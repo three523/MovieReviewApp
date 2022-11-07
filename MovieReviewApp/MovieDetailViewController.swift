@@ -29,6 +29,7 @@ class MovieDetailViewController: UIViewController {
         
         stickyView.leftButtonSetImage(image: UIImage(systemName: "chevron.backward")!)
         stickyView.rightButtonSetImage(image: UIImage(systemName: "square.and.arrow.up")!)
+        stickyView.buttonSetTintColor(color: UIColor.white)
         let dismissAction: UIAction = UIAction { _ in self.dismiss(animated: true) }
         stickyView.leftButtonAction(action: dismissAction)
         
@@ -88,7 +89,7 @@ class MovieDetailViewController: UIViewController {
         movieDetailTableView.estimatedRowHeight = 50
         
         movieDetailTableView.translatesAutoresizingMaskIntoConstraints = false
-        movieDetailTableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+        movieDetailTableView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         movieDetailTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         movieDetailTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         movieDetailTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
@@ -103,9 +104,15 @@ class MovieDetailViewController: UIViewController {
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         guard let header = movieDetailTableView.tableHeaderView as? MovieDetailHeaderView else { return }
+        header.scrollViewDidScroll(scrollView: movieDetailTableView)
         if scrollView.contentOffset.y < 500 {
-            header.scrollViewDidScroll(scrollView: scrollView)
-            stickyView.isSticky = scrollView.contentOffset.y >= 300 ? true : false
+            if scrollView.contentOffset.y > 300 {
+                stickyView.isSticky = true
+                stickyView.buttonSetTintColor(color: .black)
+            } else {
+                stickyView.isSticky = false
+                stickyView.buttonSetTintColor(color: .white)
+            }
         }
     }
 }
