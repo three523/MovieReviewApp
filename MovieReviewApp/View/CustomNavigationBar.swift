@@ -90,7 +90,9 @@ class CustomNavigationBar: UIView {
     }
     
     public func setMainTitle(title: String) {
-        titleLabel.text = title
+        DispatchQueue.main.async {
+            self.titleLabel.text = title
+        }
     }
     
     public func leftButtonSetImage(image: UIImage) {
