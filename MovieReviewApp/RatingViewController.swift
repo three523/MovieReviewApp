@@ -6,12 +6,21 @@
 //
 
 import UIKit
+import Cosmos
+import AVFoundation
+import AudioToolbox
+
+extension UIDevice {
+    static func vibrate() {
+        AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
+    }
+}
 
 class RatingViewController: UIViewController, UICollectionViewDataSource,  UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
         
     lazy var cellMoveStackView: CellMoveStackView = {
         let sv: CellMoveStackView = CellMoveStackView(frame: .zero, collectionView: collectionView)
-        let textList: [String] = ["영화", "드라마", "책", "웹툰"]
+        let textList: [String] = ["영화", "드라마"]
         sv.addButtonList(textList: textList)
         return sv
     }()
@@ -30,12 +39,20 @@ class RatingViewController: UIViewController, UICollectionViewDataSource,  UICol
         return cv
     }()
     let reviewViewModel: ReviewFilterViewModel = ReviewFilterViewModel()
+    var mediaTypeIndex = 0
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         viewSetting()
         // Do any additional setup after loading the view.
+        guard let filterText = filterHeaderView.filterButton.titleLabel?.text else { return }
+        reviewViewModel.movieList(findData: filterText, path: "discover/movie?", section: 0) { movielist in
+            DispatchQueue.main.async {
+                self.collectionView.reloadData()
+                guard let cell = self.collectionView.cellForItem(at: IndexPath(item: self.mediaTypeIndex, section: 0)) as? ReviewListCVCell else { return }
+                cell.reviewListTableView.reloadData()
+            }
+        }
     }
     
     func viewSetting() {
@@ -43,6 +60,8 @@ class RatingViewController: UIViewController, UICollectionViewDataSource,  UICol
         view.addSubview(cellMoveStackView)
         view.addSubview(filterHeaderView)
         view.addSubview(collectionView)
+        
+        collectionView.canCancelContentTouches = false
         
         let safeArea = view.safeAreaLayoutGuide
         
@@ -67,7 +86,13 @@ class RatingViewController: UIViewController, UICollectionViewDataSource,  UICol
         collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         
         NotificationCenter.default.addObserver(self, selector: #selector(getMovieFilterList(_:)), name: Notification.Name("MovieFilterName"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(getMediaTypeIndex(_:)), name: Notification.Name("CellMovieIndex"), object: nil)
         
+    }
+    
+    @objc func getMediaTypeIndex(_ notification: Notification) {
+        guard let index = notification.object as? Int else { return }
+        self.mediaTypeIndex = index
     }
     
     @objc func getMovieFilterList(_ notification: Notification) {
@@ -102,7 +127,7 @@ class RatingViewController: UIViewController, UICollectionViewDataSource,  UICol
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 4
+        return 2
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -135,10 +160,12 @@ class ReviewListCVCell: UICollectionViewCell, UITableViewDelegate, UITableViewDa
         return tb
     }()
     var movieList: [MovieInfo]? = nil
+    let imageLoader = ImageLoader()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         contentView.addSubview(reviewListTableView)
+        reviewListTableView.canCancelContentTouches = false
     }
     
     required init?(coder: NSCoder) {
@@ -159,6 +186,12 @@ class ReviewListCVCell: UICollectionViewCell, UITableViewDelegate, UITableViewDa
         }
         let movieDetail = movieList[indexPath.row]
         cell.setupViews(titleText: movieDetail.title, yearText: movieDetail.releaseDate)
+        guard let posterPath = movieDetail.posterPath else { return cell }
+        imageLoader.profileImage(stringURL: posterPath, size: .poster) { posterImage in
+            DispatchQueue.main.async {
+                cell.poster.image = posterImage
+            }
+        }
         
         return cell
     }
@@ -189,7 +222,7 @@ class ReviewListTBCell: UITableViewCell {
         return lb
     }()
     var movieDetail: MovieInfo? = nil
-    let starView: UIView = UIView()
+    let starView: CosmosView = CosmosView()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -200,10 +233,10 @@ class ReviewListTBCell: UITableViewCell {
     }
     
     func setupViews(titleText: String, yearText: String) {
-        addSubview(poster)
-        addSubview(title)
-        addSubview(year)
-        addSubview(starView)
+        contentView.addSubview(poster)
+        contentView.addSubview(title)
+        contentView.addSubview(year)
+        contentView.addSubview(starView)
         
         poster.translatesAutoresizingMaskIntoConstraints = false
         poster.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10).isActive = true
@@ -211,6 +244,8 @@ class ReviewListTBCell: UITableViewCell {
         poster.widthAnchor.constraint(equalToConstant: 50).isActive = true
         poster.heightAnchor.constraint(equalToConstant: 70).isActive = true
         poster.image = UIImage(systemName: "x.circle")
+        poster.layer.cornerRadius = 5
+        poster.clipsToBounds = true
         
         title.translatesAutoresizingMaskIntoConstraints = false
         title.topAnchor.constraint(equalTo: poster.topAnchor).isActive = true
@@ -223,9 +258,20 @@ class ReviewListTBCell: UITableViewCell {
         year.leadingAnchor.constraint(equalTo: title.leadingAnchor).isActive = true
         year.text = yearText
         year.sizeToFit()
-        
+                
+        starView.settings.fillMode = .half
+        starView.settings.totalStars = 5
+        starView.settings.starSize = 30
+        starView.rating = 0.0
+        starView.settings.minTouchRating = 0.0
         starView.translatesAutoresizingMaskIntoConstraints = false
         starView.topAnchor.constraint(equalTo: year.bottomAnchor).isActive = true
         starView.leadingAnchor.constraint(equalTo: year.leadingAnchor).isActive = true
+        
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        starView.prepareForReuse()
     }
 }

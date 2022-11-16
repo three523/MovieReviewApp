@@ -14,4 +14,5 @@ pod 'KakaoSDKCommon'
 pod 'KakaoSDKAuth'
 pod 'KakaoSDKUser'
 pod 'KakaoSDKTalk'
+pod 'Cosmos', '~> 23.0'
 end
