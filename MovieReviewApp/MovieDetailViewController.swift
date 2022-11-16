@@ -29,16 +29,12 @@ class MovieDetailViewController: UIViewController, UIGestureRecognizerDelegate {
         statusbar = statusBarView
         navigationSetting()
         
-//        navigationController?.interactivePopGestureRecognizer?.isEnabled = true
-//        navigationController?.interactivePopGestureRecognizer?.delegate = self
-        
         let dismissAction: UIAction = UIAction { _ in self.dismiss(animated: true) }
         
         detailViewModel.getMovieDetail {
             let movieDetail: MovieDetail = self.detailViewModel.getMovie()!
             DispatchQueue.main.async {
                 self.movieDetailTableView.reloadData()
-//                self.navigationItem.title = movieDetail.title
             }
             let releaseDate: String = movieDetail.releaseDate
             var subText: String = "\(releaseDate)"
