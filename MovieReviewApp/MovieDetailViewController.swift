@@ -71,6 +71,7 @@ class MovieDetailViewController: UIViewController, UIGestureRecognizerDelegate {
         }
         
         movieDetailTableView.tableHeaderView = header
+        movieDetailTableView.canCancelContentTouches = false
         
         movieDetailTableView.delegate = self
         movieDetailTableView.dataSource = self
@@ -174,9 +175,8 @@ extension MovieDetailViewController: UITableViewDelegate, UITableViewDataSource,
         if indexPath.section == 0 {
             let rowCount = tableView.numberOfRows(inSection: 0)
             if indexPath.row == 0 && rowCount == 2 {
-                var config = cell.defaultContentConfiguration()
-                config.image = UIImage(systemName: "person")
-                cell.contentConfiguration = config
+                let starCell: UITableViewCell = DetailSectionTableViewCell(style: .default, reuseIdentifier: DetailSectionTableViewCell.identifier, type: .starCell)
+                return starCell
             } else if indexPath.row == 0 && rowCount == 3 {
                 let expectationsCell: UITableViewCell = DetailSectionTableViewCell(style: .default, reuseIdentifier: DetailSectionTableViewCell.identifier, type: .expectationsCell)
                 expectationsCell.selectionStyle = .none

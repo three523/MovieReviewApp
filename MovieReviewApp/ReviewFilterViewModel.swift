@@ -32,7 +32,7 @@ class ReviewFilterViewModel {
                 }
             }
             if findData == "랜덤 영화" {
-                let page = Int.random(in: 1...100)
+                let page = Int.random(in: 1...50)
                 apiHandler.getJson(type: MovieList.self ,path: path, query: ["api_key": APIKEY, "page": String(page), "language": "ko"]) { movieList in
                     self.movieListModel = movieList
                     completed(movieList)

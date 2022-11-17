@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Cosmos
 
 enum DetailSectionCell {
     case starCell, stackCell, overCell, movieInfoCell, movieInfoStackCell, creditsCell, commentGraphCell, commentTableCell, similarCell, defaultCell, expectationsCell
@@ -51,14 +52,19 @@ class DetailSectionTableViewCell: UITableViewCell {
     private func createViews(type: DetailSectionCell) {
         switch type {
         case .starCell:
-            let view: UIView = UIView()
-            contentView.addSubview(view)
-            view.translatesAutoresizingMaskIntoConstraints = false
-            view.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
-            view.heightAnchor.constraint(equalToConstant: 70).isActive = true
-            view.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 0).isActive = true
-            view.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -0).isActive = true
-            view.backgroundColor = .blue
+            let starView: CosmosView = CosmosView()
+            starView.rating = 0.0
+            starView.settings.minTouchRating = 0.0
+            starView.settings.fillMode = .half
+            starView.settings.starSize = 60.0
+            contentView.addSubview(starView)
+            starView.translatesAutoresizingMaskIntoConstraints = false
+            starView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor).isActive = true
+            starView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10).isActive = true
+            starView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10).isActive = true
+            let heightAnchor = starView.heightAnchor.constraint(equalToConstant: 60)
+            heightAnchor.priority = UILayoutPriority(999)
+            heightAnchor.isActive = true
         case .stackCell:
             let view: DetailReviewSectionStackView = DetailReviewSectionStackView()
             contentView.addSubview(view)
