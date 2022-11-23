@@ -12,7 +12,11 @@ protocol SearchBarDelegate: AnyObject {
     func setSearchBarText(text: String) -> Void
 }
 
-class SearchViewController: UIViewController, SearchBarDelegate {
+protocol TableViewCellSelected: AnyObject {
+    func tableSelected(id: String) -> Void
+}
+
+class SearchViewController: UIViewController, SearchBarDelegate, TableViewCellSelected {
     
     private let scrollView: UIScrollView = UIScrollView()
     private let defaultTableView: UITableView = UITableView(frame: .zero, style: .plain)
@@ -57,13 +61,21 @@ class SearchViewController: UIViewController, SearchBarDelegate {
     private var collectionViewHeightAnchor: NSLayoutConstraint = NSLayoutConstraint()
     
     private var searchingTableView: UITableView = UITableView()
+        
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        guard let searchBar = searchBarController?.searchBar else { return }
+        searchBar.overrideUserInterfaceStyle = .light
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         let searchingVC: SearchingTableViewController = SearchingTableViewController()
         searchingVC.searchBarDelegate = self
+        searchingVC.tableViewSelectedDelegate = self
         searchBarController = UISearchController(searchResultsController: searchingVC)
+        searchBarController?.searchBar.tintColor = .black
         searchBarController!.searchResultsUpdater = searchingVC
         searchBarController?.searchBar.delegate = searchingVC
                 
@@ -134,7 +146,6 @@ class SearchViewController: UIViewController, SearchBarDelegate {
         collectionViewHeightAnchor = recentlyMoviesCollectionView.heightAnchor.constraint(equalToConstant: 100)
         collectionViewHeightAnchor.isActive = true
         
-        
         defaultLabel.translatesAutoresizingMaskIntoConstraints = false
         recentVisibleTopAnchor = defaultLabel.topAnchor.constraint(equalTo: recentlyMoviesCollectionView.bottomAnchor, constant: 20)
         recentHiddenTopAnchor = defaultLabel.topAnchor.constraint(equalTo: contentLayoutGuide.topAnchor, constant: 10)
@@ -174,6 +185,14 @@ class SearchViewController: UIViewController, SearchBarDelegate {
         searchBar.text = text
         searchBeginOrEnd()
         searchBar.endEditing(false)
+    }
+    
+    func tableSelected(id: String) {
+        let detailVC = MovieDetailViewController()
+        detailVC.movieId = id
+        detailVC.modalPresentationStyle = .overFullScreen
+        print("ta")
+        self.navigationController?.pushViewController(detailVC, animated: true)
     }
 }
 
@@ -226,6 +245,15 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
         }
         
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard let movieList = searchViewModel.getPopularMovieList() else { return }
+        let movieId = movieList[indexPath.row].id
+        let detailVC = MovieDetailViewController()
+        detailVC.movieId = String(movieId)
+        
+        navigationController?.pushViewController(detailVC, animated: true)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

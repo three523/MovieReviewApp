@@ -21,11 +21,15 @@ class MovieDetailViewController: UIViewController, UIGestureRecognizerDelegate {
     var count = 2
     var statusbar: UIView?
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         view.addSubview(movieDetailTableView)
-        
+                
         statusbar = statusBarView
         navigationSetting()
         
