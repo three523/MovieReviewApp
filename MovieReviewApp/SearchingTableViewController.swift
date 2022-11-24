@@ -11,6 +11,7 @@ class SearchingTableViewController: UIViewController, UISearchBarDelegate ,UISea
     
     let searchViewModel: SearchViewModel = SearchViewModel()
     weak var searchBarDelegate: SearchBarDelegate?
+    weak var tableViewSelectedDelegate: TableViewCellSelected?
     private let collectionView: UICollectionView = {
         let flowLayout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
         flowLayout.scrollDirection = .horizontal
@@ -40,13 +41,13 @@ class SearchingTableViewController: UIViewController, UISearchBarDelegate ,UISea
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+                
         view.backgroundColor = .white
         
         view.addSubview(cellMoveStackView)
         view.addSubview(collectionView)
         view.addSubview(searchRecentlyTableView)
-        
+                
         searchRecentlyTableView.register(SearchDefaultTableViewCell.self, forCellReuseIdentifier: SearchDefaultTableViewCell.identifier)
         searchRecentlyTableView.delegate = self
         searchRecentlyTableView.dataSource = self
@@ -190,6 +191,7 @@ extension SearchingTableViewController: UICollectionViewDelegate, UICollectionVi
             guard let movieList = searchViewModel.getSearchMovieList() else { return cell }
             cell.movieList = movieList
             cell.searchText = currentSearchBarText
+            cell.tableViewCellSelectedDelegate = tableViewSelectedDelegate
             return cell
         } else if indexPath.item == 1 {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SearchPersonCell.identifier, for: indexPath) as? SearchPersonCell else {
@@ -271,6 +273,7 @@ class SearchContentCell: UICollectionViewCell, UITableViewDelegate, UITableViewD
             self.tableView.reloadData()
         }
     }
+    weak var tableViewCellSelectedDelegate: TableViewCellSelected?
     private var searchViewModel: SearchViewModel = SearchViewModel()
     var index: Int = 0
     
@@ -374,14 +377,19 @@ class SearchContentCell: UICollectionViewCell, UITableViewDelegate, UITableViewD
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard movieList.count > indexPath.row else { return }
         let selectedMovieId: String = String(movieList[indexPath.row].id)
+        print("test")
         var topVC: UIViewController? = UIApplication.shared.windows.first?.rootViewController
-        while((topVC!.presentedViewController) != nil) {
-            topVC = topVC!.presentedViewController
+        while((topVC!.presentingViewController) != nil) {
+            topVC = topVC!.presentingViewController
         }
         let detailVC: MovieDetailViewController = MovieDetailViewController()
         detailVC.modalPresentationStyle = .fullScreen
         detailVC.movieId = selectedMovieId
-        topVC?.present(detailVC, animated: true)
+//        topVC?.present(detailVC, animated: true)
+        
+//        vc?.navigationController?.pushViewController(detailVC, animated: true)
+        tableViewCellSelectedDelegate?.tableSelected(id: selectedMovieId)
+//        topVC?.navigationController?.pushViewController(detailVC, animated: true)
     }
 }
 

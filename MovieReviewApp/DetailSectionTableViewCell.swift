@@ -139,7 +139,7 @@ class DetailSectionTableViewCell: UITableViewCell {
             let genres: [String] = movieDetail.genres.map{ $0.name }
             let genresToString: String = genres.joined(separator: ",")
             movieInfoStackView.textSetting(title: "장르", content: genresToString)
-            movieInfoStackView.textSetting(title: "제작 국가", content: movieDetail.productionCountries.first!.name)
+            movieInfoStackView.textSetting(title: "제작 국가", content: movieDetail.productionCountries.first?.name ?? "")
             movieInfoStackView.textSetting(title: "제작 연도", content: movieDetail.releaseDate)
             
         case .creditsCell:
