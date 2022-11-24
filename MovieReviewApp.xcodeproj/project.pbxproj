@@ -57,6 +57,8 @@
 		18B2385F28E1667900B951BA /* MovieReviewAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18B2385E28E1667900B951BA /* MovieReviewAppTests.swift */; };
 		18B2386628E1696700B951BA /* ValidateCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18B2386528E1696700B951BA /* ValidateCheck.swift */; };
 		18B2386828E1770800B951BA /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 18B2386728E1770800B951BA /* GoogleService-Info.plist */; };
+		18B70A80290BD22900E9B44D /* FBAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18B70A7F290BD22900E9B44D /* FBAuth.swift */; };
+		18B70A82290BD6E600E9B44D /* FBError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18B70A81290BD6E600E9B44D /* FBError.swift */; };
 		18BA247828A1074C0024B913 /* DetailSectionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18BA247728A1074C0024B913 /* DetailSectionTableViewCell.swift */; };
 		18BF66D728B3833C00AE492D /* CreditsSummaryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18BF66D628B3833C00AE492D /* CreditsSummaryTableViewCell.swift */; };
 		18BF66DB28B3A26200AE492D /* TableFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18BF66DA28B3A26200AE492D /* TableFooterView.swift */; };
@@ -153,6 +155,8 @@
 		18B2385E28E1667900B951BA /* MovieReviewAppTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieReviewAppTests.swift; sourceTree = "<group>"; };
 		18B2386528E1696700B951BA /* ValidateCheck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValidateCheck.swift; sourceTree = "<group>"; };
 		18B2386728E1770800B951BA /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		18B70A7F290BD22900E9B44D /* FBAuth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FBAuth.swift; sourceTree = "<group>"; };
+		18B70A81290BD6E600E9B44D /* FBError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FBError.swift; sourceTree = "<group>"; };
 		18BA247728A1074C0024B913 /* DetailSectionTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailSectionTableViewCell.swift; sourceTree = "<group>"; };
 		18BF66D628B3833C00AE492D /* CreditsSummaryTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreditsSummaryTableViewCell.swift; sourceTree = "<group>"; };
 		18BF66DA28B3A26200AE492D /* TableFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableFooterView.swift; sourceTree = "<group>"; };
@@ -288,6 +292,15 @@
 			path = MovieReviewAppTests;
 			sourceTree = "<group>";
 		};
+		18B70A7E290BD21500E9B44D /* FBAuth */ = {
+			isa = PBXGroup;
+			children = (
+				18B70A7F290BD22900E9B44D /* FBAuth.swift */,
+				18B70A81290BD6E600E9B44D /* FBError.swift */,
+			);
+			path = FBAuth;
+			sourceTree = "<group>";
+		};
 		18BA247628A105280024B913 /* Cell */ = {
 			isa = PBXGroup;
 			children = (
@@ -333,6 +346,7 @@
 		18E1795F287805790060BCD9 /* MovieReviewApp */ = {
 			isa = PBXGroup;
 			children = (
+				18B70A7E290BD21500E9B44D /* FBAuth */,
 				186E321A28E1C87D00EA18BC /* MovieReviewApp.entitlements */,
 				18B2386728E1770800B951BA /* GoogleService-Info.plist */,
 				18BA247628A105280024B913 /* Cell */,
@@ -579,6 +593,7 @@
 				18A82FC2288146F100791B03 /* FilterViewController.swift in Sources */,
 				18A88E0228FFD31400A4BEAD /* ProfileInfoTableViewCell.swift in Sources */,
 				18A88E0028FEA19C00A4BEAD /* Extenstion.swift in Sources */,
+				18B70A82290BD6E600E9B44D /* FBError.swift in Sources */,
 				18A167F228B7869A00D15BB1 /* PersonMoviesTableViewCell.swift in Sources */,
 				18A88E0428FFE8FF00A4BEAD /* TwolineButton.swift in Sources */,
 				18C018CD2886A7A500E6AE2C /* FilterTableViewHeader.swift in Sources */,
@@ -593,6 +608,7 @@
 				18A88E2C29006F2800A4BEAD /* ProfileLikeTableViewCell.swift in Sources */,
 				184272C1287D690B004E1C9E /* HomeViewController.swift in Sources */,
 				18AC2997287FEC710043B812 /* CellMoveStackView.swift in Sources */,
+				18B70A80290BD22900E9B44D /* FBAuth.swift in Sources */,
 				18BF66DF28B3BE7A00AE492D /* ReviewTableViewCell.swift in Sources */,
 				18A88E0628FFFACB00A4BEAD /* ProfileStorageTableViewCell.swift in Sources */,
 			);
