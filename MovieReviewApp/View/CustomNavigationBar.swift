@@ -90,7 +90,9 @@ class CustomNavigationBar: UIView {
     }
     
     public func setMainTitle(title: String) {
-        titleLabel.text = title
+        DispatchQueue.main.async {
+            self.titleLabel.text = title
+        }
     }
     
     public func leftButtonSetImage(image: UIImage) {
@@ -123,6 +125,11 @@ class CustomNavigationBar: UIView {
     
     public func rightButtonPadding(insets: UIEdgeInsets) {
         rightButton.contentEdgeInsets = insets
+    }
+    
+    public func buttonSetTintColor(color: UIColor) {
+        rightButton.tintColor = color
+        leftButton.tintColor = color
     }
     
     public func isStickyEnable(enable: Bool) {

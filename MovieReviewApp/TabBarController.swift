@@ -12,12 +12,12 @@ class TabBarController: UITabBarController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        if Auth.auth().currentUser == nil {
-            let authVC = AuthViewController()
-            authVC.modalPresentationStyle = .fullScreen
-            self.present(authVC, animated: false)
-            print("test")
-        }
+//        if Auth.auth().currentUser == nil {
+//            let authVC = AuthViewController()
+//            authVC.modalPresentationStyle = .fullScreen
+//            self.present(authVC, animated: false)
+//            print("test")
+//        }
     }
     
     override func viewDidLoad() {
@@ -25,7 +25,7 @@ class TabBarController: UITabBarController {
         
         self.tabBar.backgroundColor = .white
         
-        let vc1 = HomeViewController()
+        let vc1 = UINavigationController(rootViewController: HomeViewController())
         let vc2 = UINavigationController(rootViewController: SearchViewController())
         let vc3 = RatingViewController()
         let vc4 = UINavigationController(rootViewController: MyProfileViewController())

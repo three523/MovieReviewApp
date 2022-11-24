@@ -53,6 +53,7 @@ class MovieDetailCollectionViewCell: UICollectionViewCell {
         let movieDetailVC: MovieDetailViewController = MovieDetailViewController()
         movieDetailVC.modalPresentationStyle = .fullScreen
         movieDetailVC.movieId = "\(movieId)"
-        currentVC.present(movieDetailVC, animated: true)
+//        currentVC.present(movieDetailVC, animated: true)
+        currentVC.navigationController?.pushViewController(movieDetailVC, animated: true)
     }
 }

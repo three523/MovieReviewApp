@@ -12,35 +12,30 @@ protocol AddExpectationsProtocol: AnyObject {
     func deleteCell() -> Void
 }
 
-class MovieDetailViewController: UIViewController {
+class MovieDetailViewController: UIViewController, UIGestureRecognizerDelegate {
     let movieDetailTableView: UITableView = UITableView(frame: .zero, style: .grouped)
-    let stickyView: CustomNavigationBar = CustomNavigationBar()
     let header: MovieDetailHeaderView = MovieDetailHeaderView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.width))
     var movieId: String = ""
     lazy var detailViewModel: MovieDetailViewModel = MovieDetailViewModel(movieId: movieId)
     var director: String? = ""
     var count = 2
+    var statusbar: UIView?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         view.addSubview(movieDetailTableView)
-        view.addSubview(stickyView)
         
-        stickyView.leftButtonSetImage(image: UIImage(systemName: "chevron.backward")!)
-        stickyView.rightButtonSetImage(image: UIImage(systemName: "square.and.arrow.up")!)
+        statusbar = statusBarView
+        navigationSetting()
+        
         let dismissAction: UIAction = UIAction { _ in self.dismiss(animated: true) }
-        stickyView.leftButtonAction(action: dismissAction)
-        
-        movieDetailTableView.rowHeight = UITableView.automaticDimension
-        movieDetailTableView.estimatedRowHeight = 70
-        movieDetailTableView.register(OverviewTableViewCell.self, forCellReuseIdentifier: OverviewTableViewCell.identifier)
         
         detailViewModel.getMovieDetail {
+            let movieDetail: MovieDetail = self.detailViewModel.getMovie()!
             DispatchQueue.main.async {
                 self.movieDetailTableView.reloadData()
             }
-            let movieDetail: MovieDetail = self.detailViewModel.getMovie()!
             let releaseDate: String = movieDetail.releaseDate
             var subText: String = "\(releaseDate)"
             if !movieDetail.productionCountries.isEmpty {
@@ -76,37 +71,79 @@ class MovieDetailViewController: UIViewController {
         }
         
         movieDetailTableView.tableHeaderView = header
+        movieDetailTableView.canCancelContentTouches = false
         
         movieDetailTableView.delegate = self
         movieDetailTableView.dataSource = self
         
         movieDetailTableView.register(CreditsSummaryTableViewCell.self, forCellReuseIdentifier: CreditsSummaryTableViewCell.identifier)
         movieDetailTableView.register(ReviewTableViewCell.self, forCellReuseIdentifier: ReviewTableViewCell.identifier)
+        movieDetailTableView.register(OverviewTableViewCell.self, forCellReuseIdentifier: OverviewTableViewCell.identifier)
         
         movieDetailTableView.sectionHeaderTopPadding = 10
         movieDetailTableView.rowHeight = UITableView.automaticDimension
         movieDetailTableView.estimatedRowHeight = 50
         
         movieDetailTableView.translatesAutoresizingMaskIntoConstraints = false
-        movieDetailTableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+        movieDetailTableView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         movieDetailTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         movieDetailTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         movieDetailTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-        
-        stickyView.translatesAutoresizingMaskIntoConstraints = false
-        stickyView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
-        stickyView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        stickyView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        stickyView.heightAnchor.constraint(equalToConstant: 50).isActive = true
-                
+            
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         guard let header = movieDetailTableView.tableHeaderView as? MovieDetailHeaderView else { return }
-        if scrollView.contentOffset.y < 500 {
-            header.scrollViewDidScroll(scrollView: scrollView)
-            stickyView.isSticky = scrollView.contentOffset.y >= 300 ? true : false
+        header.scrollViewDidScroll(scrollView: movieDetailTableView)
+        guard let navibar = navigationController?.navigationBar,
+            let statusbar = statusbar else { return }
+        
+        let offset = scrollView.contentOffset.y / 300
+        
+        if scrollView.contentOffset.y >= 100 {
+            navigationItem.title = detailViewModel.getMovie()?.title
+        } else {
+            navigationItem.title = ""
         }
+        
+        if offset > 1 {
+            navigationItem.title = detailViewModel.getMovie()?.title
+            let backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: offset)
+            navibar.tintColor = .black
+            navibar.titleTextAttributes = [.foregroundColor: UIColor.black]
+            navibar.backgroundColor = backgroundColor
+            statusbar.backgroundColor = backgroundColor
+            navibar.barStyle = .default
+        } else {
+            let brightness = 1 - offset
+            let foregroundColor = UIColor(hue: 0, saturation: 0, brightness: brightness, alpha: 1)
+            let backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: offset)
+            navibar.tintColor = foregroundColor
+            navibar.titleTextAttributes = [.foregroundColor: foregroundColor]
+            navibar.backgroundColor = backgroundColor
+            statusbar.backgroundColor = backgroundColor
+            navibar.barStyle = .black
+        }
+    }
+    
+    func navigationSetting() {
+        let shareBarButton = UIBarButtonItem(image: UIImage(systemName: "square.and.arrow.up"), style: .plain, target: self, action: #selector(shareButtonClick))
+        
+        navigationController?.navigationBar.topItem?.title = ""
+        navigationItem.rightBarButtonItem = shareBarButton
+        
+        guard let naviBar = navigationController?.navigationBar else { return }
+        naviBar.tintColor = .white
+        naviBar.setBackgroundImage(UIImage(), for: .default)
+        naviBar.shadowImage = UIImage()
+    }
+    
+    @objc func backButtonClick() {
+        navigationController?.popViewController(animated: true)
+    }
+    
+    @objc func shareButtonClick() {
+        print("share")
     }
 }
 
@@ -138,9 +175,8 @@ extension MovieDetailViewController: UITableViewDelegate, UITableViewDataSource,
         if indexPath.section == 0 {
             let rowCount = tableView.numberOfRows(inSection: 0)
             if indexPath.row == 0 && rowCount == 2 {
-                var config = cell.defaultContentConfiguration()
-                config.image = UIImage(systemName: "person")
-                cell.contentConfiguration = config
+                let starCell: UITableViewCell = DetailSectionTableViewCell(style: .default, reuseIdentifier: DetailSectionTableViewCell.identifier, type: .starCell)
+                return starCell
             } else if indexPath.row == 0 && rowCount == 3 {
                 let expectationsCell: UITableViewCell = DetailSectionTableViewCell(style: .default, reuseIdentifier: DetailSectionTableViewCell.identifier, type: .expectationsCell)
                 expectationsCell.selectionStyle = .none
