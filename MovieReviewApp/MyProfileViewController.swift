@@ -8,22 +8,100 @@
 import UIKit
 
 class MyProfileViewController: UIViewController {
+    
+    let profileTableView: UITableView = UITableView(frame: .zero, style: .plain)
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+                
+        navigationController?.navigationBar.backgroundColor = .white
+        navigationController?.navigationBar.tintColor = .black
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "gearshape.fill"), style: .done, target: self, action: #selector(clickSetting))
+        
+        profileTableView.backgroundColor = .white
+        profileTableView.delegate = self
+        profileTableView.dataSource = self
+        profileTableView.register(ProfileInfoTableViewCell.self, forCellReuseIdentifier: ProfileInfoTableViewCell.identifier)
+        profileTableView.register(ProfileStorageTableViewCell.self, forCellReuseIdentifier: ProfileStorageTableViewCell.identifier)
+        profileTableView.register(ProfileLikeTableViewCell.self, forCellReuseIdentifier: ProfileLikeTableViewCell.identifier)
+        
+        profileTableView.separatorColor = .systemGray6
+        
+        profileTableView.estimatedRowHeight = 300
+        profileTableView.rowHeight = UITableView.automaticDimension
+        
+        viewAdd()
+        autoLayoutSetting()
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    func viewAdd() {
+        view.addSubview(profileTableView)
     }
-    */
+    
+    func autoLayoutSetting() {
+        profileTableView.translatesAutoresizingMaskIntoConstraints = false
+        profileTableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+        profileTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        profileTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        profileTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+    }
+    
+    @objc func clickSetting() {
+        let settginVC = SettingViewController()
+        settginVC.modalPresentationStyle = .fullScreen
+        settginVC.title = "설정"
+        settginVC.tableList = [["내 설정","서비스 설정","SNS 설정"]]
+        navigationController?.pushViewController(settginVC, animated: true)
+    }
 
 }
+
+extension MyProfileViewController: UITableViewDelegate, UITableViewDataSource {
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 3
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 1
+    }
+    
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        
+        let footerView = UIView(frame: CGRect(origin: .zero, size: CGSize(width: tableView.frame.width, height: 10)))
+        footerView.backgroundColor = .systemGray6
+        return footerView
+    }
+    
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return 10
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        if indexPath.section == 0 {
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: ProfileInfoTableViewCell.identifier, for: indexPath) as? ProfileInfoTableViewCell else { return UITableViewCell() }
+            cell.navigationController = navigationController
+            return cell
+        } else if indexPath.section == 1 {
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: ProfileStorageTableViewCell.identifier, for: indexPath) as? ProfileStorageTableViewCell else { return UITableViewCell() }
+            return cell
+        } else if indexPath.section == 2 {
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: ProfileLikeTableViewCell.identifier, for: indexPath) as? ProfileLikeTableViewCell else { return UITableViewCell() }
+            return cell
+        }
+        return UITableViewCell()
+    }
+    
+}
+
+#if canImport(SwiftUI) && DEBUG
+import SwiftUI
+
+struct MyProfileViewController_Preview: PreviewProvider {
+    static var previews: some View {
+        MyProfileViewController().showPreview(.iPhone12)
+        MyProfileViewController().showPreview(.iPhoneSE)
+    }
+}
+#endif

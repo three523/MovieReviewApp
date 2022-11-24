@@ -13,6 +13,8 @@ import KakaoSDKAuth
 import KakaoSDKUser
 import KakaoSDKCommon
 
+//MARK: 동일한 이메일로 가입한 경우 예외 처리
+
 class AuthViewController: UIViewController {
     
     let logoView: UIView = UIView()
@@ -86,6 +88,7 @@ class AuthViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
         logoView.backgroundColor = .systemPink
         
         logoView.addSubview(loginButton)
@@ -210,7 +213,7 @@ class AuthViewController: UIViewController {
                                             print(email)
                                             signupVC.email = email
                                         }
-                                        self.present(signupVC, animated: false)
+                                        self.dismiss(animated: true)
                                     }
                                 }
                             }
@@ -257,6 +260,7 @@ extension AuthViewController: ASAuthorizationControllerDelegate, ASAuthorization
                     print("success")
                     print(authResult?.user.email)
                     print(authResult?.user.displayName)
+                    self.dismiss(animated: true)
                 }
             }
         }

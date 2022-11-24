@@ -56,7 +56,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        
+                
         addNavigationBar()
         
         view.addSubview(emailTextField)
