@@ -22,6 +22,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window.backgroundColor = .white
 //        window.rootViewController = TabBarController()
         window.rootViewController = AuthViewController()
+//        window.rootViewController = SignupViewController()
         window.makeKeyAndVisible()
         self.window = window
         

@@ -1,20 +1,26 @@
 //
-//  LoginViewController.swift
+//  SignupViewController.swift
 //  MovieReviewApp
 //
-//  Created by apple on 2022/09/19.
+//  Created by 김도현 on 2022/09/28.
 //
 
 import UIKit
 import FirebaseAuth
 
-enum Position {
-    case top,bottom
-}
+class SignupViewController: UIViewController {
 
-class LoginViewController: UIViewController, UITextFieldDelegate {
-    
     let navigationBar: UINavigationBar = UINavigationBar()
+    let nameTextField: UITextField = {
+        let textField: UITextField = UITextField()
+        textField.font = .systemFont(ofSize: 16, weight: .regular)
+        textField.placeholder = "이름 (2글자 이상)"
+        textField.textColor = .black
+        textField.borderStyle = .none
+        textField.tintColor = .systemPink
+        textField.clearButtonMode = .always
+        return textField
+    }()
     let emailTextField: UITextField = {
         let textField: UITextField = UITextField()
         textField.font = .systemFont(ofSize: 16, weight: .regular)
@@ -36,37 +42,45 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         return textField
     }()
     let footerView: UIView = UIView()
-    let forgotPasswordButton: UIButton = {
+    let signupButton: UIButton = {
         let button: UIButton = UIButton()
-        button.setTitle("비밀번호를 잊어버리셨나요?", for: .normal)
-        button.setTitleColor(UIColor.systemPink, for: .normal)
-        button.titleLabel?.font = .systemFont(ofSize: 16, weight: .regular)
+        button.setTitle("가입하기", for: .normal)
+        button.setTitleColor(UIColor.white, for: .normal)
+        button.setTitleColor(UIColor.systemGray2, for: .disabled)
+        button.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
+        button.backgroundColor = .systemGray6
+        button.contentEdgeInsets = UIEdgeInsets(top: 7, left: 10, bottom: 7, right: 10)
+        button.clipsToBounds = true
+        button.layer.cornerRadius = 5
+        button.isEnabled = false
         return button
     }()
-    let loginButton: UIButton = {
-        let button: UIButton = UIButton()
-        button.setTitle("로그인", for: .normal)
-        button.setTitleColor(UIColor.systemGray2, for: .normal)
-        button.backgroundColor = .systemGray5
-        button.contentEdgeInsets = UIEdgeInsets(top: 5, left: 10, bottom: 5, right: 10)
-        //        button.isEnabled = false
-        return button
-    }()
+    var name: String = ""
+    var email: String = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
         
+        nameTextField.text = name
+        emailTextField.text = email
+        
         addNavigationBar()
         
+        view.addSubview(nameTextField)
         view.addSubview(emailTextField)
         view.addSubview(passwordTextField)
         view.addSubview(footerView)
-        footerView.addSubview(forgotPasswordButton)
-        footerView.addSubview(loginButton)
+        footerView.addSubview(signupButton)
+        
+        nameTextField.translatesAutoresizingMaskIntoConstraints = false
+        nameTextField.topAnchor.constraint(equalTo: navigationBar.bottomAnchor, constant: 10).isActive = true
+        nameTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10).isActive = true
+        nameTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = true
+        nameTextField.heightAnchor.constraint(equalToConstant: 50).isActive = true
         
         emailTextField.translatesAutoresizingMaskIntoConstraints = false
-        emailTextField.topAnchor.constraint(equalTo: navigationBar.bottomAnchor, constant: 10).isActive = true
+        emailTextField.topAnchor.constraint(equalTo: nameTextField.bottomAnchor, constant: 10).isActive = true
         emailTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10).isActive = true
         emailTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = true
         emailTextField.heightAnchor.constraint(equalToConstant: 50).isActive = true
@@ -80,19 +94,19 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         footerView.translatesAutoresizingMaskIntoConstraints = false
         footerView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         footerView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        footerView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
+        footerView.bottomAnchor.constraint(equalTo: view.keyboardLayoutGuide.topAnchor).isActive = true
         footerView.heightAnchor.constraint(equalToConstant: 50).isActive = true
         
-        forgotPasswordButton.translatesAutoresizingMaskIntoConstraints = false
-        forgotPasswordButton.leadingAnchor.constraint(equalTo: footerView.leadingAnchor, constant: 10).isActive = true
-        forgotPasswordButton.centerYAnchor.constraint(equalTo: footerView.centerYAnchor).isActive = true
-        
-        loginButton.translatesAutoresizingMaskIntoConstraints = false
-        loginButton.trailingAnchor.constraint(equalTo: footerView.trailingAnchor, constant: -10).isActive = true
-        loginButton.centerYAnchor.constraint(equalTo: footerView.centerYAnchor).isActive = true
+        signupButton.translatesAutoresizingMaskIntoConstraints = false
+        signupButton.leadingAnchor.constraint(equalTo: footerView.leadingAnchor, constant: 10).isActive = true
+        signupButton.trailingAnchor.constraint(equalTo: footerView.trailingAnchor, constant: -10).isActive = true
+        signupButton.centerYAnchor.constraint(equalTo: footerView.centerYAnchor).isActive = true
         
         footerView.layoutIfNeeded()
         footerView.layer.addSublayer(addBorder(targetFrame: footerView.frame, position: .top))
+        
+        nameTextField.layoutIfNeeded()
+        nameTextField.layer.addSublayer(addBorder(targetFrame: nameTextField.frame, position: .bottom))
         
         emailTextField.layoutIfNeeded()
         emailTextField.layer.addSublayer(addBorder(targetFrame: emailTextField.frame, position: .bottom))
@@ -101,10 +115,15 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         passwordTextField.layer.addSublayer(addBorder(targetFrame: passwordTextField.frame, position: .bottom))
         passwordTextField.enablePasswordToggle()
         
+        nameTextField.delegate = self
         emailTextField.delegate = self
         passwordTextField.delegate = self
         
-        loginButton.addTarget(self, action: #selector(loginClick), for: .touchUpInside)
+        nameTextField.addTarget(self, action: #selector(textChange), for: .editingChanged)
+        emailTextField.addTarget(self, action: #selector(textChange), for: .editingChanged)
+        passwordTextField.addTarget(self, action: #selector(textChange), for: .editingChanged)
+        
+        signupButton.addTarget(self, action: #selector(SignupClick), for: .touchUpInside)
     }
     
     func addNavigationBar() {
@@ -115,7 +134,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         navigationBar.backgroundColor = .systemBackground
         let cancelItem: UIBarButtonItem = UIBarButtonItem(title: "닫기", style: .plain, target: self, action: #selector(closeClick))
         cancelItem.tintColor = .black
-        let naviItem = UINavigationItem(title: "로그인")
+        let naviItem = UINavigationItem(title: "회원가입")
         naviItem.leftBarButtonItem = cancelItem
         
         navigationBar.items = [naviItem]
@@ -140,66 +159,36 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         self.dismiss(animated: true)
     }
     
-    @objc func loginClick() {
+    @objc func SignupClick() {
         guard let email: String = emailTextField.text else { return }
         guard let password = passwordTextField.text else { return }
-        Auth.auth().signIn(withEmail: email, password: password) { (user, error) in
-            if let user = user {
-                print("login success")
-            } else{
-                print("login fail")
+        Auth.auth().createUser(withEmail: email, password: password) { result, error in
+            if let error = error {
+                print(error)
+            } else {
+                print(result)
             }
         }
+        
     }
+    
+    @objc func textChange() {
+        guard let name = nameTextField.text,
+           let email = emailTextField.text,
+              let password = passwordTextField.text else { return }
+        if !name.isEmpty && !email.isEmpty && !password.isEmpty {
+            signupButton.isEnabled = true
+            signupButton.backgroundColor = .systemPink
+            return
+        }
+        signupButton.isEnabled = false
+        signupButton.backgroundColor = .systemGray6
+    }
+
 }
 
-class PasswordTextField: UITextField {
-    
-    override var isSecureTextEntry: Bool {
-        didSet {
-            if !isSecureTextEntry { return }
-            secureTextEntryisTure()
-        }
-    }
-    
-    func secureTextEntryisTure() {
-        if !isSecureTextEntry { return }
-
-        if let currentText = text {
-            let currentPosition = selectedTextRange
-            insertText(currentText)
-            selectedTextRange = currentPosition
-        }
-    }
-    
-    private func setPasswordToggleImage(_ button: UIButton) {
-        if(isSecureTextEntry){
-            button.setImage(UIImage(systemName: "eye.slash.fill"), for: .normal)
-        }else{
-            button.setImage(UIImage(systemName: "eye.fill"), for: .normal)
-        }
-    }
-
-    func enablePasswordToggle(){
-        let button = UIButton(type: .custom)
-        let buttonSize: CGFloat = 25
-        setPasswordToggleImage(button)
-
-        button.frame = CGRect(x: self.frame.size.width - buttonSize, y: (self.frame.size.height - buttonSize)/2, width: buttonSize, height: buttonSize)
-        button.tintColor = .systemGray3
-        button.addTarget(self, action: #selector(self.togglePasswordView), for: .touchUpInside)
-        addSubview(button)
-    }
-    
-    override func clearButtonRect(forBounds bounds: CGRect) -> CGRect {
-        let buttonSize: CGFloat = 25
-        let buttonPadding: CGFloat = 10
-        return CGRect(x: self.frame.size.width - (buttonSize + buttonSize + buttonPadding), y: (self.frame.size.height - buttonSize)/2, width: buttonSize, height: buttonSize)
-    }
-    
-    @objc func togglePasswordView(_ sender: Any) {
-        guard let button = sender as? UIButton else { return }
-        self.isSecureTextEntry = !self.isSecureTextEntry
-        setPasswordToggleImage(sender as! UIButton)
+extension SignupViewController: UITextFieldDelegate {
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        return true
     }
 }

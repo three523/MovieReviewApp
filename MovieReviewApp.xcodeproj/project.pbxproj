@@ -17,6 +17,8 @@
 		186E321C28E1CA1900EA18BC /* AuthServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 186E321B28E1CA1900EA18BC /* AuthServices.swift */; };
 		186E321E28E307F000EA18BC /* LoginButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 186E321D28E307F000EA18BC /* LoginButton.swift */; };
 		186E322028E3419000EA18BC /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 186E321F28E3419000EA18BC /* UIColor.swift */; };
+		189863C728E4003100C08881 /* LoginAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 189863C628E4003100C08881 /* LoginAuth.swift */; };
+		189863C928E429B700C08881 /* SignupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 189863C828E429B700C08881 /* SignupViewController.swift */; };
 		189F34B828BE5DEE00AD0A29 /* MoreButtonLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 189F34B728BE5DEE00AD0A29 /* MoreButtonLabel.swift */; };
 		189F34BA28BE5F7100AD0A29 /* OverviewTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 189F34B928BE5F7100AD0A29 /* OverviewTableViewCell.swift */; };
 		18A13F29288EA06E00A34538 /* MovieDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18A13F28288EA06E00A34538 /* MovieDetailViewController.swift */; };
@@ -99,6 +101,8 @@
 		186E321B28E1CA1900EA18BC /* AuthServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthServices.swift; sourceTree = "<group>"; };
 		186E321D28E307F000EA18BC /* LoginButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginButton.swift; sourceTree = "<group>"; };
 		186E321F28E3419000EA18BC /* UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
+		189863C628E4003100C08881 /* LoginAuth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginAuth.swift; sourceTree = "<group>"; };
+		189863C828E429B700C08881 /* SignupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupViewController.swift; sourceTree = "<group>"; };
 		189F34B728BE5DEE00AD0A29 /* MoreButtonLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreButtonLabel.swift; sourceTree = "<group>"; };
 		189F34B928BE5F7100AD0A29 /* OverviewTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverviewTableViewCell.swift; sourceTree = "<group>"; };
 		18A13F28288EA06E00A34538 /* MovieDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDetailViewController.swift; sourceTree = "<group>"; };
@@ -205,6 +209,7 @@
 				18C8026628ACCD9C0080B31E /* MovieCommentViewController.swift */,
 				18A167ED28B76BAF00D15BB1 /* PersonDetailViewController.swift */,
 				18CA204C28D86791008C720B /* LoginViewController.swift */,
+				189863C828E429B700C08881 /* SignupViewController.swift */,
 				18CA204A28D835D5008C720B /* OtherLoginViewController.swift */,
 				18CA204828D815FF008C720B /* AuthViewController.swift */,
 			);
@@ -316,6 +321,7 @@
 				18A1678028BDBFC70038BEC2 /* FilterButtonFactory.swift */,
 				18B2386528E1696700B951BA /* ValidateCheck.swift */,
 				186E321F28E3419000EA18BC /* UIColor.swift */,
+				189863C628E4003100C08881 /* LoginAuth.swift */,
 			);
 			path = MovieReviewApp;
 			sourceTree = "<group>";
@@ -497,6 +503,7 @@
 				189F34BA28BE5F7100AD0A29 /* OverviewTableViewCell.swift in Sources */,
 				18C3C67828AF5879002C2D38 /* ReleaseDates.swift in Sources */,
 				18A13F29288EA06E00A34538 /* MovieDetailViewController.swift in Sources */,
+				189863C728E4003100C08881 /* LoginAuth.swift in Sources */,
 				18C3C67628AF48E6002C2D38 /* Credits.swift in Sources */,
 				18ABB6592891319100BACD73 /* MovieDetailHeaderView.swift in Sources */,
 				18BF66DB28B3A26200AE492D /* TableFooterView.swift in Sources */,
@@ -517,6 +524,7 @@
 				18A2336F2892646100B1B7FB /* CustomNavigationBar.swift in Sources */,
 				18ABB8082897C37200E8AF7B /* MovieDetailSectionView.swift in Sources */,
 				18A167EE28B76BAF00D15BB1 /* PersonDetailViewController.swift in Sources */,
+				189863C928E429B700C08881 /* SignupViewController.swift in Sources */,
 				18C018C92886801300E6AE2C /* MovieGenres.swift in Sources */,
 				18E17961287805790060BCD9 /* AppDelegate.swift in Sources */,
 				18BF66D728B3833C00AE492D /* CreditsSummaryTableViewCell.swift in Sources */,
