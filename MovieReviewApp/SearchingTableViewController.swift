@@ -130,11 +130,32 @@ class SearchingTableViewController: UIViewController, UISearchBarDelegate ,UISea
         isEnded = !isEnded
         guard let text = searchBar.text else { return }
         self.currentSearchBarText = text
+        if text != "" {
+            recentlySearchWordAdd(word: text)
+        }
         searchViewModel.getSearchMovie(mediaType: .movie, search: text) {
             DispatchQueue.main.async {
                 self.collectionView.reloadData()
             }
         }
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.endEditing(false)
+        guard let searchBeginOrEndDelegate = searchBarDelegate else {
+            return
+        }
+        searchBeginOrEndDelegate.searchBeginOrEnd()
+    }
+    
+    func recentlySearchWordAdd(word: String) {
+        let userDefaults = UserDefaults.standard
+        var recentlySearchWord = userDefaults.array(forKey: "RecentlySearchWord") as? [String] ?? [String]()
+        recentlySearchWord.removeAll { $0 == word }
+        recentlySearchWord.insert(word, at: 0)
+        if recentlySearchWord.count > 9 { recentlySearchWord.removeLast() }
+        userDefaults.set(recentlySearchWord, forKey: "RecentlySearchWord")
+        NotificationCenter.default.post(name: Notification.Name("RecentlySearchAdd"), object: nil)
     }
 
 }

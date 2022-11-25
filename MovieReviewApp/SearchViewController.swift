@@ -50,7 +50,7 @@ class SearchViewController: UIViewController, SearchBarDelegate, TableViewCellSe
             }
         }
     }
-    
+        
     private let recentlyCollectionHeaderView: RecentlyHeaderView = RecentlyHeaderView(frame: .zero, labelText: "최근 본 작품", buttonText: "모두 삭제")
     
     private var searchBarController: UISearchController?
@@ -100,8 +100,14 @@ class SearchViewController: UIViewController, SearchBarDelegate, TableViewCellSe
             }
         }
         
+        NotificationCenter.default.addObserver(self, selector: #selector(recentlySearchAdd), name: Notification.Name("RecentlySearchAdd"), object: nil)
+        
         viewSetting()
         
+    }
+    
+    @objc func recentlySearchAdd() {
+        searchingTableView.reloadData()
     }
     
     private func viewSetting() {
@@ -166,7 +172,6 @@ class SearchViewController: UIViewController, SearchBarDelegate, TableViewCellSe
         searchingTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         searchingTableViewHeightAnchor = searchingTableView.heightAnchor.constraint(equalToConstant: 0)
         searchingTableViewHeightAnchor.isActive = true
-        
     }
     
     func searchBeginOrEnd() {
@@ -184,14 +189,13 @@ class SearchViewController: UIViewController, SearchBarDelegate, TableViewCellSe
         guard let searchBar = searchBarController?.searchBar else { return }
         searchBar.text = text
         searchBeginOrEnd()
-        searchBar.endEditing(false)
+        searchBar.endEditing(true)
     }
     
     func tableSelected(id: String) {
         let detailVC = MovieDetailViewController()
         detailVC.movieId = id
         detailVC.modalPresentationStyle = .overFullScreen
-        print("ta")
         self.navigationController?.pushViewController(detailVC, animated: true)
     }
 }
@@ -214,7 +218,8 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if tableView == searchingTableView {
-            return 10
+            guard let count = UserDefaults.standard.array(forKey: "RecentlySearchWord")?.count else { return 0 }
+            return count
         } else {
             return searchViewModel.getPopularMovieCount()
         }
@@ -223,8 +228,10 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if tableView == searchingTableView {
             let cell = UITableViewCell()
+            guard let recentlyWordList = UserDefaults.standard.array(forKey: "RecentlySearchWord") as? [String] else { return cell }
+            let recentlyWord = recentlyWordList[indexPath.row]
             var config = cell.defaultContentConfiguration()
-            config.text = "test"
+            config.text = recentlyWord
             cell.contentConfiguration = config
             return cell
         }
@@ -248,6 +255,7 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
         guard let movieList = searchViewModel.getPopularMovieList() else { return }
         let movieId = movieList[indexPath.row].id
         let detailVC = MovieDetailViewController()
