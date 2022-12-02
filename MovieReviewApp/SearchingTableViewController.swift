@@ -110,31 +110,44 @@ class SearchingTableViewController: UIViewController, UISearchBarDelegate ,UISea
         guard let searchBeginOrEndDelegate = searchBarDelegate else {
             return false
         }
-        print("begin")
-        searchBeginOrEndDelegate.searchBeginOrEnd()
+        searchBeginOrEndDelegate.searchBegin()
         if isEnded { isEnded = false }
         return true
     }
     
-    func searchBarShouldEndEditing(_ searchBar: UISearchBar) -> Bool {
-        guard let searchBeginOrEndDelegate = searchBarDelegate else {
-            return false
-        }
-        searchBeginOrEndDelegate.searchBeginOrEnd()
-        print("end")
-        return true
-    }
-    
     func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
-        print("didEnd")
         isEnded = !isEnded
         guard let text = searchBar.text else { return }
         self.currentSearchBarText = text
+        if text != "" {
+            recentlySearchWordAdd(word: text)
+        }
         searchViewModel.getSearchMovie(mediaType: .movie, search: text) {
             DispatchQueue.main.async {
                 self.collectionView.reloadData()
             }
         }
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        print("cancelButton")
+        searchBar.text = ""
+        searchBar.endEditing(false)
+        guard let searchBeginOrEndDelegate = searchBarDelegate else {
+            return
+        }
+        searchBeginOrEndDelegate.searchEnd()
+        searchBeginOrEndDelegate.recentlySearchCheck()
+    }
+    
+    func recentlySearchWordAdd(word: String) {
+        let userDefaults = UserDefaults.standard
+        var recentlySearchWord = userDefaults.array(forKey: "RecentlySearchWord") as? [String] ?? [String]()
+        recentlySearchWord.removeAll { $0 == word }
+        recentlySearchWord.insert(word, at: 0)
+        if recentlySearchWord.count > 9 { recentlySearchWord.removeLast() }
+        userDefaults.set(recentlySearchWord, forKey: "RecentlySearchWord")
+        NotificationCenter.default.post(name: Notification.Name("RecentlySearchAdd"), object: nil)
     }
 
 }

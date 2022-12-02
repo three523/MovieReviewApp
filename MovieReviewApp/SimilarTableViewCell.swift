@@ -26,6 +26,7 @@ class SimilarTableViewCell: UITableViewCell, UICollectionViewDelegate, UICollect
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         similarCollectionView.delegate = self
         similarCollectionView.dataSource = self
+        similarCollectionView.isScrollEnabled = false
                 
         similarCollectionView.register(MovieListCollectionViewCell.self, forCellWithReuseIdentifier: MovieListCollectionViewCell.identifier)
         
@@ -88,7 +89,7 @@ class SimilarTableViewCell: UITableViewCell, UICollectionViewDelegate, UICollect
     
     override func systemLayoutSizeFitting(_ targetSize: CGSize, withHorizontalFittingPriority horizontalFittingPriority: UILayoutPriority, verticalFittingPriority: UILayoutPriority) -> CGSize {
         similarCollectionView.layoutIfNeeded()
-        similarCollectionView.frame = CGRect(x: 0, y: 0, width: targetSize.width , height: targetSize.height)
+        similarCollectionView.frame = CGRect(x: 0, y: 0, width: targetSize.width - 20 , height: targetSize.height)
         
         return similarLayout.collectionViewContentSize
     }

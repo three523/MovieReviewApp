@@ -12,6 +12,11 @@ protocol AddExpectationsProtocol: AnyObject {
     func deleteCell() -> Void
 }
 
+struct RecentlyMovie: Codable {
+    var id: String
+    var imageUrl: String?
+}
+
 class MovieDetailViewController: UIViewController, UIGestureRecognizerDelegate {
     let movieDetailTableView: UITableView = UITableView(frame: .zero, style: .grouped)
     let header: MovieDetailHeaderView = MovieDetailHeaderView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.width))
@@ -54,6 +59,9 @@ class MovieDetailViewController: UIViewController, UIGestureRecognizerDelegate {
             self.detailViewModel.getPosterImage { posterImage in
                 self.header.setPosterImage(moviePosterImage: posterImage)
             }
+            
+            let recentlyMovie = RecentlyMovie(id: self.movieId, imageUrl: movieDetail.posterPath)
+            self.appendRecentlyMovie(recentlyMovie: recentlyMovie)
         }
         
         detailViewModel.getCredits {
@@ -94,6 +102,19 @@ class MovieDetailViewController: UIViewController, UIGestureRecognizerDelegate {
         movieDetailTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         movieDetailTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
             
+    }
+    
+    func appendRecentlyMovie(recentlyMovie: RecentlyMovie) {
+        let recentlyMovieData: Data = (UserDefaults.standard.value(forKey: "RecentlyMovies") as? Data) ?? Data()
+        let recentlyMovieList: [RecentlyMovie] = (try? PropertyListDecoder().decode([RecentlyMovie].self, from: recentlyMovieData)) ?? []
+        var filterRecentlyMovieList = recentlyMovieList.filter { $0.id != recentlyMovie.id }
+        filterRecentlyMovieList.insert(recentlyMovie, at: 0)
+        
+        if filterRecentlyMovieList.count > 9 {
+            filterRecentlyMovieList.removeLast()
+        }
+                
+        UserDefaults.standard.set(try? PropertyListEncoder().encode(filterRecentlyMovieList), forKey: "RecentlyMovies")
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -194,11 +215,14 @@ extension MovieDetailViewController: UITableViewDelegate, UITableViewDataSource,
         } else if indexPath.section == 1 {
             guard let detailMovie: MovieDetail = detailViewModel.getMovie() else { return cell }
             if indexPath.row == 0 {
-                var config = cell.defaultContentConfiguration()
-                config.text = detailMovie.overview
-                cell.contentConfiguration = config
-                guard let overviewCell = tableView.dequeueReusableCell(withIdentifier: OverviewTableViewCell.identifier, for: indexPath) as? OverviewTableViewCell else { return cell }
-                overviewCell.overviewLabel.text = detailMovie.overview
+                let overviewText = detailMovie.overview == "" ? "내용 없음" : detailMovie.overview
+                guard let overviewCell = tableView.dequeueReusableCell(withIdentifier: OverviewTableViewCell.identifier, for: indexPath) as? OverviewTableViewCell else {
+                    var config = cell.defaultContentConfiguration()
+                    config.text = overviewText
+                    cell.contentConfiguration = config
+                    return cell
+                }
+                overviewCell.overviewLabel.text = overviewText
                 overviewCell.delegate = self
                 return overviewCell
             } else if indexPath.row == 1 {
@@ -246,7 +270,7 @@ extension MovieDetailViewController: UITableViewDelegate, UITableViewDataSource,
             }
             return reviewCell
         } else if indexPath.section == 4 {
-            let similarCell: SimilarTableViewCell = SimilarTableViewCell(style: .default, reuseIdentifier: SimilarTableViewCell.identifier)
+            guard let similarCell: SimilarTableViewCell = tableView.dequeueReusableCell(withIdentifier: SimilarTableViewCell.identifier) as? SimilarTableViewCell else { return cell }
             similarCell.currentVC = self
             return similarCell
         }

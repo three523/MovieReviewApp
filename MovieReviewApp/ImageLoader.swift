@@ -32,6 +32,7 @@ class ImageLoader {
     }
     
     private func getDefaultImage(path: String, completed: @escaping (UIImage) -> Void) {
+        print(baseUrlString, path)
         guard let url: URL = URL(string: "\(path)") else { return }
         shared.dataTask(with: url) { data, response, error in
             guard let data = data,
