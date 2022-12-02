@@ -8,7 +8,9 @@
 import UIKit
 
 protocol SearchBarDelegate: AnyObject {
-    func searchBeginOrEnd() -> Void
+    func searchBegin() -> Void
+    func searchEnd() -> Void
+    func recentlySearchCheck() -> Void
     func setSearchBarText(text: String) -> Void
 }
 
@@ -35,30 +37,39 @@ class SearchViewController: UIViewController, SearchBarDelegate, TableViewCellSe
         return cv
     }()
     let searchViewModel: SearchViewModel = SearchViewModel()
-    private var recentVisibleTopAnchor: NSLayoutConstraint? = nil
-    private var recentHiddenTopAnchor: NSLayoutConstraint? = nil
+    private var recentlyMovieCollectionHeaderViewHiddenAnchor: NSLayoutConstraint? = nil
+    private var recentlyMovieCollectionHeaderViewVisibleAnchor: NSLayoutConstraint? = nil
+    private var recentlyMovieCollectionViewHiddenAnchor: NSLayoutConstraint? = nil
+    private var recentlyMovieCollectionViewVisibleAnchor: NSLayoutConstraint? = nil
+    private var defaultLabelAnchor: NSLayoutConstraint? = nil
     lazy var isRecentlyListVisible: Bool = false {
         didSet {
             if isRecentlyListVisible {
-                recentlyCollectionHeaderView.isHidden = !isRecentlyListVisible
-                recentlyMoviesCollectionView.isHidden = !isRecentlyListVisible
-                recentVisibleTopAnchor?.isActive = true
+                recentlyMovieCollectionViewHiddenAnchor?.isActive = false
+                recentlyMovieCollectionHeaderViewHiddenAnchor?.isActive = false
+                recentlyCollectionHeaderView.isHidden = false
+                recentlyMovieCollectionHeaderViewVisibleAnchor?.isActive = true
+                recentlyMovieCollectionViewVisibleAnchor?.isActive = true
+                defaultLabelAnchor?.constant = 20
             } else {
-                recentlyCollectionHeaderView.isHidden = !isRecentlyListVisible
-                recentlyMoviesCollectionView.isHidden = !isRecentlyListVisible
-                recentHiddenTopAnchor?.isActive = true
+                recentlyMovieCollectionHeaderViewHiddenAnchor?.isActive = true
+                recentlyMovieCollectionViewHiddenAnchor?.isActive = true
+                recentlyCollectionHeaderView.isHidden = true
+                recentlyMovieCollectionHeaderViewVisibleAnchor?.isActive = false
+                recentlyMovieCollectionViewVisibleAnchor?.isActive = false
+                defaultLabelAnchor?.constant -= 20
             }
         }
     }
         
     private let recentlyCollectionHeaderView: RecentlyHeaderView = RecentlyHeaderView(frame: .zero, labelText: "최근 본 작품", buttonText: "모두 삭제")
+    private var recentlyMovieList: [RecentlyMovie]?
     
     private var searchBarController: UISearchController?
     
     private let tableViewCellHeight: CGFloat = (UIScreen.main.bounds.height / 7).rounded(.down)
     
     private var searchingTableViewHeightAnchor: NSLayoutConstraint = NSLayoutConstraint()
-    private var collectionViewHeightAnchor: NSLayoutConstraint = NSLayoutConstraint()
     
     private var searchingTableView: UITableView = UITableView()
         
@@ -66,11 +77,12 @@ class SearchViewController: UIViewController, SearchBarDelegate, TableViewCellSe
         super.viewWillAppear(animated)
         guard let searchBar = searchBarController?.searchBar else { return }
         searchBar.overrideUserInterfaceStyle = .light
+        settingRecentlyCollectionView()
     }
-    
+        
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+                
         let searchingVC: SearchingTableViewController = SearchingTableViewController()
         searchingVC.searchBarDelegate = self
         searchingVC.tableViewSelectedDelegate = self
@@ -81,18 +93,34 @@ class SearchViewController: UIViewController, SearchBarDelegate, TableViewCellSe
                 
         searchingTableView.delegate = self
         searchingTableView.dataSource = self
+        let searchTableViewHeaderView = RecentlyHeaderView(frame: CGRect(x: 0, y: 0, width: searchingTableView.frame.width, height: 44), labelText: "최근 검색어", buttonText: "모두 삭제")
+        searchTableViewHeaderView.removeRecent(action: UIAction(handler: { _ in
+            UserDefaults.standard.set([], forKey: "RecentlySearchWord")
+            DispatchQueue.main.async {
+                self.searchingTableView.reloadData()
+                self.searchingTableView.tableHeaderView?.isHidden = true
+            }
+        }))
+        searchingTableView.tableHeaderView = searchTableViewHeaderView
                 
         recentlyMoviesCollectionView.delegate = self
         recentlyMoviesCollectionView.dataSource = self
         recentlyMoviesCollectionView.register(RecentlyMoviesCollectionViewCell.self, forCellWithReuseIdentifier: RecentlyMoviesCollectionViewCell.identifier)
+        
+        recentlyCollectionHeaderView.removeRecent(action: UIAction(handler: { _ in
+            UserDefaults.standard.set(try? PropertyListEncoder().encode([RecentlyMovie]()), forKey: "RecentlyMovies")
+            DispatchQueue.main.async {
+                self.recentlyMoviesCollectionView.reloadData()
+                self.isRecentlyListVisible = false
+            }
+        }))
         
         defaultTableView.delegate = self
         defaultTableView.dataSource = self
         defaultTableView.register(SearchDefaultTableViewCell.self, forCellReuseIdentifier: SearchDefaultTableViewCell.identifier)
         defaultTableView.isScrollEnabled = false
         
-        //MARK: 봤던 영화나 드라마 체크기능을 만들면 메서드로 생성
-        isRecentlyListVisible = false
+        viewSetting()
         
         searchViewModel.getPopularMovie {
             DispatchQueue.main.async {
@@ -101,8 +129,6 @@ class SearchViewController: UIViewController, SearchBarDelegate, TableViewCellSe
         }
         
         NotificationCenter.default.addObserver(self, selector: #selector(recentlySearchAdd), name: Notification.Name("RecentlySearchAdd"), object: nil)
-        
-        viewSetting()
         
     }
     
@@ -142,20 +168,19 @@ class SearchViewController: UIViewController, SearchBarDelegate, TableViewCellSe
         recentlyCollectionHeaderView.topAnchor.constraint(equalTo: contentLayoutGuide.topAnchor, constant: 10).isActive = true
         recentlyCollectionHeaderView.leadingAnchor.constraint(equalTo: frameLayoutGuide.leadingAnchor, constant: 10).isActive = true
         recentlyCollectionHeaderView.trailingAnchor.constraint(equalTo: frameLayoutGuide.trailingAnchor, constant: -10).isActive = true
-        collectionViewHeightAnchor = recentlyCollectionHeaderView.heightAnchor.constraint(equalToConstant: 50)
-        collectionViewHeightAnchor.isActive = true
+        recentlyMovieCollectionHeaderViewVisibleAnchor = recentlyCollectionHeaderView.heightAnchor.constraint(equalToConstant: 50)
+        recentlyMovieCollectionHeaderViewHiddenAnchor = recentlyCollectionHeaderView.heightAnchor.constraint(equalToConstant: 0)
         
         recentlyMoviesCollectionView.translatesAutoresizingMaskIntoConstraints = false
         recentlyMoviesCollectionView.topAnchor.constraint(equalTo: recentlyCollectionHeaderView.bottomAnchor, constant: 10).isActive = true
         recentlyMoviesCollectionView.leadingAnchor.constraint(equalTo: frameLayoutGuide.leadingAnchor).isActive = true
         recentlyMoviesCollectionView.trailingAnchor.constraint(equalTo: frameLayoutGuide.trailingAnchor).isActive = true
-        collectionViewHeightAnchor = recentlyMoviesCollectionView.heightAnchor.constraint(equalToConstant: 100)
-        collectionViewHeightAnchor.isActive = true
+        recentlyMovieCollectionViewVisibleAnchor = recentlyMoviesCollectionView.heightAnchor.constraint(equalToConstant: 100)
+        recentlyMovieCollectionViewHiddenAnchor = recentlyMoviesCollectionView.heightAnchor.constraint(equalToConstant: 0)
         
         defaultLabel.translatesAutoresizingMaskIntoConstraints = false
-        recentVisibleTopAnchor = defaultLabel.topAnchor.constraint(equalTo: recentlyMoviesCollectionView.bottomAnchor, constant: 20)
-        recentHiddenTopAnchor = defaultLabel.topAnchor.constraint(equalTo: contentLayoutGuide.topAnchor, constant: 10)
-        recentHiddenTopAnchor?.isActive = true
+        defaultLabelAnchor = defaultLabel.topAnchor.constraint(equalTo: recentlyMoviesCollectionView.bottomAnchor, constant: 10)
+        defaultLabelAnchor?.isActive = true
         defaultLabel.leadingAnchor.constraint(equalTo: frameLayoutGuide.leadingAnchor, constant: 10).isActive = true
         
         defaultTableView.translatesAutoresizingMaskIntoConstraints = false
@@ -165,7 +190,6 @@ class SearchViewController: UIViewController, SearchBarDelegate, TableViewCellSe
         defaultTableView.heightAnchor.constraint(equalToConstant: 10*tableViewCellHeight).isActive = true
         defaultTableView.bottomAnchor.constraint(equalTo: contentLayoutGuide.bottomAnchor).isActive = true
         
-        defaultLabel.layoutIfNeeded()
         searchingTableView.translatesAutoresizingMaskIntoConstraints = false
         searchingTableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
         searchingTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
@@ -174,22 +198,28 @@ class SearchViewController: UIViewController, SearchBarDelegate, TableViewCellSe
         searchingTableViewHeightAnchor.isActive = true
     }
     
-    func searchBeginOrEnd() {
-        if searchingTableViewHeightAnchor.constant == 0 {
-            let height = view.frame.height - (view.safeAreaInsets.top + 50)
-            searchingTableViewHeightAnchor.constant = height
-            recentlyCollectionHeaderView.setText(labelText: "최근 검색", buttonText: "모두 삭제")
-        } else {
-            searchingTableViewHeightAnchor.constant = 0
-            recentlyCollectionHeaderView.setText(labelText: "최근에 본 영화", buttonText: "모두 삭제")
-        }
+    func searchEnd() {
+        searchingTableViewHeightAnchor.constant = 0
+    }
+    
+    func searchBegin() {
+        let searchingTableViewHeight = view.frame.height - (view.safeAreaInsets.top + 50)
+        searchingTableViewHeightAnchor.constant = searchingTableViewHeight
     }
     
     func setSearchBarText(text: String) {
         guard let searchBar = searchBarController?.searchBar else { return }
         searchBar.text = text
-        searchBeginOrEnd()
         searchBar.endEditing(true)
+    }
+    
+    func recentlySearchCheck() {
+        guard let recentlyWords = UserDefaults.standard.array(forKey: "RecentlySearchWord"),
+              false == recentlyWords.isEmpty else {
+            searchingTableView.tableHeaderView?.isHidden = true
+            return
+        }
+        searchingTableView.tableHeaderView?.isHidden = false
     }
     
     func tableSelected(id: String) {
@@ -198,17 +228,39 @@ class SearchViewController: UIViewController, SearchBarDelegate, TableViewCellSe
         detailVC.modalPresentationStyle = .overFullScreen
         self.navigationController?.pushViewController(detailVC, animated: true)
     }
+    
+    func settingRecentlyCollectionView() {
+        guard let recentlyMovieData: Data = UserDefaults.standard.value(forKey: "RecentlyMovies") as? Data else {
+            isRecentlyListVisible = false
+            return
+        }
+        guard let recentlyMovies: [RecentlyMovie] = (try? PropertyListDecoder().decode([RecentlyMovie].self, from: recentlyMovieData)),
+            false == recentlyMovies.isEmpty else {
+            isRecentlyListVisible = false
+            return
+        }
+        recentlyMovieList = recentlyMovies
+        recentlyMoviesCollectionView.reloadData()
+        isRecentlyListVisible = true
+    }
 }
 
 extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 10
+        return recentlyMovieList?.count ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RecentlyMoviesCollectionViewCell.identifier, for: indexPath) as! RecentlyMoviesCollectionViewCell
-        
+        guard let recentlyMovieList = recentlyMovieList,
+              let imageUrl = recentlyMovieList[indexPath.row].imageUrl else { return cell }
+        print(imageUrl)
+        ImageLoader.loader.tmdbImageLoad(stringUrl: imageUrl, size: .poster) { image in
+            DispatchQueue.main.async {
+                cell.moviePosterImageView.image = image
+            }
+        }
         return cell
     }
     
@@ -255,6 +307,14 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        if tableView == searchingTableView {
+            guard let recentlyWordList = UserDefaults.standard.array(forKey: "RecentlySearchWord") as? [String],
+                  let searchBar = searchBarController?.searchBar else { return }
+            searchBar.text = recentlyWordList[indexPath.row]
+            searchBar.endEditing(true)
+            return
+        }
         
         guard let movieList = searchViewModel.getPopularMovieList() else { return }
         let movieId = movieList[indexPath.row].id
@@ -312,6 +372,10 @@ class RecentlyHeaderView: UIView {
         titleLabel.text = labelText
         removeAllBtn.setTitle(buttonText, for: .normal)
     }
+    
+    func removeRecent(action: UIAction) {
+        removeAllBtn.addAction(action, for: .touchUpInside)
+    }
 }
 
 class RecentlyMoviesCollectionViewCell: UICollectionViewCell {
@@ -327,6 +391,9 @@ class RecentlyMoviesCollectionViewCell: UICollectionViewCell {
         moviePosterImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 5).isActive = true
         moviePosterImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -5).isActive = true
         moviePosterImageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -5).isActive = true
+        
+        moviePosterImageView.layer.cornerRadius = 10
+        moviePosterImageView.clipsToBounds = true
     }
     
     required init?(coder: NSCoder) {

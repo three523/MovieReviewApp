@@ -12,8 +12,6 @@ enum MediaType: String {
     case tv = "tv?"
 }
 
-
-
 class SearchViewModel {
     private let shared: URLSession = URLSession.shared
     private let apiHandler: ApiHandler = ApiHandler()

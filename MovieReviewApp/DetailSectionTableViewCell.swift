@@ -133,7 +133,7 @@ class DetailSectionTableViewCell: UITableViewCell {
                 results = releaseDates
             }
             
-            let certification = results.first?.releaseDates?.first?.certification ?? ""
+            let certification = results.first?.releaseDates?.first?.certification ?? "X"
             movieInfoStackView.textSetting(title: "연령 등급", content: certification)
             
             let genres: [String] = movieDetail.genres.map{ $0.name }

@@ -110,23 +110,12 @@ class SearchingTableViewController: UIViewController, UISearchBarDelegate ,UISea
         guard let searchBeginOrEndDelegate = searchBarDelegate else {
             return false
         }
-        print("begin")
-        searchBeginOrEndDelegate.searchBeginOrEnd()
+        searchBeginOrEndDelegate.searchBegin()
         if isEnded { isEnded = false }
         return true
     }
     
-    func searchBarShouldEndEditing(_ searchBar: UISearchBar) -> Bool {
-        guard let searchBeginOrEndDelegate = searchBarDelegate else {
-            return false
-        }
-        searchBeginOrEndDelegate.searchBeginOrEnd()
-        print("end")
-        return true
-    }
-    
     func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
-        print("didEnd")
         isEnded = !isEnded
         guard let text = searchBar.text else { return }
         self.currentSearchBarText = text
@@ -141,11 +130,14 @@ class SearchingTableViewController: UIViewController, UISearchBarDelegate ,UISea
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        print("cancelButton")
+        searchBar.text = ""
         searchBar.endEditing(false)
         guard let searchBeginOrEndDelegate = searchBarDelegate else {
             return
         }
-        searchBeginOrEndDelegate.searchBeginOrEnd()
+        searchBeginOrEndDelegate.searchEnd()
+        searchBeginOrEndDelegate.recentlySearchCheck()
     }
     
     func recentlySearchWordAdd(word: String) {
