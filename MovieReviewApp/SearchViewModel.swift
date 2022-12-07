@@ -34,7 +34,7 @@ class SearchViewModel {
         let searchPath: String = path + mediaType.rawValue
         let searchQuery = search.replacingOccurrences(of: " ", with: "+")
         query["query"] = searchQuery
-        if mediaType == .movie{
+        if mediaType == .movie {
             apiHandler.getJson(type: MovieList.self, path: searchPath, query: query) { movies in
                 self.searchMovies = movies.results
                 completed()

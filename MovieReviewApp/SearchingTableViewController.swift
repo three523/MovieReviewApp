@@ -130,7 +130,6 @@ class SearchingTableViewController: UIViewController, UISearchBarDelegate ,UISea
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        print("cancelButton")
         searchBar.text = ""
         searchBar.endEditing(false)
         guard let searchBeginOrEndDelegate = searchBarDelegate else {

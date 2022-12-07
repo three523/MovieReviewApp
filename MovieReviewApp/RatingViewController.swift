@@ -16,7 +16,15 @@ extension UIDevice {
     }
 }
 
-class RatingViewController: UIViewController, UICollectionViewDataSource,  UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+protocol FilterHeaderDelegate: AnyObject {
+    func searchButtonClick()
+}
+
+protocol PushMovieDetailViewControllerDelegate: AnyObject {
+    func navigationPush(index: Int)
+}
+
+class RatingViewController: UIViewController, UICollectionViewDataSource,  UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, FilterHeaderDelegate, PushMovieDetailViewControllerDelegate {
         
     lazy var cellMoveStackView: CellMoveStackView = {
         let sv: CellMoveStackView = CellMoveStackView(frame: .zero, collectionView: collectionView)
@@ -40,12 +48,23 @@ class RatingViewController: UIViewController, UICollectionViewDataSource,  UICol
     }()
     let reviewViewModel: ReviewFilterViewModel = ReviewFilterViewModel()
     var mediaTypeIndex = 0
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: animated)
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navigationController?.setNavigationBarHidden(false, animated: animated)
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         viewSetting()
         // Do any additional setup after loading the view.
         guard let filterText = filterHeaderView.filterButton.titleLabel?.text else { return }
+        filterHeaderView.delegate = self
         reviewViewModel.movieList(findData: filterText, path: "discover/movie?", section: 0) { movielist in
             DispatchQueue.main.async {
                 self.collectionView.reloadData()
@@ -123,7 +142,6 @@ class RatingViewController: UIViewController, UICollectionViewDataSource,  UICol
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         let index = collectionView.indexPathsForVisibleItems[0].item
         cellMoveStackView.setButtonTitleColor(index: index)
-        
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -132,6 +150,7 @@ class RatingViewController: UIViewController, UICollectionViewDataSource,  UICol
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ReviewListCVCell.identifier, for: indexPath) as! ReviewListCVCell
+        cell.delegate = self
         cell.movieList = reviewViewModel.getMovieList()
         if indexPath.item == 0 { cell.backgroundColor = .cyan }
         else if indexPath.item == 1 { cell.backgroundColor = .green }
@@ -144,6 +163,19 @@ class RatingViewController: UIViewController, UICollectionViewDataSource,  UICol
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: collectionView.frame.width, height: collectionView.frame.height)
+    }
+    
+    func searchButtonClick() {
+        let ratingSearchViewController = RatingSearchViewController()
+        ratingSearchViewController.modalPresentationStyle = .overFullScreen
+        navigationController?.pushViewController(ratingSearchViewController, animated: true)
+    }
+    
+    func navigationPush(index: Int) {
+        guard let movie = reviewViewModel.getMovie(index: index) else { return }
+        let movieDetailViewController = MovieDetailViewController()
+        movieDetailViewController.movieId = String(movie.id)
+        navigationController?.pushViewController(movieDetailViewController, animated: true)
     }
 
 }
@@ -161,6 +193,7 @@ class ReviewListCVCell: UICollectionViewCell, UITableViewDelegate, UITableViewDa
     }()
     var movieList: [MovieInfo]? = nil
     let imageLoader = ImageLoader()
+    weak var delegate: PushMovieDetailViewControllerDelegate?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -194,6 +227,10 @@ class ReviewListCVCell: UICollectionViewCell, UITableViewDelegate, UITableViewDa
         }
         
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        delegate?.navigationPush(index: indexPath.row)
     }
     
     func tableViewReload() {
@@ -264,6 +301,8 @@ class ReviewListTBCell: UITableViewCell {
         starView.settings.starSize = 30
         starView.rating = 0.0
         starView.settings.minTouchRating = 0.0
+        starView.settings.passTouchesToSuperview = false
+        starView.settings.updateOnTouch = true
         starView.translatesAutoresizingMaskIntoConstraints = false
         starView.topAnchor.constraint(equalTo: year.bottomAnchor).isActive = true
         starView.leadingAnchor.constraint(equalTo: year.leadingAnchor).isActive = true
