@@ -26,7 +26,7 @@ class TabBarController: UITabBarController {
         
         let vc1 = UINavigationController(rootViewController: HomeViewController())
         let vc2 = UINavigationController(rootViewController: SearchViewController())
-        let vc3 = RatingViewController()
+        let vc3 = UINavigationController(rootViewController: RatingViewController())
         let vc4 = UINavigationController(rootViewController: MyProfileViewController())
         
         vc1.title = "홈"

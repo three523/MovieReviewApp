@@ -31,7 +31,8 @@ class FilterHeaderView: UIView {
         return btn
     }()
     
-    var vc: UIViewController? = nil
+    weak var vc: UIViewController? = nil
+    weak var delegate: FilterHeaderDelegate?
     
     init(frame: CGRect, vc: UIViewController) {
         self.vc = vc
@@ -59,6 +60,13 @@ class FilterHeaderView: UIView {
         searchIconButton.widthAnchor.constraint(equalTo: self.heightAnchor).isActive = true
         
         NotificationCenter.default.addObserver(self, selector: #selector(setFilterLabel(_:)), name: Notification.Name(rawValue: "MovieFilterName"), object: nil)
+        
+        searchIconButton.addTarget(self, action: #selector(searchButtonClick), for: .touchUpInside)
+    }
+    
+    @objc
+    func searchButtonClick() {
+        delegate?.searchButtonClick()
     }
     
     @objc func setFilterLabel(_ notification: Notification) {
