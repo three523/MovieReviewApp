@@ -91,6 +91,7 @@ class MovieDetailViewController: UIViewController, UIGestureRecognizerDelegate {
         movieDetailTableView.register(CreditsSummaryTableViewCell.self, forCellReuseIdentifier: CreditsSummaryTableViewCell.identifier)
         movieDetailTableView.register(ReviewTableViewCell.self, forCellReuseIdentifier: ReviewTableViewCell.identifier)
         movieDetailTableView.register(OverviewTableViewCell.self, forCellReuseIdentifier: OverviewTableViewCell.identifier)
+        movieDetailTableView.register(SimilarTableViewCell.self, forCellReuseIdentifier: SimilarTableViewCell.identifier)
         
         movieDetailTableView.sectionHeaderTopPadding = 10
         movieDetailTableView.rowHeight = UITableView.automaticDimension
@@ -270,6 +271,7 @@ extension MovieDetailViewController: UITableViewDelegate, UITableViewDataSource,
             }
             return reviewCell
         } else if indexPath.section == 4 {
+            print("similarCell")
             guard let similarCell: SimilarTableViewCell = tableView.dequeueReusableCell(withIdentifier: SimilarTableViewCell.identifier) as? SimilarTableViewCell else { return cell }
             similarCell.currentVC = self
             return similarCell
@@ -384,7 +386,8 @@ extension MovieDetailViewController: UITableViewDelegate, UITableViewDataSource,
                     }
                 }
             }
-            self.present(personVC, animated: true)
+            self.navigationController?.pushViewController(personVC, animated: true)
+//            self.present(personVC, animated: true)
         }
         
     }
