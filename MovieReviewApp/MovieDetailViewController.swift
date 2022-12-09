@@ -91,6 +91,8 @@ class MovieDetailViewController: UIViewController, UIGestureRecognizerDelegate {
         movieDetailTableView.register(CreditsSummaryTableViewCell.self, forCellReuseIdentifier: CreditsSummaryTableViewCell.identifier)
         movieDetailTableView.register(ReviewTableViewCell.self, forCellReuseIdentifier: ReviewTableViewCell.identifier)
         movieDetailTableView.register(OverviewTableViewCell.self, forCellReuseIdentifier: OverviewTableViewCell.identifier)
+        movieDetailTableView.register(SimilarTableViewCell.self, forCellReuseIdentifier: SimilarTableViewCell.identifier)
+
         
         movieDetailTableView.sectionHeaderTopPadding = 10
         movieDetailTableView.rowHeight = UITableView.automaticDimension
