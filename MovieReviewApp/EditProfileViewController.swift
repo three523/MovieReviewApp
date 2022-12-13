@@ -7,7 +7,7 @@
 
 import UIKit
 
-class Profile {
+struct Profile {
     var nickname: String
     var introduction: String
     var profileImage: UIImage?
@@ -62,6 +62,8 @@ class EditProfileViewController: UIViewController {
         textfiled.translatesAutoresizingMaskIntoConstraints = false
         return textfiled
     }()
+    let pickerViewController: UIImagePickerController = UIImagePickerController()
+    var profile: Profile?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -73,6 +75,8 @@ class EditProfileViewController: UIViewController {
         title = "프로필 변경"
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "취소", style: .plain, target: self, action: #selector(cancelButtonClick))
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "확인", style: .done, target: self, action: #selector(doneButtonClick))
+                
+        pickerViewController.delegate = self
         
         viewAdd()
         viewAutoLayoutSetting()
@@ -145,15 +149,15 @@ class EditProfileViewController: UIViewController {
         let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         
         actionSheet.addAction(UIAlertAction(title: "직접 찍기", style: .default, handler: { _ in
-            print("직접 찍기")
+            self.openCamera()
         }))
         
         actionSheet.addAction(UIAlertAction(title: "앨범에서 선택", style: .default, handler: { _ in
-            print("앨범")
+            self.openLibrary()
         }))
         
         actionSheet.addAction(UIAlertAction(title: "삭제하기", style: .default, handler: { _ in
-            print("삭제")
+            self.removeProfileImage()
         }))
         
         let cancelAction = UIAlertAction(title: "취소", style: .cancel)
@@ -161,6 +165,10 @@ class EditProfileViewController: UIViewController {
         
         actionSheet.addAction(cancelAction)
         present(actionSheet, animated: true)
+    }
+    
+    private func removeProfileImage() {
+        profileImageView.image = UIImage(systemName: "person.fill")
     }
     
     @objc
@@ -173,4 +181,30 @@ class EditProfileViewController: UIViewController {
         navigationController?.popViewController(animated: true)
     }
 
+}
+
+extension EditProfileViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    
+    private func openLibrary() {
+        pickerViewController.sourceType = .photoLibrary
+        present(pickerViewController, animated: true)
+    }
+    
+    private func openCamera() {
+        if(UIImagePickerController .isSourceTypeAvailable(.camera)){
+            pickerViewController.sourceType = .camera
+            present(pickerViewController, animated: true)
+        } else {
+            print("Camera not available")
+        }
+    }
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        if let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
+            profileImageView.image = image
+        }
+
+        dismiss(animated: true, completion: nil)
+
+    }
 }
