@@ -7,7 +7,11 @@
 
 import UIKit
 
-class MyProfileViewController: UIViewController {
+protocol EditProfileDelegate: AnyObject {
+    func pushEditViewController()
+}
+
+class MyProfileViewController: UIViewController, EditProfileDelegate {
     
     let profileTableView: UITableView = UITableView(frame: .zero, style: .plain)
 
@@ -53,6 +57,11 @@ class MyProfileViewController: UIViewController {
         settginVC.tableList = [["내 설정","서비스 설정","SNS 설정"]]
         navigationController?.pushViewController(settginVC, animated: true)
     }
+    
+    func pushEditViewController() {
+        let vc = EditProfileViewController()
+        navigationController?.pushViewController(vc, animated: true)
+    }
 
 }
 
@@ -81,7 +90,7 @@ extension MyProfileViewController: UITableViewDelegate, UITableViewDataSource {
         
         if indexPath.section == 0 {
             guard let cell = tableView.dequeueReusableCell(withIdentifier: ProfileInfoTableViewCell.identifier, for: indexPath) as? ProfileInfoTableViewCell else { return UITableViewCell() }
-            cell.navigationController = navigationController
+            cell.delegate = self
             return cell
         } else if indexPath.section == 1 {
             guard let cell = tableView.dequeueReusableCell(withIdentifier: ProfileStorageTableViewCell.identifier, for: indexPath) as? ProfileStorageTableViewCell else { return UITableViewCell() }

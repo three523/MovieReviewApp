@@ -149,7 +149,6 @@ class AuthViewController: UIViewController {
         signStackView.layoutIfNeeded()
         kakaoLoginButton.layoutIfNeeded()
         guard let kakaoLogoView = kakaoLoginButton.imageView else { return }
-        print(kakaoLoginButton.frame,kakaoLogoView.frame)
         kakaoLoginButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: (kakaoLoginButton.frame.width - kakaoLogoView.frame.width) - 10)
         
         kakaoLoginButton.titleEdgeInsets = UIEdgeInsets(top: 0, left: -kakaoLogoView.frame.width, bottom: 0, right: 0)

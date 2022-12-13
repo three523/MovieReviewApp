@@ -67,9 +67,9 @@ class PersonDetailViewController: UIViewController {
     var collectionViewHeightAnchor: NSLayoutConstraint?
     var collectionViewOriginSize: CGFloat?
     var likeCount: Int = 0
-
+    
     override func viewDidLoad() {
-        
+                
         super.viewDidLoad()
         view.backgroundColor = .systemGray5
         
@@ -176,7 +176,6 @@ class PersonDetailViewController: UIViewController {
     }
     
     func profileViewSubviewsSetting() {
-        
         let containerView: UIStackView = UIStackView()
         containerView.axis = .horizontal
         containerView.alignment = .center
@@ -237,7 +236,6 @@ class PersonDetailViewController: UIViewController {
     }
     
     @objc func getHeightConstant(notification: Notification) {
-                
         guard let constant = notification.object as? CGFloat else { return }
         guard let originSize = collectionViewOriginSize else { return }
         let maxHeight = UIScreen.main.bounds.height - (UIApplication.shared.statusBarFrame.height + 50 + mediaFilterView.bounds.height + creditFilterView.bounds.height)

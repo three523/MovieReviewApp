@@ -6,11 +6,12 @@
 //
 
 import UIKit
+import KakaoSDKUser
 
 class ProfileInfoTableViewCell: UITableViewCell {
     
     static let identifier: String = "\(ProfileInfoTableViewCell.self)"
-    weak var navigationController: UINavigationController?
+    weak var delegate: EditProfileDelegate?
     let profileImageView: UIImageView = {
         let imageView: UIImageView = UIImageView(image: UIImage(systemName: "person.fill"))
         imageView.contentMode = .scaleAspectFit
@@ -63,6 +64,15 @@ class ProfileInfoTableViewCell: UITableViewCell {
         label.text = "0"
         return label
     }()
+    let introductionLabel: UILabel = {
+        let label: UILabel = UILabel()
+        label.font = .systemFont(ofSize: 12, weight: .regular)
+        label.textColor = .black
+        label.text = ""
+        return label
+    }()
+    var introductionVisibleAnchor: NSLayoutConstraint?
+    var introductionInVisibleAnchor: NSLayoutConstraint?
     let followerStr: String = "0"
     let followingStr: String = "0"
     let profileChangeButton: UIButton = {
@@ -96,11 +106,6 @@ class ProfileInfoTableViewCell: UITableViewCell {
         btn.setLabelText(first: "0", second: "콜렉션")
         return btn
     }()
-
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
-    }
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -110,20 +115,22 @@ class ProfileInfoTableViewCell: UITableViewCell {
         
         profileImageView.layoutIfNeeded()
         profileImageView.layer.cornerRadius = profileImageView.frame.height/2
-
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func viewAdd() {
+    private func viewAdd() {
         contentView.addSubview(profileImageView)
         contentView.addSubview(nickNameLabel)
         contentView.addSubview(followStackView)
+        contentView.addSubview(introductionLabel)
         contentView.addSubview(profileChangeButton)
         contentView.addSubview(lineView)
         contentView.addSubview(myActivityStackView)
+        
+        profileChangeButton.addTarget(self, action: #selector(pushEditProfieViewController), for: .touchUpInside)
         
         followStackView.addArrangedSubview(followerLabel)
         followStackView.addArrangedSubview(followerCountLabel)
@@ -140,8 +147,7 @@ class ProfileInfoTableViewCell: UITableViewCell {
         myActivityStackView.addTwoLineButton(btnList: [ratingButton, commentButton, collectionButton])
     }
     
-    func viewAutolaoutSetting() {
-        
+    private func viewAutolaoutSetting() {
         profileImageView.translatesAutoresizingMaskIntoConstraints = false
         profileImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10).isActive = true
         profileImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20).isActive = true
@@ -155,6 +161,11 @@ class ProfileInfoTableViewCell: UITableViewCell {
         followStackView.translatesAutoresizingMaskIntoConstraints = false
         followStackView.topAnchor.constraint(equalTo: nickNameLabel.bottomAnchor, constant: 10).isActive = true
         followStackView.leadingAnchor.constraint(equalTo: profileImageView.leadingAnchor).isActive = true
+        
+        introductionLabel.translatesAutoresizingMaskIntoConstraints = false
+        introductionLabel.topAnchor.constraint(equalTo: followStackView.bottomAnchor).isActive = true
+        introductionLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10).isActive = true
+        checkIntroduction()
         
         profileChangeButton.translatesAutoresizingMaskIntoConstraints = false
         profileChangeButton.topAnchor.constraint(equalTo: followStackView.bottomAnchor, constant: 10).isActive = true
@@ -175,13 +186,20 @@ class ProfileInfoTableViewCell: UITableViewCell {
         myActivityStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
         myActivityStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).isActive = true
         myActivityStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true
-        
     }
     
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
+    @objc
+    func pushEditProfieViewController() {
+        delegate?.pushEditViewController()
+    }
+    
+    private func checkIntroduction() {
+        introductionVisibleAnchor = introductionLabel.text == "" ? introductionLabel.heightAnchor.constraint(equalToConstant: 0) : introductionLabel.heightAnchor.constraint(equalToConstant: 20)
+        introductionVisibleAnchor?.isActive = true
+    }
+    
+    private func getUserName() -> String {
+        return ""
     }
 
 }
