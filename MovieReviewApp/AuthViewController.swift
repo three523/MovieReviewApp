@@ -184,17 +184,33 @@ class AuthViewController: UIViewController {
         
         let nonce = FBAuth.randomNonceString()
         currentNonce = nonce
-        FBAuth.signInWithKakaoTalk(nonce: nonce) { result in
-            switch result {
-            case .success(let user):
-                let username = user.kakaoAccount?.profile?.nickname ?? ""
-                let email = user.kakaoAccount?.email ?? ""
-                signupVC.name = username
-                signupVC.email = email
-
-                self.present(signupVC, animated: false)
-            case .failure(let error):
-                print(error)
+        if UserApi.isKakaoTalkLoginAvailable() {
+            FBAuth.signInWithKakaoTalk(nonce: nonce) { result in
+                switch result {
+                case .success(let user):
+                    let username = user.kakaoAccount?.profile?.nickname ?? ""
+                    let email = user.kakaoAccount?.email ?? ""
+                    signupVC.name = username
+                    signupVC.email = email
+                    
+                    self.present(signupVC, animated: false)
+                case .failure(let error):
+                    print(error)
+                }
+            }
+        } else {
+            FBAuth.signInWithKakao { result in
+                switch result {
+                case .success(let user):
+                    let username = user.kakaoAccount?.profile?.nickname ?? ""
+                    let email = user.kakaoAccount?.email ?? ""
+                    signupVC.name = username
+                    signupVC.email = email
+                    
+                    self.present(signupVC, animated: false)
+                case .failure(let error):
+                    print(error)
+                }
             }
         }
     }
@@ -210,25 +226,31 @@ extension AuthViewController: ASAuthorizationControllerDelegate, ASAuthorization
         if let appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential {
             guard let idToken = appleIDCredential.identityToken,
                   let tokenStr = String(data: idToken, encoding: .utf8) else { return }
-                        
-            guard let code = appleIDCredential.authorizationCode else { return }
-            let codeStr = String(data: code, encoding: .utf8)
-            
+                                    
             guard let nonce = currentNonce else { return }
             
             FBAuth.signInWithApple(idTokenString: tokenStr, nonce: nonce) { result in
                 switch result {
-                case .success(let authResult):
-                    print(authResult.user.email)
-                    print(authResult.user.displayName)
-                    self.dismiss(animated: true)
+                case .success(_):
+                    FBDataBaseManager.default.getDataSnapshot(type: .profile) { result in
+                        switch result {
+                        case .success(_):
+                            print("success")
+                        case .failure(let failure):
+                            print(failure.localizedDescription)
+                            if let name = appleIDCredential.fullName?.nickname {
+                                FBDataBaseManager.default.setProfile(profile: Profile(nickname: name, profileImage: ""))
+                            }
+                        }
+                        self.dismiss(animated: true)
+                    }
                 case .failure(let err):
                     print(err.localizedDescription)
                 }
             }
         }
     }
-    
+        
     func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
         print(error.localizedDescription)
     }

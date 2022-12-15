@@ -7,11 +7,15 @@
 
 import UIKit
 import KakaoSDKUser
+import FirebaseAuth
+import FirebaseCore
+import FirebaseDatabase
 
 class ProfileInfoTableViewCell: UITableViewCell {
     
     static let identifier: String = "\(ProfileInfoTableViewCell.self)"
     weak var delegate: EditProfileDelegate?
+    let profileViewModel: ProfileViewModel = ProfileViewModel()
     let profileImageView: UIImageView = {
         let imageView: UIImageView = UIImageView(image: UIImage(systemName: "person.fill"))
         imageView.contentMode = .scaleAspectFit
@@ -115,6 +119,11 @@ class ProfileInfoTableViewCell: UITableViewCell {
         
         profileImageView.layoutIfNeeded()
         profileImageView.layer.cornerRadius = profileImageView.frame.height/2
+        
+        profileViewModel.viewUpdate = {
+            self.update()
+        }
+        update()
     }
     
     required init?(coder: NSCoder) {
@@ -198,8 +207,31 @@ class ProfileInfoTableViewCell: UITableViewCell {
         introductionVisibleAnchor?.isActive = true
     }
     
-    private func getUserName() -> String {
-        return ""
+    private func update() {
+        profileViewModel.getProfile { profile in
+            self.setNameLabel(name: profile.nickname)
+            self.setIntroduction(introduction: profile.introduction)
+            self.setProfileImageView(imagePath: profile.profileImage)
+        }
     }
-
+    
+    private func setNameLabel(name: String) {
+        DispatchQueue.main.async {
+            self.nickNameLabel.text = name
+        }
+    }
+    
+    private func setIntroduction(introduction: String) {
+        DispatchQueue.main.async {
+            self.introductionLabel.text = introduction
+        }
+    }
+    
+    private func setProfileImageView(imagePath: String) {
+        ImageLoader.loader.profileImage(stringURL: imagePath, size: .poster) { image in
+            DispatchQueue.main.async {
+                self.profileImageView.image = image
+            }
+        }
+    }
 }

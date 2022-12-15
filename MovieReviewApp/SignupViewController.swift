@@ -165,11 +165,20 @@ class SignupViewController: UIViewController {
         FBAuth.createUserWithPassword(email: email, password: password) { result in
             switch result {
             case.success(_):
-                print("createSuccess")
                 FBAuth.signInWithPassword(email: email, password: password) { result in
                     switch result {
                     case .success(_):
-                        self.dismiss(animated: false)
+                        FBDataBaseManager.default.getDataSnapshot(type: .profile) { result in
+                            switch result {
+                            case .success(_):
+                                print("success")
+                            case .failure(let failure):
+                                print(failure.localizedDescription)
+                                let profile = Profile(nickname: self.name, profileImage: "")
+                                FBDataBaseManager.default.setProfile(profile: profile)
+                            }
+                            self.dismiss(animated: false)
+                        }
                     case .failure(let error):
                         print(error)
                     }

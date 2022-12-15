@@ -19,6 +19,7 @@
 		186E321C28E1CA1900EA18BC /* AuthServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 186E321B28E1CA1900EA18BC /* AuthServices.swift */; };
 		186E321E28E307F000EA18BC /* LoginButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 186E321D28E307F000EA18BC /* LoginButton.swift */; };
 		186E322028E3419000EA18BC /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 186E321F28E3419000EA18BC /* UIColor.swift */; };
+		1881CBAC2949E0B800D6670B /* FBDatabaseManaer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1881CBAB2949E0B800D6670B /* FBDatabaseManaer.swift */; };
 		189863C728E4003100C08881 /* LoginAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 189863C628E4003100C08881 /* LoginAuth.swift */; };
 		189863C928E429B700C08881 /* SignupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 189863C828E429B700C08881 /* SignupViewController.swift */; };
 		189EC36628E5847400023218 /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 189EC36528E5847400023218 /* SettingViewController.swift */; };
@@ -56,6 +57,7 @@
 		18AC2995287FB35C0043B812 /* ImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18AC2994287FB35C0043B812 /* ImageLoader.swift */; };
 		18AC2997287FEC710043B812 /* CellMoveStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18AC2996287FEC710043B812 /* CellMoveStackView.swift */; };
 		18ADC2792941D3FD00FF1A02 /* EditProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18ADC2782941D3FD00FF1A02 /* EditProfileViewController.swift */; };
+		18B20C83294884AC00DEF8DA /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18B20C82294884AC00DEF8DA /* ProfileViewModel.swift */; };
 		18B2385F28E1667900B951BA /* MovieReviewAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18B2385E28E1667900B951BA /* MovieReviewAppTests.swift */; };
 		18B2386628E1696700B951BA /* ValidateCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18B2386528E1696700B951BA /* ValidateCheck.swift */; };
 		18B2386828E1770800B951BA /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 18B2386728E1770800B951BA /* GoogleService-Info.plist */; };
@@ -118,6 +120,7 @@
 		186E321B28E1CA1900EA18BC /* AuthServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthServices.swift; sourceTree = "<group>"; };
 		186E321D28E307F000EA18BC /* LoginButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginButton.swift; sourceTree = "<group>"; };
 		186E321F28E3419000EA18BC /* UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
+		1881CBAB2949E0B800D6670B /* FBDatabaseManaer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FBDatabaseManaer.swift; sourceTree = "<group>"; };
 		189863C628E4003100C08881 /* LoginAuth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginAuth.swift; sourceTree = "<group>"; };
 		189863C828E429B700C08881 /* SignupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupViewController.swift; sourceTree = "<group>"; };
 		189EC36528E5847400023218 /* SettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
@@ -155,6 +158,7 @@
 		18AC2994287FB35C0043B812 /* ImageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLoader.swift; sourceTree = "<group>"; };
 		18AC2996287FEC710043B812 /* CellMoveStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellMoveStackView.swift; sourceTree = "<group>"; };
 		18ADC2782941D3FD00FF1A02 /* EditProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileViewController.swift; sourceTree = "<group>"; };
+		18B20C82294884AC00DEF8DA /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
 		18B2385C28E1667900B951BA /* MovieReviewAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MovieReviewAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		18B2385E28E1667900B951BA /* MovieReviewAppTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieReviewAppTests.swift; sourceTree = "<group>"; };
 		18B2386528E1696700B951BA /* ValidateCheck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValidateCheck.swift; sourceTree = "<group>"; };
@@ -279,6 +283,7 @@
 				18AC2992287FA6990043B812 /* HomeViewModel.swift */,
 				18C018CA288682D400E6AE2C /* ReviewFilterViewModel.swift */,
 				18A4DBD8289955B400FBC346 /* MovieDetailViewModel.swift */,
+				18B20C82294884AC00DEF8DA /* ProfileViewModel.swift */,
 				18A167EF28B76BF600D15BB1 /* PersonViewModel.swift */,
 				18C3C67528AF48E6002C2D38 /* Credits.swift */,
 				18C3C67728AF5879002C2D38 /* ReleaseDates.swift */,
@@ -303,6 +308,7 @@
 			children = (
 				18B70A7F290BD22900E9B44D /* FBAuth.swift */,
 				18B70A81290BD6E600E9B44D /* FBError.swift */,
+				1881CBAB2949E0B800D6670B /* FBDatabaseManaer.swift */,
 			);
 			path = FBAuth;
 			sourceTree = "<group>";
@@ -592,6 +598,7 @@
 				18A88E2E29006FF700A4BEAD /* ProfileLikeDetailTableViewCell.swift in Sources */,
 				18AC2993287FA6990043B812 /* HomeViewModel.swift in Sources */,
 				18A88E0828FFFEC900A4BEAD /* StorageView.swift in Sources */,
+				1881CBAC2949E0B800D6670B /* FBDatabaseManaer.swift in Sources */,
 				180CE3CE28C73013000FACF8 /* SearchPerson.swift in Sources */,
 				18A4DBD9289955B400FBC346 /* MovieDetailViewModel.swift in Sources */,
 				18A2F727287EABB000CA9947 /* HomeTableViewCell.swift in Sources */,
@@ -615,6 +622,7 @@
 				18C369BD28BF404E00BCFC99 /* SearchViewModel.swift in Sources */,
 				18A88E2C29006F2800A4BEAD /* ProfileLikeTableViewCell.swift in Sources */,
 				184272C1287D690B004E1C9E /* HomeViewController.swift in Sources */,
+				18B20C83294884AC00DEF8DA /* ProfileViewModel.swift in Sources */,
 				18AC2997287FEC710043B812 /* CellMoveStackView.swift in Sources */,
 				18B70A80290BD22900E9B44D /* FBAuth.swift in Sources */,
 				18BF66DF28B3BE7A00AE492D /* ReviewTableViewCell.swift in Sources */,

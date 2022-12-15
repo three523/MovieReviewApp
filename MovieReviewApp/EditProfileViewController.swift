@@ -10,9 +10,9 @@ import UIKit
 struct Profile {
     var nickname: String
     var introduction: String
-    var profileImage: UIImage?
+    var profileImage: String
     
-    init(nickname: String, introduction: String = "", profileImage: UIImage?) {
+    init(nickname: String, introduction: String = "", profileImage: String) {
         self.nickname = nickname
         self.introduction = introduction
         self.profileImage = profileImage
