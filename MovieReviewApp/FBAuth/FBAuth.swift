@@ -47,7 +47,6 @@ struct FBAuth {
     
     static func signInWithKakaoTalk(nonce: String, completion: @escaping (Result<KakaoSDKUser.User,Error>) -> ()) {
         UserApi.shared.loginWithKakaoTalk(nonce: nonce) {_,error in
-            
             if let error = error {
                 completion(.failure(error))
             } else {

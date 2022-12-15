@@ -184,17 +184,33 @@ class AuthViewController: UIViewController {
         
         let nonce = FBAuth.randomNonceString()
         currentNonce = nonce
-        FBAuth.signInWithKakaoTalk(nonce: nonce) { result in
-            switch result {
-            case .success(let user):
-                let username = user.kakaoAccount?.profile?.nickname ?? ""
-                let email = user.kakaoAccount?.email ?? ""
-                signupVC.name = username
-                signupVC.email = email
-
-                self.present(signupVC, animated: false)
-            case .failure(let error):
-                print(error)
+        if UserApi.isKakaoTalkLoginAvailable() {
+            FBAuth.signInWithKakaoTalk(nonce: nonce) { result in
+                switch result {
+                case .success(let user):
+                    let username = user.kakaoAccount?.profile?.nickname ?? ""
+                    let email = user.kakaoAccount?.email ?? ""
+                    signupVC.name = username
+                    signupVC.email = email
+                    
+                    self.present(signupVC, animated: false)
+                case .failure(let error):
+                    print(error)
+                }
+            }
+        } else {
+            FBAuth.signInWithKakao { result in
+                switch result {
+                case .success(let user):
+                    let username = user.kakaoAccount?.profile?.nickname ?? ""
+                    let email = user.kakaoAccount?.email ?? ""
+                    signupVC.name = username
+                    signupVC.email = email
+                    
+                    self.present(signupVC, animated: false)
+                case .failure(let error):
+                    print(error)
+                }
             }
         }
     }
@@ -219,8 +235,9 @@ extension AuthViewController: ASAuthorizationControllerDelegate, ASAuthorization
             FBAuth.signInWithApple(idTokenString: tokenStr, nonce: nonce) { result in
                 switch result {
                 case .success(let authResult):
-                    print(authResult.user.email)
-                    print(authResult.user.displayName)
+                    if let name = appleIDCredential.fullName?.nickname {
+                        FBDataBaseManager.default.setProfile(profile: Profile(nickname: name, profileImage: ""))
+                    }
                     self.dismiss(animated: true)
                 case .failure(let err):
                     print(err.localizedDescription)
@@ -228,7 +245,7 @@ extension AuthViewController: ASAuthorizationControllerDelegate, ASAuthorization
             }
         }
     }
-    
+        
     func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
         print(error.localizedDescription)
     }

@@ -7,6 +7,22 @@
 
 import Foundation
 
+enum FBDatabaseManagerError: Error {
+    case snapShotNil
+    case emailNil
+}
+
+extension FBDatabaseManagerError: LocalizedError {
+    var errorDescription: String? {
+        switch self {
+        case .snapShotNil:
+            return NSLocalizedString("SnapShot is nil", comment: "")
+        case .emailNil:
+            return NSLocalizedString("Current email is nil", comment: "")
+        }
+    }
+}
+
 enum SignInWithAppleAuthError: Error {
     case noAuthDataResult
     case noIdentityToken
