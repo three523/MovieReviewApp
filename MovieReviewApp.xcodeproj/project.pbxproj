@@ -20,6 +20,7 @@
 		186E321E28E307F000EA18BC /* LoginButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 186E321D28E307F000EA18BC /* LoginButton.swift */; };
 		186E322028E3419000EA18BC /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 186E321F28E3419000EA18BC /* UIColor.swift */; };
 		1881CBAC2949E0B800D6670B /* FBDatabaseManaer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1881CBAB2949E0B800D6670B /* FBDatabaseManaer.swift */; };
+		1883259A294B1E13002E76A8 /* FBStorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18832599294B1E13002E76A8 /* FBStorageManager.swift */; };
 		189863C728E4003100C08881 /* LoginAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 189863C628E4003100C08881 /* LoginAuth.swift */; };
 		189863C928E429B700C08881 /* SignupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 189863C828E429B700C08881 /* SignupViewController.swift */; };
 		189EC36628E5847400023218 /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 189EC36528E5847400023218 /* SettingViewController.swift */; };
@@ -121,6 +122,7 @@
 		186E321D28E307F000EA18BC /* LoginButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginButton.swift; sourceTree = "<group>"; };
 		186E321F28E3419000EA18BC /* UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
 		1881CBAB2949E0B800D6670B /* FBDatabaseManaer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FBDatabaseManaer.swift; sourceTree = "<group>"; };
+		18832599294B1E13002E76A8 /* FBStorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FBStorageManager.swift; sourceTree = "<group>"; };
 		189863C628E4003100C08881 /* LoginAuth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginAuth.swift; sourceTree = "<group>"; };
 		189863C828E429B700C08881 /* SignupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupViewController.swift; sourceTree = "<group>"; };
 		189EC36528E5847400023218 /* SettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
@@ -309,6 +311,7 @@
 				18B70A7F290BD22900E9B44D /* FBAuth.swift */,
 				18B70A81290BD6E600E9B44D /* FBError.swift */,
 				1881CBAB2949E0B800D6670B /* FBDatabaseManaer.swift */,
+				18832599294B1E13002E76A8 /* FBStorageManager.swift */,
 			);
 			path = FBAuth;
 			sourceTree = "<group>";
@@ -611,6 +614,7 @@
 				18A79618293F341F00B56E03 /* RatingSearchViewController.swift in Sources */,
 				18A167F228B7869A00D15BB1 /* PersonMoviesTableViewCell.swift in Sources */,
 				18A88E0428FFE8FF00A4BEAD /* TwolineButton.swift in Sources */,
+				1883259A294B1E13002E76A8 /* FBStorageManager.swift in Sources */,
 				18C018CD2886A7A500E6AE2C /* FilterTableViewHeader.swift in Sources */,
 				18CA204D28D86791008C720B /* LoginViewController.swift in Sources */,
 				18C018CB288682D400E6AE2C /* ReviewFilterViewModel.swift in Sources */,
