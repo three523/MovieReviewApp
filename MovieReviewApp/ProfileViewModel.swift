@@ -15,7 +15,7 @@ class ProfileViewModel {
     var viewUpdate: (() -> Void) = {}
     
     init() {
-        NotificationCenter.default.addObserver(self, selector: #selector(setFirebaseProfile), name: Notification.Name("setprofile"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(setFirebaseProfileObserver), name: Notification.Name("setprofile"), object: nil)
     }
     
     public func getProfile(completed: @escaping (Profile) -> ()) {
@@ -26,6 +26,11 @@ class ProfileViewModel {
             self.profile = profile
             completed(profile)
         }
+    }
+    
+    public func setProfile(profile: Profile) {
+        self.profile = profile
+        fbDatabaseManager.setProfile(profile: profile)
     }
     
     private func firebaseProfile(completed: @escaping (Profile) -> ()) {
@@ -42,7 +47,7 @@ class ProfileViewModel {
     }
     
     @objc
-    private func setFirebaseProfile(_ notification: Notification) {
+    private func setFirebaseProfileObserver(_ notification: Notification) {
         guard let profile = notification.object as? Profile else { return }
         self.profile = profile
         viewUpdate()
@@ -57,6 +62,5 @@ class ProfileViewModel {
               }
         return Profile(nickname: nickname, introduction: introduction, profileImage: profileImage)
     }
-    
     
 }
