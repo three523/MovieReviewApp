@@ -228,7 +228,8 @@ class ProfileInfoTableViewCell: UITableViewCell {
     }
     
     private func setProfileImageView(imagePath: String) {
-        ImageLoader.loader.profileImage(stringURL: imagePath, size: .poster) { image in
+        FBStorageManager.downloadImage(urlString: imagePath) { image in
+            guard let image = image else { return }
             DispatchQueue.main.async {
                 self.profileImageView.image = image
             }

@@ -19,11 +19,11 @@ final class FBDataBaseManager {
     public func getDataSnapshot(type: FireBaseDataType, completed: @escaping (Result<DataSnapshot,Error>) -> ()) {
         switch type {
         case .profile:
-            guard let email = Auth.auth().currentUser?.email else {
+            guard let uid = Auth.auth().currentUser?.uid else {
                 completed(.failure(FBDatabaseManagerError.emailNil))
                 return
             }
-            let ref = baseRef.child("user").child(email)
+            let ref = baseRef.child("user").child(uid)
             ref.getData { error, snapshot in
                 if let error = error {
                     completed(.failure(error))
@@ -37,12 +37,12 @@ final class FBDataBaseManager {
     }
     
     public func setProfile(profile: Profile) {
-        guard let email = Auth.auth().currentUser?.email else {
+        guard let uid = Auth.auth().currentUser?.uid else {
             print("email is nil")
             return
         }
         profileChangeNotification(profile: profile)
-        let ref = baseRef.child("user").child(email).child("profile")
+        let ref = baseRef.child("user").child(uid).child("profile")
         let keyedValues = profileToKeyedValues(profile: profile)
         ref.setValuesForKeys(keyedValues)
     }

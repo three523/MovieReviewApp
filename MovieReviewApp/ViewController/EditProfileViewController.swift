@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 struct Profile {
     var nickname: String
@@ -63,6 +64,7 @@ class EditProfileViewController: UIViewController {
         return textfiled
     }()
     let pickerViewController: UIImagePickerController = UIImagePickerController()
+    let profileViewModel = ProfileViewModel()
     var profile: Profile?
 
     override func viewDidLoad() {
@@ -178,6 +180,9 @@ class EditProfileViewController: UIViewController {
     
     @objc
     func  doneButtonClick() {
+        if let profile = profile {
+            profileViewModel.setProfile(profile: profile)
+        }
         navigationController?.popViewController(animated: true)
     }
 
@@ -200,8 +205,16 @@ extension EditProfileViewController: UIImagePickerControllerDelegate, UINavigati
     }
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        if let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
-            profileImageView.image = image
+        if let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage,
+           let uid = Auth.auth().currentUser?.uid {
+            DispatchQueue.main.async {
+                self.profileImageView.image = image
+            }
+            FBStorageManager.uploadImage(image: image, pathRoot: uid) { url in
+                if let url = url {
+                    self.profile?.profileImage = url.absoluteString
+                }
+            }
         }
 
         dismiss(animated: true, completion: nil)
