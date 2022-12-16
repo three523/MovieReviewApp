@@ -47,14 +47,9 @@ class SimilarTableViewCell: UITableViewCell, UICollectionViewDelegate, UICollect
         super.awakeFromNib()
         // Initialization code
     }
-
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
-    }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        print("SimilarMovie: \(MovieDetailViewModel.similarMovies?.results)")
         guard let similarMoviesCount = MovieDetailViewModel.similarMovies?.results.count else { return 0 }
         return similarMoviesCount > 9 ? 9 : similarMoviesCount
     }
