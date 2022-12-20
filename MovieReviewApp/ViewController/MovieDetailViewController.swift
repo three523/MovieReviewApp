@@ -24,18 +24,12 @@ class MovieDetailViewController: UIViewController, UIGestureRecognizerDelegate {
     lazy var detailViewModel: MovieDetailViewModel = MovieDetailViewModel(movieId: movieId)
     var director: String? = ""
     var count = 2
-    var statusbar: UIView?
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         view.addSubview(movieDetailTableView)
                 
-        statusbar = statusBarView
         navigationSetting()
         
         let dismissAction: UIAction = UIAction { _ in self.dismiss(animated: true) }
@@ -121,8 +115,7 @@ class MovieDetailViewController: UIViewController, UIGestureRecognizerDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         guard let header = movieDetailTableView.tableHeaderView as? MovieDetailHeaderView else { return }
         header.scrollViewDidScroll(scrollView: movieDetailTableView)
-        guard let navibar = navigationController?.navigationBar,
-            let statusbar = statusbar else { return }
+        guard let navibar = navigationController?.navigationBar else { return }
         
         let offset = scrollView.contentOffset.y / 300
         
@@ -131,14 +124,13 @@ class MovieDetailViewController: UIViewController, UIGestureRecognizerDelegate {
         } else {
             navigationItem.title = ""
         }
-        
+        let navigationAppearance = navibar.standardAppearance
         if offset > 1 {
             navigationItem.title = detailViewModel.getMovie()?.title
-            let backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: offset)
+            let backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 1)
             navibar.tintColor = .black
             navibar.titleTextAttributes = [.foregroundColor: UIColor.black]
-            navibar.backgroundColor = backgroundColor
-            statusbar.backgroundColor = backgroundColor
+            navigationAppearance.backgroundColor = backgroundColor
             navibar.barStyle = .default
         } else {
             let brightness = 1 - offset
@@ -146,8 +138,7 @@ class MovieDetailViewController: UIViewController, UIGestureRecognizerDelegate {
             let backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: offset)
             navibar.tintColor = foregroundColor
             navibar.titleTextAttributes = [.foregroundColor: foregroundColor]
-            navibar.backgroundColor = backgroundColor
-            statusbar.backgroundColor = backgroundColor
+            navigationAppearance.backgroundColor = backgroundColor
             navibar.barStyle = .black
         }
     }
@@ -160,8 +151,10 @@ class MovieDetailViewController: UIViewController, UIGestureRecognizerDelegate {
         
         guard let naviBar = navigationController?.navigationBar else { return }
         naviBar.tintColor = .white
-        naviBar.setBackgroundImage(UIImage(), for: .default)
-        naviBar.shadowImage = UIImage()
+        let naviBarAppearance = UINavigationBarAppearance()
+        naviBarAppearance.configureWithTransparentBackground()
+        naviBar.standardAppearance = naviBarAppearance
+        naviBar.scrollEdgeAppearance = naviBarAppearance
     }
     
     @objc func backButtonClick() {
@@ -387,7 +380,6 @@ extension MovieDetailViewController: UITableViewDelegate, UITableViewDataSource,
                 }
             }
             self.navigationController?.pushViewController(personVC, animated: true)
-//            self.present(personVC, animated: true)
         }
         
     }
