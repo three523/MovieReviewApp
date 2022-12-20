@@ -19,6 +19,7 @@ final class FBStorageManager {
         let firebaseReference = Storage.storage().reference().child("\(imageName)")
         firebaseReference.putData(imageData, metadata: metaData) { metaData, error in
             firebaseReference.downloadURL { url, _ in
+                print("URL: \(url)")
                 completion(url)
             }
         }

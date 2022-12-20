@@ -228,10 +228,12 @@ class ProfileInfoTableViewCell: UITableViewCell {
     }
     
     private func setProfileImageView(imagePath: String) {
-        FBStorageManager.downloadImage(urlString: imagePath) { image in
-            guard let image = image else { return }
-            DispatchQueue.main.async {
-                self.profileImageView.image = image
+        if false == imagePath.isEmpty {
+            FBStorageManager.downloadImage(urlString: imagePath) { image in
+                guard let image = image else { return }
+                DispatchQueue.main.async {
+                    self.profileImageView.image = image
+                }
             }
         }
     }
