@@ -126,7 +126,6 @@ class MovieDetailViewController: UIViewController, UIGestureRecognizerDelegate {
         }
         let navigationAppearance = navibar.standardAppearance
         if offset > 1 {
-            navigationItem.title = detailViewModel.getMovie()?.title
             let backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 1)
             navibar.tintColor = .black
             navibar.titleTextAttributes = [.foregroundColor: UIColor.black]
