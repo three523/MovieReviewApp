@@ -73,6 +73,12 @@ class PersonDetailViewController: UIViewController {
     var collectionViewHeightAnchor: NSLayoutConstraint?
     var collectionViewOriginSize: CGFloat?
     var likeCount: Int = 0
+    var titleView: UILabel = {
+        let label = UILabel()
+        label.font = .systemFont(ofSize: 17, weight: .regular)
+        label.textColor = .label
+        return label
+    }()
     
     override func viewDidLoad() {
                 
@@ -96,11 +102,9 @@ class PersonDetailViewController: UIViewController {
         
         profileViewSubviewsSetting()
         
-        guard let name = name else { return }
         guard let personId = personId else { return }
         
         navigationController.navigationBar.topItem?.title = ""
-        navigationItem.title = ""
         navigationController.navigationBar.scrollEdgeAppearance?.backgroundColor = .white
         
         scrollView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
@@ -266,10 +270,6 @@ class PersonDetailViewController: UIViewController {
         movieDetailVC.modalPresentationStyle = .fullScreen
         navigationController?.pushViewController(movieDetailVC, animated: true)
     }
-    
-    func scrollViewDidScrollToTop(_ scrollView: UIScrollView) {
-        print(scrollView.contentOffset.y)
-    }
 }
 
 extension PersonDetailViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
@@ -292,12 +292,14 @@ extension PersonDetailViewController: UICollectionViewDelegate, UICollectionView
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if scrollView == self.scrollView {
-            print(scrollView.contentOffset.y)
+            let offsetY = scrollView.contentOffset.y
+            navigationItem.title = offsetY > -30.0 ? name : ""
+            navigationController?.navigationBar.setNeedsLayout()
             return
         }
         let count = mediaFilterView.stackViewButtonCount()
         mediaFilterView.barLeadingAnchor?.constant = scrollView.contentOffset.x / CGFloat(count)
-        print(personMovieCollectionView.indexPathsForVisibleItems)
+
     }
     
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
