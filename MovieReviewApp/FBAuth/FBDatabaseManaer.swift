@@ -8,12 +8,37 @@
 import FirebaseDatabase
 import FirebaseAuth
 
+protocol FBAuthDatabase {
+    var databaseManager: FBDataBaseManager? { get set }
+    var name: String { get set }
+}
+
+// 처음에 로그인시 기존 프로필 정보가 있으면 가져오고 아닌경우 새로 만들어 저장하는 기능
+extension FBAuthDatabase where Self: UIViewController {
+    func setDatabaseProfile() {
+        guard let databaseManager = databaseManager else {
+            print("DatabaseManager nil")
+            return
+        }
+        databaseManager.getDataSnapshot(type: .profile) { result in
+            switch result {
+            case .success(_):
+                print("success")
+            case .failure(let failure):
+                print(failure.localizedDescription)
+                let profile = Profile(nickname: self.name, profileImage: "")
+                databaseManager.setProfile(profile: profile)
+            }
+            self.dismiss(animated: false)
+        }
+    }
+}
+
 enum FireBaseDataType {
     case profile
 }
 
 final class FBDataBaseManager {
-    static let `default`: FBDataBaseManager = FBDataBaseManager()
     private let baseRef: DatabaseReference = Database.database().reference()
     
     public func getDataSnapshot(type: FireBaseDataType, completed: @escaping (Result<DataSnapshot,Error>) -> ()) {
@@ -23,13 +48,14 @@ final class FBDataBaseManager {
                 completed(.failure(FBDatabaseManagerError.emailNil))
                 return
             }
-            let ref = baseRef.child("user").child(uid)
+            let ref = baseRef.child("user").child(uid).child("profile")
             ref.getData { error, snapshot in
                 if let error = error {
                     completed(.failure(error))
                     return
                 }
-                if let snapshot = snapshot {
+                if let snapshot = snapshot,
+                   let value = snapshot.value as? [String: String] {
                     completed(.success(snapshot))
                     return
                 }
@@ -46,7 +72,8 @@ final class FBDataBaseManager {
         profileChangeNotification(profile: profile)
         let ref = baseRef.child("user").child(uid).child("profile")
         let keyedValues = profileToKeyedValues(profile: profile)
-        ref.onDisconnectSetValue(keyedValues)
+        ref.setValue(keyedValues)
+        ref.setValue(keyedValues)
     }
     
     private func profileToKeyedValues(profile: Profile) -> [String : String] {

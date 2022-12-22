@@ -54,9 +54,10 @@ class ProfileViewModel {
     }
     
     private func snapshotToProfile(snapshot: DataSnapshot) -> Profile {
-        guard let nickname = snapshot.value(forKey: "nickname") as? String,
-              let introduction = snapshot.value(forKey: "introduction") as? String,
-              let profileImage = snapshot.value(forKey: "profileimage") as? String else {
+        guard let profile = snapshot.value as? [String: String],
+              let nickname = profile["nickname"],
+              let introduction = profile["introduction"],
+              let profileImage = profile["profileimage"] else {
                   print("snapshot to profile error")
                   return profile ?? Profile(nickname: "guest", profileImage: "")
               }

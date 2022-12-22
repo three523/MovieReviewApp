@@ -8,7 +8,7 @@
 import UIKit
 import FirebaseAuth
 
-class SignupViewController: UIViewController {
+class SignupViewController: UIViewController, FBAuthDatabase {
 
     let navigationBar: UINavigationBar = UINavigationBar()
     let nameTextField: UITextField = {
@@ -57,10 +57,13 @@ class SignupViewController: UIViewController {
     }()
     var name: String = ""
     var email: String = ""
+    var databaseManager: FBDataBaseManager?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        
+        databaseManager = FBDataBaseManager()
         
         nameTextField.text = name
         emailTextField.text = email
@@ -160,25 +163,16 @@ class SignupViewController: UIViewController {
     }
     
     @objc func SignupClick() {
-        guard let email: String = emailTextField.text else { return }
+        guard let email = emailTextField.text else { return }
         guard let password = passwordTextField.text else { return }
+        
         FBAuth.createUserWithPassword(email: email, password: password) { result in
             switch result {
             case.success(_):
                 FBAuth.signInWithPassword(email: email, password: password) { result in
                     switch result {
                     case .success(_):
-                        FBDataBaseManager.default.getDataSnapshot(type: .profile) { result in
-                            switch result {
-                            case .success(_):
-                                print("success")
-                            case .failure(let failure):
-                                print(failure.localizedDescription)
-                                let profile = Profile(nickname: self.name, profileImage: "")
-                                FBDataBaseManager.default.setProfile(profile: profile)
-                            }
-                            self.dismiss(animated: false)
-                        }
+                        self.setDatabaseProfile()
                     case .failure(let error):
                         print(error)
                     }
@@ -188,7 +182,7 @@ class SignupViewController: UIViewController {
                 FBAuth.signInWithPassword(email: email, password: password) { result in
                     switch result {
                     case .success(_):
-                        self.dismiss(animated: false)
+                        self.setDatabaseProfile()
                     case .failure(let error):
                         print(error.localizedDescription)
                     }
