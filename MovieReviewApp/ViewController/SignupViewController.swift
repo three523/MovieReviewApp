@@ -185,6 +185,14 @@ class SignupViewController: UIViewController {
                 }
             case .failure(let error):
                 print(error.localizedDescription)
+                FBAuth.signInWithPassword(email: email, password: password) { result in
+                    switch result {
+                    case .success(_):
+                        self.dismiss(animated: false)
+                    case .failure(let error):
+                        print(error.localizedDescription)
+                    }
+                }
             }
         }
     }

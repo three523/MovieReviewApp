@@ -344,7 +344,6 @@ extension MovieDetailViewController: UITableViewDelegate, UITableViewDataSource,
             let sectionView: MovieDetailSectionView = MovieDetailSectionView(frame: defaultFrame, sectionType: .defaultSection, textList: ["비슷한 작품"])
             return sectionView
         default: return nil
-            
         }
     }
     
@@ -384,7 +383,6 @@ extension MovieDetailViewController: UITableViewDelegate, UITableViewDataSource,
     }
     
     func addCell() {
-        print("add")
         if count == 2 {
             movieDetailTableView.beginUpdates()
             count = 3
@@ -394,7 +392,6 @@ extension MovieDetailViewController: UITableViewDelegate, UITableViewDataSource,
     }
     
     func deleteCell() {
-        print("delete")
         if count == 3 {
             movieDetailTableView.beginUpdates()
             count = 2
