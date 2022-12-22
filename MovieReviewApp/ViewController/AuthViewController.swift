@@ -85,6 +85,12 @@ class AuthViewController: UIViewController {
     }()
     
     var currentNonce: String?
+    
+    override func viewWillAppear(_ animated: Bool) {
+        if Auth.auth().currentUser != nil {
+            self.dismiss(animated: false)
+        }
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()

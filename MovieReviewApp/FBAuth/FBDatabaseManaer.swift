@@ -27,9 +27,11 @@ final class FBDataBaseManager {
             ref.getData { error, snapshot in
                 if let error = error {
                     completed(.failure(error))
+                    return
                 }
                 if let snapshot = snapshot {
                     completed(.success(snapshot))
+                    return
                 }
                 completed(.failure(FBDatabaseManagerError.snapShotNil))
             }
@@ -44,7 +46,7 @@ final class FBDataBaseManager {
         profileChangeNotification(profile: profile)
         let ref = baseRef.child("user").child(uid).child("profile")
         let keyedValues = profileToKeyedValues(profile: profile)
-        ref.setValuesForKeys(keyedValues)
+        ref.onDisconnectSetValue(keyedValues)
     }
     
     private func profileToKeyedValues(profile: Profile) -> [String : String] {
