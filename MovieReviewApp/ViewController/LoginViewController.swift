@@ -12,7 +12,7 @@ enum Position {
     case top,bottom
 }
 
-class LoginViewController: UIViewController, UITextFieldDelegate {
+class LoginViewController: UIViewController, UITextFieldDelegate, FBAuthDatabase {
     
     let navigationBar: UINavigationBar = UINavigationBar()
     let emailTextField: UITextField = {
@@ -53,11 +53,16 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         return button
     }()
     
+    var name: String = "Guest"
+    var databaseManager: FBDataBaseManager?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
                 
         addNavigationBar()
+        
+        databaseManager = FBDataBaseManager()
         
         view.addSubview(emailTextField)
         view.addSubview(passwordTextField)
@@ -146,6 +151,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         Auth.auth().signIn(withEmail: email, password: password) { (user, error) in
             if let user = user {
                 print("login success")
+                self.setDatabaseProfile()
             } else{
                 print("login fail")
             }

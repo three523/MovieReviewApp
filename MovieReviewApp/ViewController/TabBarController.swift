@@ -22,6 +22,14 @@ class TabBarController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        let firebaseAuth = Auth.auth()
+        do {
+            try firebaseAuth.signOut()
+            self.navigationController?.popToRootViewController(animated: false)
+        } catch let signOutError as NSError {
+            print("Error signing out: %@", signOutError)
+        }
+        
         self.tabBar.backgroundColor = .white
         
         let vc1 = UINavigationController(rootViewController: HomeViewController())

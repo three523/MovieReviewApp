@@ -15,7 +15,7 @@ import KakaoSDKCommon
 
 //MARK: 동일한 이메일로 가입한 경우 예외 처리
 
-class AuthViewController: UIViewController {
+class AuthViewController: UIViewController, FBAuthDatabase {
     
     let logoView: UIView = UIView()
     let logoLabel: UILabel = {
@@ -62,7 +62,6 @@ class AuthViewController: UIViewController {
         button.layer.cornerRadius = 5
         return button
     }()
-    
     //MARK: 카카오 로고 이미지는 깨지는 관계로 변경의 필요성이 있음
     let kakaoLoginButton: LoginButton = {
         let button: LoginButton = LoginButton()
@@ -83,6 +82,8 @@ class AuthViewController: UIViewController {
         btn.titleLabel?.font = .systemFont(ofSize: 14, weight: .regular)
         return btn
     }()
+    var databaseManager: FBDataBaseManager?
+    var name: String = "Guest"
     
     var currentNonce: String?
     
@@ -94,6 +95,8 @@ class AuthViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        databaseManager = FBDataBaseManager()
 
         logoView.backgroundColor = .systemPink
         
@@ -179,8 +182,8 @@ class AuthViewController: UIViewController {
         request.nonce = FBAuth.sha256(nonce)
         
         let appleAuthVC = ASAuthorizationController(authorizationRequests: [request])
-        appleAuthVC.delegate = self as? ASAuthorizationControllerDelegate
-        appleAuthVC.presentationContextProvider = self as? ASAuthorizationControllerPresentationContextProviding
+        appleAuthVC.delegate = self
+        appleAuthVC.presentationContextProvider = self
         appleAuthVC.performRequests()
     }
     
@@ -235,21 +238,15 @@ extension AuthViewController: ASAuthorizationControllerDelegate, ASAuthorization
                                     
             guard let nonce = currentNonce else { return }
             
+            if let familyName = appleIDCredential.fullName?.familyName,
+               let givenName = appleIDCredential.fullName?.givenName {
+                name = familyName + givenName
+            }
+            
             FBAuth.signInWithApple(idTokenString: tokenStr, nonce: nonce) { result in
                 switch result {
                 case .success(_):
-                    FBDataBaseManager.default.getDataSnapshot(type: .profile) { result in
-                        switch result {
-                        case .success(_):
-                            print("success")
-                        case .failure(let failure):
-                            print(failure.localizedDescription)
-                            if let name = appleIDCredential.fullName?.nickname {
-                                FBDataBaseManager.default.setProfile(profile: Profile(nickname: name, profileImage: ""))
-                            }
-                        }
-                        self.dismiss(animated: true)
-                    }
+                    self.setDatabaseProfile()
                 case .failure(let err):
                     print(err.localizedDescription)
                 }
