@@ -11,19 +11,19 @@ protocol CollectionViewHeightControllProtocol: AnyObject {
     func setHeightConstraint(constant: Double)
 }
 
-//MARK: tabelView collectionView 로 전환하기, 스크롤시 일정 높이까지 collectionview 높이 조정
 class PersonDetailViewController: UIViewController {
     var personId: String? = nil
     var name: String? = nil
     var job: String? = nil
     let personViewModel: PersonViewModel = PersonViewModel()
-    let scrollView: UIScrollView = {
+    let containerScrollView: UIScrollView = {
         let srv: UIScrollView = UIScrollView()
         srv.translatesAutoresizingMaskIntoConstraints = false
         srv.showsVerticalScrollIndicator = false
-        srv.bounces = false
+        srv.bounces = true
         return srv
     }()
+    weak var tableScrollView: UIScrollView?
     lazy var personMovieCollectionView: UICollectionView = {
         let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
@@ -72,13 +72,8 @@ class PersonDetailViewController: UIViewController {
     let buttonFactory: FilterButtonFatory = FilterButtonFatory()
     var collectionViewHeightAnchor: NSLayoutConstraint?
     var collectionViewOriginSize: CGFloat?
+    var isMainViewScroll: Bool = false
     var likeCount: Int = 0
-    var titleView: UILabel = {
-        let label = UILabel()
-        label.font = .systemFont(ofSize: 17, weight: .regular)
-        label.textColor = .label
-        return label
-    }()
     
     override func viewDidLoad() {
                 
@@ -87,16 +82,16 @@ class PersonDetailViewController: UIViewController {
         
         personMovieCollectionView.register(PersonDetailCollectionViewCell.self, forCellWithReuseIdentifier: PersonDetailCollectionViewCell.identifier)
         
-        scrollView.delegate = self
+        containerScrollView.delegate = self
         
-        view.addSubview(scrollView)
-        scrollView.addSubview(mediaFilterView)
-        scrollView.addSubview(personProfileStackView)
+        view.addSubview(containerScrollView)
+        containerScrollView.addSubview(mediaFilterView)
+        containerScrollView.addSubview(personProfileStackView)
         let creditFilterContainerView: UIView = UIView()
         creditFilterContainerView.backgroundColor = .white
         creditFilterContainerView.addSubview(creditFilterView)
-        scrollView.addSubview(creditFilterContainerView)
-        scrollView.addSubview(personMovieCollectionView)
+        containerScrollView.addSubview(creditFilterContainerView)
+        containerScrollView.addSubview(personMovieCollectionView)
         
         guard let navigationController = navigationController else { return }
         
@@ -107,28 +102,28 @@ class PersonDetailViewController: UIViewController {
         navigationController.navigationBar.topItem?.title = ""
         navigationController.navigationBar.scrollEdgeAppearance?.backgroundColor = .white
         
-        scrollView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-        scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        containerScrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+        containerScrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        containerScrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        containerScrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
                 
         personProfileStackView.backgroundColor = .white
         personProfileStackView.translatesAutoresizingMaskIntoConstraints = false
-        personProfileStackView.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor).isActive = true
-        personProfileStackView.leadingAnchor.constraint(equalTo: scrollView.frameLayoutGuide.leadingAnchor).isActive = true
-        personProfileStackView.trailingAnchor.constraint(equalTo: scrollView.frameLayoutGuide.trailingAnchor).isActive = true
+        personProfileStackView.topAnchor.constraint(equalTo: containerScrollView.contentLayoutGuide.topAnchor).isActive = true
+        personProfileStackView.leadingAnchor.constraint(equalTo: containerScrollView.frameLayoutGuide.leadingAnchor).isActive = true
+        personProfileStackView.trailingAnchor.constraint(equalTo: containerScrollView.frameLayoutGuide.trailingAnchor).isActive = true
         
         mediaFilterView.backgroundColor = .white
         mediaFilterView.translatesAutoresizingMaskIntoConstraints = false
         mediaFilterView.topAnchor.constraint(equalTo: personProfileStackView.bottomAnchor, constant: 10).isActive = true
-        mediaFilterView.leadingAnchor.constraint(equalTo: scrollView.frameLayoutGuide.leadingAnchor).isActive = true
-        mediaFilterView.trailingAnchor.constraint(equalTo: scrollView.frameLayoutGuide.trailingAnchor).isActive = true
+        mediaFilterView.leadingAnchor.constraint(equalTo: containerScrollView.frameLayoutGuide.leadingAnchor).isActive = true
+        mediaFilterView.trailingAnchor.constraint(equalTo: containerScrollView.frameLayoutGuide.trailingAnchor).isActive = true
         
         creditFilterContainerView.translatesAutoresizingMaskIntoConstraints = false
         creditFilterContainerView.topAnchor.constraint(equalTo: mediaFilterView.bottomAnchor, constant: 2).isActive = true
-        creditFilterContainerView.leadingAnchor.constraint(equalTo: scrollView.frameLayoutGuide.leadingAnchor).isActive = true
-        creditFilterContainerView.trailingAnchor.constraint(equalTo: scrollView.frameLayoutGuide.trailingAnchor).isActive = true
-        creditFilterContainerView.widthAnchor.constraint(equalTo: scrollView.frameLayoutGuide.widthAnchor).isActive = true
+        creditFilterContainerView.leadingAnchor.constraint(equalTo: containerScrollView.frameLayoutGuide.leadingAnchor).isActive = true
+        creditFilterContainerView.trailingAnchor.constraint(equalTo: containerScrollView.frameLayoutGuide.trailingAnchor).isActive = true
+        creditFilterContainerView.widthAnchor.constraint(equalTo: containerScrollView.frameLayoutGuide.widthAnchor).isActive = true
         creditFilterContainerView.heightAnchor.constraint(equalTo: creditFilterView.heightAnchor).isActive = true
         
         creditFilterView.backgroundColor = .white
@@ -139,9 +134,9 @@ class PersonDetailViewController: UIViewController {
         
         personMovieCollectionView.translatesAutoresizingMaskIntoConstraints = false
         personMovieCollectionView.topAnchor.constraint(equalTo: creditFilterView.bottomAnchor).isActive = true
-        personMovieCollectionView.leadingAnchor.constraint(equalTo: scrollView.frameLayoutGuide.leadingAnchor).isActive = true
-        personMovieCollectionView.trailingAnchor.constraint(equalTo: scrollView.frameLayoutGuide.trailingAnchor).isActive = true
-        personMovieCollectionView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor).isActive = true
+        personMovieCollectionView.leadingAnchor.constraint(equalTo: containerScrollView.frameLayoutGuide.leadingAnchor).isActive = true
+        personMovieCollectionView.trailingAnchor.constraint(equalTo: containerScrollView.frameLayoutGuide.trailingAnchor).isActive = true
+        personMovieCollectionView.bottomAnchor.constraint(equalTo: containerScrollView.bottomAnchor).isActive = true
         
         mediaFilterView.layoutIfNeeded()
                 
@@ -239,28 +234,11 @@ class PersonDetailViewController: UIViewController {
         lineView.translatesAutoresizingMaskIntoConstraints = false
         lineView.heightAnchor.constraint(equalToConstant: 0.5).isActive = true
         
-        NotificationCenter.default.addObserver(self, selector: #selector(getHeightConstant(notification:)), name: Notification.Name("PersonListHeightConstant"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(presentVC(notification:)), name: Notification.Name("MovieSelected"), object: nil)
     }
     
     @objc func backButtonCilck() {
         navigationController?.popViewController(animated: true)
-    }
-    
-    @objc func getHeightConstant(notification: Notification) {
-        guard let constant = notification.object as? CGFloat else { return }
-        guard let originSize = collectionViewOriginSize else { return }
-        let maxHeight = UIScreen.main.bounds.height - (UIApplication.shared.statusBarFrame.height + 50 + mediaFilterView.bounds.height + creditFilterView.bounds.height)
-        let minHeight = originSize
-        let resultHeight = originSize + constant
-
-        if resultHeight > maxHeight {
-            collectionViewHeightAnchor?.constant = maxHeight
-        } else if resultHeight > minHeight {
-            collectionViewHeightAnchor?.constant = resultHeight
-        } else {
-            collectionViewHeightAnchor?.constant = minHeight
-        }
     }
     
     @objc func presentVC(notification: Notification) {
@@ -280,9 +258,12 @@ extension PersonDetailViewController: UICollectionViewDelegate, UICollectionView
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PersonDetailCollectionViewCell.identifier, for: indexPath) as? PersonDetailCollectionViewCell,
-              let creditMovies = personViewModel.creditMovies,
-              let heightAnchor = collectionViewHeightAnchor else { return UICollectionViewCell() }
+              let creditMovies = personViewModel.creditMovies else { return UICollectionViewCell() }
         cell.creditMovies = creditMovies
+        cell.mainScrollView = containerScrollView
+        let limitOffsetY = (personProfileStackView.bounds.height + 10)
+        cell.limitOffsetY = limitOffsetY
+        self.tableScrollView = cell.personMoviesTableView
         return cell
     }
     
@@ -290,16 +271,36 @@ extension PersonDetailViewController: UICollectionViewDelegate, UICollectionView
         return CGSize(width: collectionView.frame.width, height: collectionView.frame.height)
     }
     
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        isMainViewScroll = true
+    }
+    
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        if scrollView == self.scrollView {
+        if scrollView == self.containerScrollView {
+            let limitOffsetY = (personProfileStackView.bounds.height + 10)
+            guard let tableScrollView = tableScrollView else { return }
             let offsetY = scrollView.contentOffset.y
-            navigationItem.title = offsetY > -30.0 ? name : ""
+            
+            if isMainViewScroll {
+                // containerScrollView에서 스크롤시 PersonStackView를 전부 가리게 된 경우 테이블뷰가 스크롤 되게 함
+                if  offsetY > limitOffsetY {
+                    tableScrollView.contentOffset.y += offsetY - limitOffsetY
+                    scrollView.contentOffset.y = limitOffsetY
+                    return
+                }
+                // containerScrollView에서 스크롤을 위로 올릴때 tableView 스크롤이 내려가 있는경우 테이블뷰의 스크롤이 올라가게 함
+                else if offsetY < limitOffsetY && tableScrollView.contentOffset.y > 0 {
+                    tableScrollView.contentOffset.y += offsetY - limitOffsetY
+                    scrollView.contentOffset.y = limitOffsetY
+                }
+            }
+            navigationItem.title = offsetY > 60.0 ? name : ""
             navigationController?.navigationBar.setNeedsLayout()
-            return
         }
-        let count = mediaFilterView.stackViewButtonCount()
-        mediaFilterView.barLeadingAnchor?.constant = scrollView.contentOffset.x / CGFloat(count)
-
+    }
+    
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        isMainViewScroll = false
     }
     
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {

@@ -26,6 +26,9 @@ class PersonDetailCollectionViewCell: UICollectionViewCell {
         }
     }
     var tableViewOriginSize: CGFloat? = nil
+    weak var mainScrollView: UIScrollView?
+    var limitOffsetY: CGFloat?
+    private var isTableViewScroll: Bool = false
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -97,8 +100,31 @@ extension PersonDetailCollectionViewCell: UITableViewDelegate, UITableViewDataSo
         NotificationCenter.default.post(name: Notification.Name("MovieSelected"), object: cell.movieId)
     }
     
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        isTableViewScroll = true
+    }
+    
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let constant: CGFloat = scrollView.contentOffset.y
-        NotificationCenter.default.post(name: Notification.Name("PersonListHeightConstant"), object: constant)
+        guard let mainScrollView = mainScrollView,
+            let limitOffsetY = limitOffsetY else { return }
+        if isTableViewScroll {
+            // 배우나 감독의 정보가 가려지지 않은 상태일때 테이블뷰가 아니라 메인 스크롤이 움직이게 하는 기능
+            if mainScrollView.contentOffset.y >= 0 && mainScrollView.contentOffset.y < limitOffsetY {
+                mainScrollView.contentOffset.y += scrollView.contentOffset.y
+                scrollView.contentOffset.y = 0
+            }
+            // 테이블뷰의 스크롤이 가장 위에 있을때 배우나 감독의 정보가 가려져 있는 상태면 메인 스크롤이 움직이게 하는 기능
+            else if scrollView.contentOffset.y < 0 && mainScrollView.contentOffset.y > 0 {
+                mainScrollView.contentOffset.y += scrollView.contentOffset.y
+            }
+            
+            else if mainScrollView.contentOffset.y < 0 {
+                mainScrollView.contentOffset.y = 0
+            }
+        }
+    }
+    
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        isTableViewScroll = false
     }
 }
