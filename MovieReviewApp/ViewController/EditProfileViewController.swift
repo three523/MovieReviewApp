@@ -65,6 +65,7 @@ class EditProfileViewController: UIViewController {
     }()
     let pickerViewController: UIImagePickerController = UIImagePickerController()
     let profileViewModel = ProfileViewModel()
+    var profileImage: UIImage?
     var profile: Profile?
 
     override func viewDidLoad() {
@@ -180,14 +181,22 @@ class EditProfileViewController: UIViewController {
     
     @objc
     func  doneButtonClick() {
-        if let profile = profile {
-            profileViewModel.setProfile(profile: profile)
+        guard let nickname = nameTextFiled.text,
+              let introduction = introductionTextFiled.text,
+              let _ = profileImage else { return }
+        if  let image = profileImage,
+            let uid = Auth.auth().currentUser?.uid {
+            FBStorageManager.uploadImage(image: image, pathRoot: uid) { url in
+                if let url = url {
+                    self.profile = Profile(nickname: nickname, introduction: introduction, profileImage: url.absoluteString)
+                    self.profileViewModel.setProfile(profile: self.profile!)
+                    self.navigationController?.popViewController(animated: true)
+                }
+            }
         }
-        navigationController?.popViewController(animated: true)
     }
 
 }
-
 extension EditProfileViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     private func openLibrary() {
@@ -209,11 +218,7 @@ extension EditProfileViewController: UIImagePickerControllerDelegate, UINavigati
            let uid = Auth.auth().currentUser?.uid {
             DispatchQueue.main.async {
                 self.profileImageView.image = image
-            }
-            FBStorageManager.uploadImage(image: image, pathRoot: uid) { url in
-                if let url = url {
-                    self.profile?.profileImage = url.absoluteString
-                }
+                self.profileImage = image
             }
         }
 
