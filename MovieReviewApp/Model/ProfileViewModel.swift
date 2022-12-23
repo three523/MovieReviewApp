@@ -30,9 +30,7 @@ class ProfileViewModel {
     
     public func setProfile(profile: Profile) {
         getProfile { previousProfile in
-            print("previousProfile \(previousProfile.profileImage)")
             FBStorageManager.deleteImage(urlString: previousProfile.profileImage) {
-                print("profile \(profile.profileImage)")
                 self.profile = profile
                 self.fbDatabaseManager.setProfile(profile: profile)
             }
