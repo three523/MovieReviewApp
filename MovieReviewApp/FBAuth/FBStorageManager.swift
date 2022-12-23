@@ -23,7 +23,6 @@ final class FBStorageManager {
                     print(error.localizedDescription)
                     completion(nil)
                 }
-                print("URL: \(url)")
                 completion(url)
             }
         }
