@@ -29,8 +29,14 @@ class ProfileViewModel {
     }
     
     public func setProfile(profile: Profile) {
-        self.profile = profile
-        fbDatabaseManager.setProfile(profile: profile)
+        getProfile { previousProfile in
+            print("previousProfile \(previousProfile.profileImage)")
+            FBStorageManager.deleteImage(urlString: previousProfile.profileImage) {
+                print("profile \(profile.profileImage)")
+                self.profile = profile
+                self.fbDatabaseManager.setProfile(profile: profile)
+            }
+        }
     }
     
     private func firebaseProfile(completed: @escaping (Profile) -> ()) {

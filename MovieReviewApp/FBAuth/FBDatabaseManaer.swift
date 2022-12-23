@@ -73,7 +73,6 @@ final class FBDataBaseManager {
         let ref = baseRef.child("user").child(uid).child("profile")
         let keyedValues = profileToKeyedValues(profile: profile)
         ref.setValue(keyedValues)
-        ref.setValue(keyedValues)
     }
     
     private func profileToKeyedValues(profile: Profile) -> [String : String] {
