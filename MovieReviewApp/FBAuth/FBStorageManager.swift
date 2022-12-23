@@ -43,7 +43,6 @@ final class FBStorageManager {
     }
     
     static func deleteImage(urlString: String, completed: @escaping () -> Void) {
-        print("urlString: \(urlString)")
         let storageRefernce = Storage.storage().reference(forURL: urlString)
         storageRefernce.delete { error in
             if let error = error {
