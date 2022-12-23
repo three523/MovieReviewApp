@@ -14,7 +14,8 @@ final class FBStorageManager {
         let metaData = StorageMetadata()
         metaData.contentType = "image/jpeg"
         
-        let imageName = UUID().uuidString + String(Date().timeIntervalSince1970)
+        let imageName = UUID().uuidString
+        print(imageName)
         
         let firebaseReference = Storage.storage().reference().child("\(imageName)")
         firebaseReference.putData(imageData, metadata: metaData) { metaData, error in
@@ -38,6 +39,17 @@ final class FBStorageManager {
                 return
             }
             completion(UIImage(data: imageData))
+        }
+    }
+    
+    static func deleteImage(urlString: String, completed: @escaping () -> Void) {
+        print("urlString: \(urlString)")
+        let storageRefernce = Storage.storage().reference(forURL: urlString)
+        storageRefernce.delete { error in
+            if let error = error {
+                print(error.localizedDescription)
+            }
+            completed()
         }
     }
 }
