@@ -12,23 +12,15 @@ class TabBarController: UITabBarController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        if Auth.auth().currentUser == nil {
-            let authVC = AuthViewController()
-            authVC.modalPresentationStyle = .fullScreen
-            self.present(authVC, animated: false)
-        }
+//        if Auth.auth().currentUser == nil {
+//            let authVC = AuthViewController()
+//            authVC.modalPresentationStyle = .fullScreen
+//            self.present(authVC, animated: false)
+//        }
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        let firebaseAuth = Auth.auth()
-        do {
-            try firebaseAuth.signOut()
-            self.navigationController?.popToRootViewController(animated: false)
-        } catch let signOutError as NSError {
-            print("Error signing out: %@", signOutError)
-        }
         
         self.tabBar.backgroundColor = .white
         

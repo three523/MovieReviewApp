@@ -20,6 +20,32 @@ struct Profile {
     }
 }
 
+/*
+ moviestorage {
+    평가한 : String = movieId: String
+    보고싶어요 : String = movieId: String
+    보는중 : String = movieId: String
+ }
+ dramatorage: String = [
+    평가한 : String = movieId: String
+    보고싶어요 : String = movieId: String
+    보는중 : String = movieId: String
+ ]
+ [String: [String: String]]
+ */
+
+struct MediaStorage {
+    var movieStorage: MyStorage
+    
+    static var empty: MediaStorage = MediaStorage(movieStorage: MyStorage(ratedStorage: [], wantedStorage: [], watchingStorage: []))
+}
+
+struct MyStorage {
+    var ratedStorage: [String]
+    var wantedStorage: [String]
+    var watchingStorage: [String]
+}
+
 class EditProfileViewController: UIViewController {
     
     let profileImageView: UIImageView  = {
