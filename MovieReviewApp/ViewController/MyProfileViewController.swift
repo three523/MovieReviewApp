@@ -11,7 +11,11 @@ protocol EditProfileDelegate: AnyObject {
     func pushEditViewController()
 }
 
-class MyProfileViewController: UIViewController, EditProfileDelegate {
+protocol MyStorageDelegate: AnyObject {
+    func pushMyStorageViewController(type: MyStorageType)
+}
+
+class MyProfileViewController: UIViewController, EditProfileDelegate, MyStorageDelegate {
     
     let profileTableView: UITableView = UITableView(frame: .zero, style: .plain)
 
@@ -30,7 +34,6 @@ class MyProfileViewController: UIViewController, EditProfileDelegate {
         profileTableView.register(ProfileLikeTableViewCell.self, forCellReuseIdentifier: ProfileLikeTableViewCell.identifier)
         
         profileTableView.separatorColor = .systemGray6
-        
         profileTableView.estimatedRowHeight = 300
         profileTableView.rowHeight = UITableView.automaticDimension
         
@@ -62,7 +65,13 @@ class MyProfileViewController: UIViewController, EditProfileDelegate {
         let vc = EditProfileViewController()
         navigationController?.pushViewController(vc, animated: true)
     }
-
+    
+    func pushMyStorageViewController(type: MyStorageType) {
+        let vc = MyStorageViewController()
+        vc.storageType = type
+        navigationController?.pushViewController(vc, animated: false)
+    }
+    
 }
 
 extension MyProfileViewController: UITableViewDelegate, UITableViewDataSource {
@@ -94,6 +103,7 @@ extension MyProfileViewController: UITableViewDelegate, UITableViewDataSource {
             return cell
         } else if indexPath.section == 1 {
             guard let cell = tableView.dequeueReusableCell(withIdentifier: ProfileStorageTableViewCell.identifier, for: indexPath) as? ProfileStorageTableViewCell else { return UITableViewCell() }
+            cell.delegate = self
             return cell
         } else if indexPath.section == 2 {
             guard let cell = tableView.dequeueReusableCell(withIdentifier: ProfileLikeTableViewCell.identifier, for: indexPath) as? ProfileLikeTableViewCell else { return UITableViewCell() }
@@ -103,14 +113,3 @@ extension MyProfileViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
 }
-
-#if canImport(SwiftUI) && DEBUG
-import SwiftUI
-
-struct MyProfileViewController_Preview: PreviewProvider {
-    static var previews: some View {
-        MyProfileViewController().showPreview(.iPhone12)
-        MyProfileViewController().showPreview(.iPhoneSE)
-    }
-}
-#endif

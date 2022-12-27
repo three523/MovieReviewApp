@@ -11,7 +11,11 @@ class MovieListCollectionViewCell: MovieDetailCollectionViewCell {
     
     static let identifier: String = "\(MovieListCollectionViewCell.self)"
     
-    let moviePoster: UIImageView = UIImageView(image: UIImage(systemName: "square.and.arrow.up")!)
+    let moviePoster: UIImageView = {
+        let imgView: UIImageView = UIImageView()
+        imgView.backgroundColor = .systemGray4
+        return imgView
+    }()
     let movieTitleLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont(name: "AvenirNext-Medium", size: 17)
