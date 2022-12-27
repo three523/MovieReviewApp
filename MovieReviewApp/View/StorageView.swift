@@ -18,6 +18,7 @@ class StorageView: UIView {
         return label
     }()
     var imageInset: CGFloat = 10
+    var text: String?
     
     override init(frame: CGRect) {
         imageView = CircleIconImageView(image: UIImage(systemName: "x.circle.fill"), inset: imageInset)
@@ -31,6 +32,7 @@ class StorageView: UIView {
     convenience init(image: UIImage?, imageSize: CGFloat, inset: CGFloat, text: String) {
         self.init()
         imageView = CircleIconImageView(image: image, imageSize: imageSize, inset: inset)
+        self.text = text
         titleLabel.text = text
         
         viewAdd()
@@ -59,5 +61,5 @@ class StorageView: UIView {
     public func setImageCircle() {
         imageView.setImageCircle()
     }
-    
+        
 }

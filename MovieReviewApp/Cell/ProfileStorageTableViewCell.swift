@@ -23,13 +23,9 @@ class ProfileStorageTableViewCell: UITableViewCell {
         st.distribution = .fillEqually
         return st
     }()
+    weak var delegate: MyStorageDelegate?
     let movieStorageView: StorageView = StorageView(image: UIImage(systemName: "film"), imageSize: 30, inset: 15, text: "영화")
     let tvStorageView: StorageView = StorageView(image: UIImage(systemName: "tv"), imageSize: 30, inset: 15, text: "TV")
-
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
-    }
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -37,7 +33,9 @@ class ProfileStorageTableViewCell: UITableViewCell {
         autoLayoutSetting()
         
         movieStorageView.setImageCircle()
+        movieStorageView.addGestureRecognizer(setTapGestureRecognizer())
         tvStorageView.setImageCircle()
+        tvStorageView.addGestureRecognizer(setTapGestureRecognizer())
     }
     
     required init?(coder: NSCoder) {
@@ -67,9 +65,12 @@ class ProfileStorageTableViewCell: UITableViewCell {
         storageStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10).isActive = true
     }
     
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-        // Configure the view for the selected state
+    func setTapGestureRecognizer() -> UITapGestureRecognizer {
+        return UITapGestureRecognizer(target: self, action: #selector(storageButtonClick))
+    }
+    
+    @objc func storageButtonClick(_ gesture: UITapGestureRecognizer) {
+        gesture.view == movieStorageView ? delegate?.pushMyStorageViewController(type: .movie) : delegate?.pushMyStorageViewController(type: .drama)
     }
 
 }

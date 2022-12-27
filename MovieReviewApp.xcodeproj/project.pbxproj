@@ -20,6 +20,7 @@
 		186E321E28E307F000EA18BC /* LoginButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 186E321D28E307F000EA18BC /* LoginButton.swift */; };
 		186E322028E3419000EA18BC /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 186E321F28E3419000EA18BC /* UIColor.swift */; };
 		1881CBAC2949E0B800D6670B /* FBDatabaseManaer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1881CBAB2949E0B800D6670B /* FBDatabaseManaer.swift */; };
+		18830952295ABF6C007890F5 /* StorageDetailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18830951295ABF6C007890F5 /* StorageDetailTableViewCell.swift */; };
 		1883259A294B1E13002E76A8 /* FBStorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18832599294B1E13002E76A8 /* FBStorageManager.swift */; };
 		189863C728E4003100C08881 /* LoginAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 189863C628E4003100C08881 /* LoginAuth.swift */; };
 		189863C928E429B700C08881 /* SignupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 189863C828E429B700C08881 /* SignupViewController.swift */; };
@@ -52,6 +53,9 @@
 		18A88E0A290002B000A4BEAD /* CircleIconImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18A88E09290002B000A4BEAD /* CircleIconImageView.swift */; };
 		18A88E2C29006F2800A4BEAD /* ProfileLikeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18A88E2B29006F2800A4BEAD /* ProfileLikeTableViewCell.swift */; };
 		18A88E2E29006FF700A4BEAD /* ProfileLikeDetailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18A88E2D29006FF700A4BEAD /* ProfileLikeDetailTableViewCell.swift */; };
+		18AB9E9429596CA300EE9D02 /* MyStorageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18AB9E9329596CA300EE9D02 /* MyStorageViewController.swift */; };
+		18AB9E962959872E00EE9D02 /* SortView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18AB9E952959872E00EE9D02 /* SortView.swift */; };
+		18AB9E982959945B00EE9D02 /* StorageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18AB9E972959945B00EE9D02 /* StorageCollectionViewCell.swift */; };
 		18ABB6592891319100BACD73 /* MovieDetailHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18ABB6582891319100BACD73 /* MovieDetailHeaderView.swift */; };
 		18ABB8082897C37200E8AF7B /* MovieDetailSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18ABB8072897C37200E8AF7B /* MovieDetailSectionView.swift */; };
 		18AC2993287FA6990043B812 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18AC2992287FA6990043B812 /* HomeViewModel.swift */; };
@@ -120,6 +124,7 @@
 		186E321D28E307F000EA18BC /* LoginButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginButton.swift; sourceTree = "<group>"; };
 		186E321F28E3419000EA18BC /* UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
 		1881CBAB2949E0B800D6670B /* FBDatabaseManaer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FBDatabaseManaer.swift; sourceTree = "<group>"; };
+		18830951295ABF6C007890F5 /* StorageDetailTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageDetailTableViewCell.swift; sourceTree = "<group>"; };
 		18832599294B1E13002E76A8 /* FBStorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FBStorageManager.swift; sourceTree = "<group>"; };
 		189863C628E4003100C08881 /* LoginAuth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginAuth.swift; sourceTree = "<group>"; };
 		189863C828E429B700C08881 /* SignupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupViewController.swift; sourceTree = "<group>"; };
@@ -152,6 +157,9 @@
 		18A88E09290002B000A4BEAD /* CircleIconImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleIconImageView.swift; sourceTree = "<group>"; };
 		18A88E2B29006F2800A4BEAD /* ProfileLikeTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileLikeTableViewCell.swift; sourceTree = "<group>"; };
 		18A88E2D29006FF700A4BEAD /* ProfileLikeDetailTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileLikeDetailTableViewCell.swift; sourceTree = "<group>"; };
+		18AB9E9329596CA300EE9D02 /* MyStorageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyStorageViewController.swift; sourceTree = "<group>"; };
+		18AB9E952959872E00EE9D02 /* SortView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortView.swift; sourceTree = "<group>"; };
+		18AB9E972959945B00EE9D02 /* StorageCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageCollectionViewCell.swift; sourceTree = "<group>"; };
 		18ABB6582891319100BACD73 /* MovieDetailHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDetailHeaderView.swift; sourceTree = "<group>"; };
 		18ABB8072897C37200E8AF7B /* MovieDetailSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDetailSectionView.swift; sourceTree = "<group>"; };
 		18AC2992287FA6990043B812 /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
@@ -235,6 +243,7 @@
 				186E321D28E307F000EA18BC /* LoginButton.swift */,
 				18A88E0328FFE8FF00A4BEAD /* TwolineButton.swift */,
 				18A88E0728FFFEC900A4BEAD /* StorageView.swift */,
+				18AB9E952959872E00EE9D02 /* SortView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -266,6 +275,8 @@
 				18A88E0528FFFACB00A4BEAD /* ProfileStorageTableViewCell.swift */,
 				18A88E2B29006F2800A4BEAD /* ProfileLikeTableViewCell.swift */,
 				18A88E2D29006FF700A4BEAD /* ProfileLikeDetailTableViewCell.swift */,
+				18AB9E972959945B00EE9D02 /* StorageCollectionViewCell.swift */,
+				18830951295ABF6C007890F5 /* StorageDetailTableViewCell.swift */,
 			);
 			path = Cell;
 			sourceTree = "<group>";
@@ -295,6 +306,7 @@
 				189863C828E429B700C08881 /* SignupViewController.swift */,
 				18CA204A28D835D5008C720B /* OtherLoginViewController.swift */,
 				18CA204828D815FF008C720B /* AuthViewController.swift */,
+				18AB9E9329596CA300EE9D02 /* MyStorageViewController.swift */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -564,6 +576,7 @@
 				18A1678128BDBFC70038BEC2 /* FilterButtonFactory.swift in Sources */,
 				18A2F729287EABEA00CA9947 /* MovieListCollectionViewCell.swift in Sources */,
 				189F34BA28BE5F7100AD0A29 /* OverviewTableViewCell.swift in Sources */,
+				18AB9E982959945B00EE9D02 /* StorageCollectionViewCell.swift in Sources */,
 				18C3C67828AF5879002C2D38 /* ReleaseDates.swift in Sources */,
 				18A13F29288EA06E00A34538 /* MovieDetailViewController.swift in Sources */,
 				189863C728E4003100C08881 /* LoginAuth.swift in Sources */,
@@ -601,10 +614,12 @@
 				18A88E2E29006FF700A4BEAD /* ProfileLikeDetailTableViewCell.swift in Sources */,
 				18AC2993287FA6990043B812 /* HomeViewModel.swift in Sources */,
 				18A88E0828FFFEC900A4BEAD /* StorageView.swift in Sources */,
+				18AB9E9429596CA300EE9D02 /* MyStorageViewController.swift in Sources */,
 				1881CBAC2949E0B800D6670B /* FBDatabaseManaer.swift in Sources */,
 				180CE3CE28C73013000FACF8 /* SearchPerson.swift in Sources */,
 				18A4DBD9289955B400FBC346 /* MovieDetailViewModel.swift in Sources */,
 				18A2F727287EABB000CA9947 /* HomeTableViewCell.swift in Sources */,
+				18AB9E962959872E00EE9D02 /* SortView.swift in Sources */,
 				18BA247828A1074C0024B913 /* DetailSectionTableViewCell.swift in Sources */,
 				18FD374628DD2F3500435714 /* APIKEY.swift in Sources */,
 				18A82FC2288146F100791B03 /* FilterViewController.swift in Sources */,
@@ -622,6 +637,7 @@
 				18E17963287805790060BCD9 /* SceneDelegate.swift in Sources */,
 				18CEB15428B477E70067D598 /* SimilarMovie.swift in Sources */,
 				18A3B7A9289A1A11002709EB /* MovieDetailCell.swift in Sources */,
+				18830952295ABF6C007890F5 /* StorageDetailTableViewCell.swift in Sources */,
 				18BF66DD28B3B97A00AE492D /* Reviews.swift in Sources */,
 				18C369BD28BF404E00BCFC99 /* SearchViewModel.swift in Sources */,
 				18A88E2C29006F2800A4BEAD /* ProfileLikeTableViewCell.swift in Sources */,
