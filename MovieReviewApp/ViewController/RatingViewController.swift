@@ -140,7 +140,10 @@ class RatingViewController: UIViewController, UICollectionViewDataSource,  UICol
     }
     
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        let index = collectionView.indexPathsForVisibleItems[0].item
+        guard let index = collectionView.indexPathForItem(at: scrollView.contentOffset)?.item else {
+            print("StorageCollectionView IndexPathForItem is nil")
+            return
+        }
         cellMoveStackView.setButtonTitleColor(index: index)
     }
     
