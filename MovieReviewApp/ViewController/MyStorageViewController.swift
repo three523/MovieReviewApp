@@ -27,7 +27,6 @@ class MyStorageViewController: UIViewController {
         let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         layout.minimumLineSpacing = 0
-        layout.minimumLineSpacing = 0
         layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         let cv: UICollectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         cv.isPagingEnabled = true
@@ -132,14 +131,15 @@ extension MyStorageViewController: UICollectionViewDelegate, UICollectionViewDat
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        print("didscroll")
         let count = cellMoveStackView.stackViewButtonCount()
         cellMoveStackView.barLeadingAnchor?.constant = scrollView.contentOffset.x / CGFloat(count)
     }
     
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        print("didend")
-        let index = storageCollectionView.indexPathsForVisibleItems[0].item
+        guard let index = storageCollectionView.indexPathForItem(at: scrollView.contentOffset)?.item else {
+            print("StorageCollectionView IndexPathForItem is nil")
+            return
+        }
         cellMoveStackView.setButtonTitleColor(index: index)
     }
     
