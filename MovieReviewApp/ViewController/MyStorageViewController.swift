@@ -132,11 +132,13 @@ extension MyStorageViewController: UICollectionViewDelegate, UICollectionViewDat
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        print("didscroll")
         let count = cellMoveStackView.stackViewButtonCount()
         cellMoveStackView.barLeadingAnchor?.constant = scrollView.contentOffset.x / CGFloat(count)
     }
     
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        print("didend")
         let index = storageCollectionView.indexPathsForVisibleItems[0].item
         cellMoveStackView.setButtonTitleColor(index: index)
     }
