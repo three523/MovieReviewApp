@@ -9,7 +9,7 @@ import UIKit
 
 class CellMoveStackView: UIStackView {
     
-    var collectionView: UICollectionView
+    weak var collectionView: UICollectionView?
     private var buttonTextFont: UIFont = UIFont.systemFont(ofSize: 20, weight: .medium)
     private let bar: UIView = {
         let bar = UIView()
@@ -97,11 +97,15 @@ class CellMoveStackView: UIStackView {
     }
     
     @objc func cellMove(senderBtn: UIButton) {
+        guard let collectionView = collectionView else {
+            print("CellMoveStackView collectionview is nil")
+            return }
         for index in 0..<self.arrangedSubviews.count {
             if let btn = self.arrangedSubviews[index] as? UIButton {
                 btn.isSelected = false
                 if btn == senderBtn {
-                    collectionView.scrollToItem(at: IndexPath(item: index, section: 0), at: .bottom, animated: true)
+                    guard let rect = collectionView.layoutAttributesForItem(at:IndexPath(row: index, section: 0))?.frame else { return }
+                    collectionView.scrollRectToVisible(rect, animated: true)
                 }
             }
         }
