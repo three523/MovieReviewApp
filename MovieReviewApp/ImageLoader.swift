@@ -62,7 +62,6 @@ class ImageLoader {
     }
     
     func tmdbImageLoad(stringUrl: String, size: ImageSize ,completed: @escaping (UIImage) -> Void) {
-        print(stringUrl)
         guard let url = NSURL(string: "\(baseUrlString)\(size.rawValue)\(stringUrl)") else {
             print("url is nil")
             return

@@ -20,11 +20,16 @@ protocol FilterHeaderDelegate: AnyObject {
     func searchButtonClick()
 }
 
-protocol PushMovieDetailViewControllerDelegate: AnyObject {
-    func navigationPush(index: Int)
+protocol NavigationPushDelegate: AnyObject where Self: UIViewController { }
+extension NavigationPushDelegate {
+    func movieDetailViewController(movieId: Int) {
+        let movieDetailViewController = MovieDetailViewController()
+        movieDetailViewController.movieId = String(movieId)
+        navigationController?.pushViewController(movieDetailViewController, animated: true)
+    }
 }
 
-class RatingViewController: UIViewController, UICollectionViewDataSource,  UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, FilterHeaderDelegate, PushMovieDetailViewControllerDelegate {
+class RatingViewController: UIViewController, UICollectionViewDataSource,  UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, FilterHeaderDelegate, NavigationPushDelegate {
         
     lazy var cellMoveStackView: CellMoveStackView = {
         let sv: CellMoveStackView = CellMoveStackView(frame: .zero, collectionView: collectionView)
@@ -173,13 +178,6 @@ class RatingViewController: UIViewController, UICollectionViewDataSource,  UICol
         ratingSearchViewController.modalPresentationStyle = .overFullScreen
         navigationController?.pushViewController(ratingSearchViewController, animated: true)
     }
-    
-    func navigationPush(index: Int) {
-        guard let movie = reviewViewModel.getMovie(index: index) else { return }
-        let movieDetailViewController = MovieDetailViewController()
-        movieDetailViewController.movieId = String(movie.id)
-        navigationController?.pushViewController(movieDetailViewController, animated: true)
-    }
 
 }
 
@@ -196,7 +194,7 @@ class ReviewListCVCell: UICollectionViewCell, UITableViewDelegate, UITableViewDa
     }()
     var movieList: [MovieInfo]? = nil
     let imageLoader = ImageLoader()
-    weak var delegate: PushMovieDetailViewControllerDelegate?
+    weak var delegate: NavigationPushDelegate?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -233,7 +231,10 @@ class ReviewListCVCell: UICollectionViewCell, UITableViewDelegate, UITableViewDa
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        delegate?.navigationPush(index: indexPath.row)
+        guard let movieList = movieList else { return }
+        let movieId = movieList[indexPath.row].id
+        guard let delegate = delegate else { return }
+        delegate.movieDetailViewController(movieId: movieId)
     }
     
     func tableViewReload() {

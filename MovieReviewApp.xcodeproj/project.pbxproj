@@ -22,6 +22,10 @@
 		1881CBAC2949E0B800D6670B /* FBDatabaseManaer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1881CBAB2949E0B800D6670B /* FBDatabaseManaer.swift */; };
 		18830952295ABF6C007890F5 /* StorageDetailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18830951295ABF6C007890F5 /* StorageDetailTableViewCell.swift */; };
 		1883259A294B1E13002E76A8 /* FBStorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18832599294B1E13002E76A8 /* FBStorageManager.swift */; };
+		1883CF46295C468D00754490 /* StorageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1883CF45295C468D00754490 /* StorageViewModel.swift */; };
+		1883CF48295C471D00754490 /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1883CF47295C471D00754490 /* Profile.swift */; };
+		1883CF4A295C475A00754490 /* MediaReaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1883CF49295C475A00754490 /* MediaReaction.swift */; };
+		1887C738295D7609001BFD12 /* MyReactionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1887C737295D7609001BFD12 /* MyReactionModel.swift */; };
 		189863C728E4003100C08881 /* LoginAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 189863C628E4003100C08881 /* LoginAuth.swift */; };
 		189863C928E429B700C08881 /* SignupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 189863C828E429B700C08881 /* SignupViewController.swift */; };
 		189EC36628E5847400023218 /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 189EC36528E5847400023218 /* SettingViewController.swift */; };
@@ -126,6 +130,10 @@
 		1881CBAB2949E0B800D6670B /* FBDatabaseManaer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FBDatabaseManaer.swift; sourceTree = "<group>"; };
 		18830951295ABF6C007890F5 /* StorageDetailTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageDetailTableViewCell.swift; sourceTree = "<group>"; };
 		18832599294B1E13002E76A8 /* FBStorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FBStorageManager.swift; sourceTree = "<group>"; };
+		1883CF45295C468D00754490 /* StorageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageViewModel.swift; sourceTree = "<group>"; };
+		1883CF47295C471D00754490 /* Profile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Profile.swift; sourceTree = "<group>"; };
+		1883CF49295C475A00754490 /* MediaReaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaReaction.swift; sourceTree = "<group>"; };
+		1887C737295D7609001BFD12 /* MyReactionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyReactionModel.swift; sourceTree = "<group>"; };
 		189863C628E4003100C08881 /* LoginAuth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginAuth.swift; sourceTree = "<group>"; };
 		189863C828E429B700C08881 /* SignupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupViewController.swift; sourceTree = "<group>"; };
 		189EC36528E5847400023218 /* SettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
@@ -317,10 +325,12 @@
 				18A2F72F287EC8F400CA9947 /* Movie.swift */,
 				18CEB15328B477E70067D598 /* SimilarMovie.swift */,
 				180CE3CF28C76EDE000FACF8 /* TV.swift */,
+				1883CF47295C471D00754490 /* Profile.swift */,
 				18AC2992287FA6990043B812 /* HomeViewModel.swift */,
 				18C018CA288682D400E6AE2C /* ReviewFilterViewModel.swift */,
 				18A4DBD8289955B400FBC346 /* MovieDetailViewModel.swift */,
 				18B20C82294884AC00DEF8DA /* ProfileViewModel.swift */,
+				1883CF45295C468D00754490 /* StorageViewModel.swift */,
 				18A167EF28B76BF600D15BB1 /* PersonViewModel.swift */,
 				18C3C67528AF48E6002C2D38 /* Credits.swift */,
 				18C3C67728AF5879002C2D38 /* ReleaseDates.swift */,
@@ -328,6 +338,8 @@
 				18A167EB28B7644B00D15BB1 /* CreditMovie.swift */,
 				18C369BC28BF404E00BCFC99 /* SearchViewModel.swift */,
 				180CE3CD28C73013000FACF8 /* SearchPerson.swift */,
+				1883CF49295C475A00754490 /* MediaReaction.swift */,
+				1887C737295D7609001BFD12 /* MyReactionModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -593,6 +605,7 @@
 				184272C3287D691E004E1C9E /* SearchViewController.swift in Sources */,
 				18A65E4628B8C33F00D132D9 /* PersonDetailCollectionViewCell.swift in Sources */,
 				18CEB15A28B4B4460067D598 /* ActorDirectorTableViewCell.swift in Sources */,
+				1883CF48295C471D00754490 /* Profile.swift in Sources */,
 				18CEB15C28B4C41C0067D598 /* ReviewViewController.swift in Sources */,
 				18E17965287805790060BCD9 /* TabBarController.swift in Sources */,
 				186E321E28E307F000EA18BC /* LoginButton.swift in Sources */,
@@ -604,6 +617,7 @@
 				18A2336F2892646100B1B7FB /* CustomNavigationBar.swift in Sources */,
 				18ABB8082897C37200E8AF7B /* MovieDetailSectionView.swift in Sources */,
 				18A167EE28B76BAF00D15BB1 /* PersonDetailViewController.swift in Sources */,
+				1887C738295D7609001BFD12 /* MyReactionModel.swift in Sources */,
 				189863C928E429B700C08881 /* SignupViewController.swift in Sources */,
 				18C018C92886801300E6AE2C /* MovieGenres.swift in Sources */,
 				18E17961287805790060BCD9 /* AppDelegate.swift in Sources */,
@@ -618,6 +632,7 @@
 				1881CBAC2949E0B800D6670B /* FBDatabaseManaer.swift in Sources */,
 				180CE3CE28C73013000FACF8 /* SearchPerson.swift in Sources */,
 				18A4DBD9289955B400FBC346 /* MovieDetailViewModel.swift in Sources */,
+				1883CF46295C468D00754490 /* StorageViewModel.swift in Sources */,
 				18A2F727287EABB000CA9947 /* HomeTableViewCell.swift in Sources */,
 				18AB9E962959872E00EE9D02 /* SortView.swift in Sources */,
 				18BA247828A1074C0024B913 /* DetailSectionTableViewCell.swift in Sources */,
@@ -626,6 +641,7 @@
 				18A88E0228FFD31400A4BEAD /* ProfileInfoTableViewCell.swift in Sources */,
 				18A88E0028FEA19C00A4BEAD /* Extenstion.swift in Sources */,
 				18B70A82290BD6E600E9B44D /* FBError.swift in Sources */,
+				1883CF4A295C475A00754490 /* MediaReaction.swift in Sources */,
 				18A79618293F341F00B56E03 /* RatingSearchViewController.swift in Sources */,
 				18A167F228B7869A00D15BB1 /* PersonMoviesTableViewCell.swift in Sources */,
 				18A88E0428FFE8FF00A4BEAD /* TwolineButton.swift in Sources */,

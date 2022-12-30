@@ -34,7 +34,7 @@ class MovieDetailTableViewCell: UITableViewCell {
 
 class MovieDetailCollectionViewCell: UICollectionViewCell {
     weak var currentVC: UIViewController? = nil
-    var movieId: Int? = nil
+    var movieId: String? = nil
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -52,7 +52,7 @@ class MovieDetailCollectionViewCell: UICollectionViewCell {
         }
         let movieDetailVC: MovieDetailViewController = MovieDetailViewController()
         movieDetailVC.modalPresentationStyle = .fullScreen
-        movieDetailVC.movieId = "\(movieId)"
+        movieDetailVC.movieId = movieId
 //        currentVC.present(movieDetailVC, animated: true)
         currentVC.navigationController?.pushViewController(movieDetailVC, animated: true)
     }

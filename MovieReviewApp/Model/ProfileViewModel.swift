@@ -10,7 +10,6 @@ import FirebaseDatabase
 
 class ProfileViewModel {
     private var profile: Profile?
-    private var mediaStorage: MediaStorage?
     private let fbDatabaseManager: FBDataBaseManager = FBDataBaseManager()
     var viewUpdate: (() -> Void) = {}
     
@@ -28,16 +27,6 @@ class ProfileViewModel {
         }
     }
     
-    public func getStorage(completed: @escaping (MediaStorage) -> ()) {
-        if let mediaStorage = mediaStorage {
-            completed(mediaStorage)
-        }
-        firebaseStorage { mediaStorage in
-            self.mediaStorage = mediaStorage
-            completed(mediaStorage)
-        }
-    }
-    
     public func setProfile(profile: Profile) {
         getProfile { previousProfile in
             FBStorageManager.deleteImage(urlString: previousProfile.profileImage) {
@@ -45,11 +34,6 @@ class ProfileViewModel {
                 self.fbDatabaseManager.setProfile(profile: profile)
             }
         }
-    }
-    
-    public func setStorage(mediaStorage: MediaStorage) {
-        self.mediaStorage = mediaStorage
-        self.fbDatabaseManager.setStorage(mediaStorage: mediaStorage)
     }
     
     private func firebaseProfile(completed: @escaping (Profile) -> ()) {
@@ -65,30 +49,10 @@ class ProfileViewModel {
         }
     }
     
-    private func firebaseStorage(completed: @escaping (MediaStorage) -> ()) {
-        fbDatabaseManager.getDataSnapshot(type: .storage) { result in
-            switch  result {
-            case .success(let snapshot):
-                let mediaStorage = self.snapshotToStorage(snapshot: snapshot)
-                completed(mediaStorage)
-            case .failure(let failure):
-                print(failure.localizedDescription)
-                completed(MediaStorage.empty)
-            }
-        }
-    }
-    
     @objc
     private func setFirebaseProfileObserver(_ notification: Notification) {
         guard let profile = notification.object as? Profile else { return }
         self.profile = profile
-        viewUpdate()
-    }
-    
-    @objc
-    private func setFirebaseStorageObserver(_ notification: Notification) {
-        guard let mediaStorage = notification.object as? MediaStorage else { return }
-        self.mediaStorage = mediaStorage
         viewUpdate()
     }
     
@@ -101,19 +65,6 @@ class ProfileViewModel {
                   return profile ?? Profile(nickname: "guest", profileImage: "")
               }
         return Profile(nickname: nickname, introduction: introduction, profileImage: profileImage)
-    }
-    
-    private func snapshotToStorage(snapshot: DataSnapshot) -> MediaStorage {
-        guard let movieStorage = snapshot.value as? [String : [String]],
-              let ratedStorage = movieStorage["RatedStorage"],
-              let wantedStorage = movieStorage["WantedStorage"],
-              let watchingStorage = movieStorage["WatchingStorge"]
-        else {
-            print("Snapshot to Storage Error")
-            return MediaStorage.empty
-        }
-        let myStorage = MyStorage(ratedStorage: ratedStorage, wantedStorage: wantedStorage, watchingStorage: watchingStorage)
-        return MediaStorage(movieStorage: myStorage)
     }
     
 }

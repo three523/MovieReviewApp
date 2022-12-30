@@ -49,6 +49,7 @@ final class FBDataBaseManager {
         }
         switch type {
         case .profile:
+            print(uid)
             let ref = baseRef.child("User").child(uid).child("Profile")
             ref.getData { error, snapshot in
                 if let error = error {
@@ -63,14 +64,14 @@ final class FBDataBaseManager {
                 completed(.failure(FBDatabaseManagerError.snapShotNil))
             }
         case .storage:
-            let ref = baseRef.child("User").child(uid).child("Storage")
+            let ref = baseRef.child("User").child(uid).child("Reaction").child("Movie")
             ref.getData { error, snapshot in
                 if let error = error {
                     completed(.failure(error))
                     return
                 }
                 if let snapshot = snapshot,
-                   let _ = snapshot.value as? [String: [String]] {
+                   let _ = snapshot.value as? [String: Any] {
                     completed(.success(snapshot))
                     return
                 }
@@ -85,20 +86,20 @@ final class FBDataBaseManager {
             return
         }
         profileChangeNotification(profile: profile)
-        let ref = baseRef.child("User").child(uid).child("Srofile")
+        let ref = baseRef.child("User").child(uid).child("Profile")
         let keyedValues = profileToKeyedValues(profile: profile)
         ref.setValue(keyedValues)
     }
     
-    public func setStorage(mediaStorage: MediaStorage) {
+    public func setReaction(mySummaryMediaInfos: [[String : Any]], type: MediaReaction) {
         guard let uid = Auth.auth().currentUser?.uid else {
             print("Current is nil")
             return
         }
-        let ref = baseRef.child("User").child(uid).child("Storage")
-        let movieStorageRef = ref.child("MovieStorage")
-        let movieKeyedValues = storageToKeyedValues(myStorage: mediaStorage.movieStorage)
-        movieStorageRef.setValue(movieKeyedValues)
+        let ref = baseRef.child("User").child(uid).child("Reaction")
+        let movieReactionRef = ref.child("Movie").child(type.rawValue)
+        print("Firebase: \(mySummaryMediaInfos)")
+        movieReactionRef.setValue(mySummaryMediaInfos)
     }
     
     private func profileToKeyedValues(profile: Profile) -> [String : String] {
@@ -109,20 +110,12 @@ final class FBDataBaseManager {
         ]
     }
     
-    private func storageToKeyedValues(myStorage: MyStorage) -> [String : [String]] {
-        return [
-            "RatedStorage" : myStorage.ratedStorage,
-            "WantedStorage" : myStorage.wantedStorage,
-            "WatchingStorage" : myStorage.watchingStorage
-        ]
-    }
-    
     private func profileChangeNotification(profile: Profile) {
         NotificationCenter.default.post(name: Notification.Name("setprofile"), object: profile)
     }
     
-    private func storageChangeNotification(mediaStorage: MediaStorage) {
-        NotificationCenter.default.post(name: Notification.Name("setstorage"), object: mediaStorage)
+    private func storageChangeNotification(myStorage: MyReaction) {
+        NotificationCenter.default.post(name: Notification.Name("setstorage"), object: myStorage)
     }
     
 }

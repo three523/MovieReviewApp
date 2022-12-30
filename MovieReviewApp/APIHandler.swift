@@ -28,14 +28,12 @@ class ApiHandler {
                 return
             }
             
-            let jsonEncoder: JSONDecoder = JSONDecoder()
+            let jsonDecoder: JSONDecoder = JSONDecoder()
                         
             do {
-                let json: T = try jsonEncoder.decode(T.self, from: data)
+                let json: T = try jsonDecoder.decode(T.self, from: data)
                 completed(json)
             } catch let e {
-                print(fullPath)
-                print(T.self)
                 print(e.localizedDescription)
             }
 
