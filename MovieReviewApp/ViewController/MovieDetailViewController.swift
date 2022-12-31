@@ -196,7 +196,7 @@ extension MovieDetailViewController: UITableViewDelegate, UITableViewDataSource,
         if indexPath.section == 0 {
             let rowCount = tableView.numberOfRows(inSection: 0)
             if indexPath.row == 0 && rowCount == 2 {
-                let starCell: UITableViewCell = DetailSectionTableViewCell(style: .default, reuseIdentifier: DetailSectionTableViewCell.identifier, type: .starCell)
+                let starCell: UITableViewCell = DetailSectionTableViewCell(style: .default, reuseIdentifier: DetailSectionTableViewCell.identifier, type: .starCell, delegate: self)
                 return starCell
             } else if indexPath.row == 0 && rowCount == 3 {
                 let expectationsCell: UITableViewCell = DetailSectionTableViewCell(style: .default, reuseIdentifier: DetailSectionTableViewCell.identifier, type: .expectationsCell)
@@ -404,14 +404,11 @@ extension MovieDetailViewController: UITableViewDelegate, UITableViewDataSource,
     }
     
     func addReaction(summaryMediaInfo: SummaryMediaInfo, type: MediaReaction) -> Void {
-        print("AddReaction : \(summaryMediaInfo)")
         MyReactionModel.shared.addMediaInfo(mySummaryMediaInfo: summaryMediaInfo, type: type)
-//        myReactionModel.addMediaInfo(mySummaryMediaInfo: summaryMediaInfo, type: type)
     }
     
     func deleteReaction(summaryMediaInfo: SummaryMediaInfo, type: MediaReaction) -> Void {
         MyReactionModel.shared.deleteMediaInfo(mySummaryMediaInfo: summaryMediaInfo, type: type)
-//        myReactionModel.deleteMediaInfo(mySummaryMediaInfo: summaryMediaInfo, type: type)
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {

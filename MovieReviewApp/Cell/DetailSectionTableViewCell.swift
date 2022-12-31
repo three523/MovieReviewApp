@@ -57,6 +57,7 @@ class DetailSectionTableViewCell: UITableViewCell {
             starView.settings.minTouchRating = 0.0
             starView.settings.fillMode = .half
             starView.settings.starSize = 60.0
+            starView.didFinishTouchingCosmos = didFinishTouchStarView(_:)
             contentView.addSubview(starView)
             starView.translatesAutoresizingMaskIntoConstraints = false
             starView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor).isActive = true
@@ -76,12 +77,10 @@ class DetailSectionTableViewCell: UITableViewCell {
             let viewHeightanchor: NSLayoutConstraint = view.heightAnchor.constraint(equalToConstant: 70)
             viewHeightanchor.priority = UILayoutPriority(999)
             viewHeightanchor.isActive = true
-            guard let delegate = delegate,
-                  let movieDetail = MovieDetailViewModel.movieDetail else { return }
+            guard let delegate = delegate else { return }
             let delegateAction: UIAction = UIAction{ action in
                 guard let btn = action.sender as? UIButton else { return }
-                let releaseYear = String(movieDetail.releaseDate.prefix(4))
-                let summaryMediaInfo = SummaryMediaInfo(id: movieDetail.id, title: movieDetail.title, posterPath: movieDetail.posterPath, releaseDate: releaseYear, voteAverage: movieDetail.voteAverage, genres: movieDetail.genres.map({ $0.name }).joined(separator: "/"), productionCountrie: movieDetail.productionCountries.first?.name)
+                guard let summaryMediaInfo = self.getSummaryMediaInfo() else { return }
                 var type: MediaReaction = .wanted
                 guard let btnTitle = btn.titleLabel?.text else { return }
                 if btnTitle == "보고싶어요" { type = .wanted }
@@ -188,6 +187,24 @@ class DetailSectionTableViewCell: UITableViewCell {
             expectationsImageView.widthAnchor.constraint(equalTo: contentView.heightAnchor, constant: -10).isActive = true
             
         }
+    }
+    
+    private func didFinishTouchStarView(_ rating: Double) {
+        guard let summaryMediaInfo = getSummaryMediaInfo() else { return }
+        //MARK: rating 점수 2배로 저장하기
+        if rating == 0.0 {
+            delegate?.deleteReaction(summaryMediaInfo: summaryMediaInfo, type: .rated)
+        } else {
+            delegate?.addReaction(summaryMediaInfo: summaryMediaInfo, type: .rated)
+        }
+    }
+    
+    private func getSummaryMediaInfo() -> SummaryMediaInfo? {
+        guard let movieDetail = MovieDetailViewModel.movieDetail else { return nil }
+        let releaseYear = String(movieDetail.releaseDate.prefix(4))
+        let voteAverage = round(movieDetail.voteAverage*10)/10
+        let summaryMediaInfo = SummaryMediaInfo(id: movieDetail.id, title: movieDetail.title, posterPath: movieDetail.posterPath, releaseDate: releaseYear, voteAverage: voteAverage, genres: movieDetail.genres.map({ $0.name }).joined(separator: "/"), productionCountrie: movieDetail.productionCountries.first?.name)
+        return summaryMediaInfo
     }
 }
 
