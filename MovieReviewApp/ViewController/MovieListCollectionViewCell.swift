@@ -31,7 +31,17 @@ class MovieListCollectionViewCell: MovieDetailCollectionViewCell {
         return label
     }()
     
-    var movie: MovieInfo? = nil
+    //MARK: movieInfo 없이 작동시 지울예정
+    var movie: MovieInfo? = nil {
+        willSet {
+            self.settingData()
+        }
+    }
+    var movieTest: SummaryMediaInfo? = nil {
+        didSet {
+            settingData()
+        }
+    }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -63,13 +73,31 @@ class MovieListCollectionViewCell: MovieDetailCollectionViewCell {
     }
     
     func settingData() {
+        if let movie = movieTest {
+            if let posterPath = movie.posterPath {
+                ImageLoader.loader.tmdbImageLoad(stringUrl: posterPath, size: .poster) { image in
+                    DispatchQueue.main.async {
+                        self.moviePoster.image = image
+                    }
+                }
+            }
+            
+            movieTitleLabel.text = movie.title
+            guard let average = movie.voteAverage else {
+                movieScoreLable.text = "평점: 0"
+                return
+            }
+            movieScoreLable.text = "평점: \(average)"
+        }
+        //TODO: MovieInfo => SummaryMediaInfo 로 전부 전환후에 지우기
         guard let movie = movie else {
             return
         }
-        guard let posterPath = movie.posterPath else { return }
-        ImageLoader().tmdbImageLoad(stringUrl: posterPath, size: .poster) { image in
-            DispatchQueue.main.async {
-                self.moviePoster.image = image
+        if let posterPath = movie.posterPath {
+            ImageLoader().tmdbImageLoad(stringUrl: posterPath, size: .poster) { image in
+                DispatchQueue.main.async {
+                    self.moviePoster.image = image
+                }
             }
         }
         

@@ -8,22 +8,22 @@
 import Foundation
 import UIKit
 
-enum MyStorageType: String {
+enum MyStorageMediaType: String {
     case movie = "영화 보관함 ▾"
     case drama = "TV 보관함 ▾"
 }
 
-class MyStorageViewController: UIViewController {
+class MyStorageViewController: UIViewController, NavigationPushDelegate {
     
-    let titleButton = UIButton()
-    lazy var cellMoveStackView: CellMoveStackView = {
+    private let titleButton = UIButton()
+    private lazy var cellMoveStackView: CellMoveStackView = {
         let sv: CellMoveStackView = CellMoveStackView(frame: .zero, collectionView: storageCollectionView)
         let textList: [String] = ["평가한", "보고싶어요", "보는중"]
         sv.addButtonList(textList: textList)
         sv.translatesAutoresizingMaskIntoConstraints = false
         return sv
     }()
-    let storageCollectionView: UICollectionView = {
+    private let storageCollectionView: UICollectionView = {
         let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         layout.minimumLineSpacing = 0
@@ -34,13 +34,13 @@ class MyStorageViewController: UIViewController {
         cv.translatesAutoresizingMaskIntoConstraints = false
         return cv
     }()
-    
-    var storageType: MyStorageType = .movie {
+    var storageType: MyStorageMediaType = .movie {
         willSet {
             titleButton.setTitle(newValue.rawValue, for: .normal)
             // TODO: Reload table
         }
     }
+    private let myReactionModel: MyReactionModel = MyReactionModel.shared
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -121,6 +121,12 @@ extension MyStorageViewController: UICollectionViewDelegate, UICollectionViewDat
             print("Storage CollectionView Cell is nil")
             return UICollectionViewCell(frame: CGRect(x: 0, y: 0, width: collectionView.frame.width, height: 100))
         }
+        
+        if indexPath.item == 0 { cell.movies = myReactionModel.myReactionList.rated ?? [] }
+        else if indexPath.item == 1 { cell.movies = myReactionModel.myReactionList.wanted ?? [] }
+        else if indexPath.item == 2 { cell.movies = myReactionModel.myReactionList.watching ?? [] }
+        
+        cell.delegate = self
         return cell
     }
     

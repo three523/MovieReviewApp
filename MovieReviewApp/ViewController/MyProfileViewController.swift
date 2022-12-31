@@ -12,7 +12,7 @@ protocol EditProfileDelegate: AnyObject {
 }
 
 protocol MyStorageDelegate: AnyObject {
-    func pushMyStorageViewController(type: MyStorageType)
+    func pushMyStorageViewController(type: MyStorageMediaType)
 }
 
 class MyProfileViewController: UIViewController, EditProfileDelegate, MyStorageDelegate {
@@ -66,7 +66,7 @@ class MyProfileViewController: UIViewController, EditProfileDelegate, MyStorageD
         navigationController?.pushViewController(vc, animated: true)
     }
     
-    func pushMyStorageViewController(type: MyStorageType) {
+    func pushMyStorageViewController(type: MyStorageMediaType) {
         let vc = MyStorageViewController()
         vc.storageType = type
         navigationController?.pushViewController(vc, animated: false)

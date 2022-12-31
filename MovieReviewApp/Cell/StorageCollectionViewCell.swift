@@ -50,6 +50,8 @@ class StorageCollectionViewCell: UICollectionViewCell, ViewSortDelegate {
             }
         }
     }
+    weak var delegate: NavigationPushDelegate?
+    var movies: [SummaryMediaInfo] = []
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -114,7 +116,7 @@ class StorageCollectionViewCell: UICollectionViewCell, ViewSortDelegate {
 extension StorageCollectionViewCell: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 10
+        return movies.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -122,6 +124,9 @@ extension StorageCollectionViewCell: UICollectionViewDelegate, UICollectionViewD
             print("Storage CollectionView Cell is nil")
             return UICollectionViewCell(frame: CGRect(x: 0, y: 0, width: collectionView.frame.width, height: 100))
         }
+        
+        cell.movieTest = movies[indexPath.item]
+        
         return cell
     }
     
@@ -131,12 +136,17 @@ extension StorageCollectionViewCell: UICollectionViewDelegate, UICollectionViewD
         return CGSize(width: width, height: height)
     }
     
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let movieId = movies[indexPath.item].id
+        delegate?.movieDetailViewController(movieId: movieId)
+    }
+    
 }
 
 extension StorageCollectionViewCell: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+        return movies.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -144,6 +154,7 @@ extension StorageCollectionViewCell: UITableViewDelegate, UITableViewDataSource 
             print("Storage Detail TableView Cell is nil")
             return UITableViewCell()
         }
+        cell.movieInfo = movies[indexPath.row]
         return cell
     }
         

@@ -76,16 +76,26 @@ class DetailSectionTableViewCell: UITableViewCell {
             let viewHeightanchor: NSLayoutConstraint = view.heightAnchor.constraint(equalToConstant: 70)
             viewHeightanchor.priority = UILayoutPriority(999)
             viewHeightanchor.isActive = true
-            guard let delegate = delegate else { return }
+            guard let delegate = delegate,
+                  let movieDetail = MovieDetailViewModel.movieDetail else { return }
             let delegateAction: UIAction = UIAction{ action in
                 guard let btn = action.sender as? UIButton else { return }
+                let releaseYear = String(movieDetail.releaseDate.prefix(4))
+                let summaryMediaInfo = SummaryMediaInfo(id: movieDetail.id, title: movieDetail.title, posterPath: movieDetail.posterPath, releaseDate: releaseYear, voteAverage: movieDetail.voteAverage, genres: movieDetail.genres.map({ $0.name }).joined(separator: "/"), productionCountrie: movieDetail.productionCountries.first?.name)
+                var type: MediaReaction = .wanted
+                guard let btnTitle = btn.titleLabel?.text else { return }
+                if btnTitle == "보고싶어요" { type = .wanted }
+                else if btnTitle == "보는중" { type = .watching }
                 if btn.isSelected {
                     delegate.addCell()
+                    delegate.addReaction(summaryMediaInfo: summaryMediaInfo, type: type)
                 } else {
                     delegate.deleteCell()
+                    delegate.deleteReaction(summaryMediaInfo: summaryMediaInfo, type: type)
                 }
             }
-            view.watchAction(action: delegateAction)
+            view.buttonAddAction(action: delegateAction, type: .watchButton)
+            view.buttonAddAction(action: delegateAction, type: .whtchingButton)
         case .overCell:
             return
         case .movieInfoCell:
@@ -181,6 +191,13 @@ class DetailSectionTableViewCell: UITableViewCell {
     }
 }
 
+enum ReactionButtonType {
+    case commentButton
+    case watchButton
+    case whtchingButton
+    case moreButton
+}
+
 class DetailReviewSectionStackView: UIStackView {
     
     private var container: AttributeContainer = {
@@ -274,9 +291,17 @@ class DetailReviewSectionStackView: UIStackView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    public func watchAction(action: UIAction) {
-        watchMovieBtn.addAction(action, for: .touchUpInside)
-        watchingBtn.addAction(action, for: .touchUpInside)
+    public func buttonAddAction(action: UIAction, type: ReactionButtonType) {
+        switch type {
+        case .commentButton:
+            commentBtn.addAction(action, for: .touchUpInside)
+        case .watchButton:
+            watchMovieBtn.addAction(action, for: .touchUpInside)
+        case .whtchingButton:
+            watchingBtn.addAction(action, for: .touchUpInside)
+        case .moreButton:
+            moreBtn.addAction(action, for: .touchUpInside)
+        }
     }
 }
 

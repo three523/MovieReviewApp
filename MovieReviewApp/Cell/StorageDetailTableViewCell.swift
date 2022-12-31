@@ -10,7 +10,7 @@ import UIKit
 class StorageDetailTableViewCell: UITableViewCell {
     
     static let identifier: String = "\(StorageDetailTableViewCell.self)"
-    let posterImageView: UIImageView = {
+    private let posterImageView: UIImageView = {
         let imgView: UIImageView = UIImageView()
         imgView.backgroundColor = .systemGray4
         imgView.clipsToBounds = true
@@ -18,25 +18,23 @@ class StorageDetailTableViewCell: UITableViewCell {
         imgView.translatesAutoresizingMaskIntoConstraints = false
         return imgView
     }()
-    let titleLabel: UILabel = {
+    private let titleLabel: UILabel = {
         let lb: UILabel = UILabel()
         lb.font = .systemFont(ofSize: 14, weight: .regular)
         lb.text = "                  "
         lb.textColor = .black
-        lb.backgroundColor = .systemGray4
         lb.translatesAutoresizingMaskIntoConstraints = false
         return lb
     }()
-    let averageLabel: UILabel = {
+    private let averageLabel: UILabel = {
         let lb: UILabel = UILabel()
         lb.font = .systemFont(ofSize: 12, weight: .regular)
         lb.text = "      "
-        lb.textColor = .systemGray4
-        lb.backgroundColor = .systemGray4
+        lb.textColor = .systemGray
         lb.translatesAutoresizingMaskIntoConstraints = false
         return lb
     }()
-    let myRatingLabel: UILabel = {
+    private let myRatingLabel: UILabel = {
         let lb: UILabel = UILabel()
         lb.font = .systemFont(ofSize: 12, weight: .regular)
         lb.text = ""
@@ -44,15 +42,19 @@ class StorageDetailTableViewCell: UITableViewCell {
         lb.translatesAutoresizingMaskIntoConstraints = false
         return lb
     }()
-    let infoLabel: UILabel = {
+    private let infoLabel: UILabel = {
         let lb: UILabel = UILabel()
         lb.font = .systemFont(ofSize: 12, weight: .regular)
         lb.text = "                        "
-        lb.textColor = .systemGray4
-        lb.backgroundColor = .systemGray4
+        lb.textColor = .systemGray
         lb.translatesAutoresizingMaskIntoConstraints = false
         return lb
     }()
+    var movieInfo: SummaryMediaInfo? = nil {
+        didSet {
+            setData()
+        }
+    }
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -96,4 +98,24 @@ class StorageDetailTableViewCell: UITableViewCell {
         infoLabel.leadingAnchor.constraint(equalTo: posterImageView.trailingAnchor, constant: 10).isActive = true
     }
     
+    private func setData() {
+        guard let movieInfo = movieInfo else { return }
+        titleLabel.text = movieInfo.title
+        if let average = movieInfo.voteAverage {
+            averageLabel.text = "평균★\(average)"
+        }
+        if let posterPath = movieInfo.posterPath {
+            ImageLoader.loader.tmdbImageLoad(stringUrl: posterPath, size: .poster) { image in
+                DispatchQueue.main.async {
+                    self.posterImageView.image = image
+                }
+            }
+        }
+        if let releaseDate = movieInfo.releaseDate,
+           let countrie = movieInfo.productionCountrie,
+           let genres = movieInfo.genres {
+            infoLabel.text = "\(releaseDate) ∙ \(genres) ∙ \(countrie)"
+        }
+    }
+        
 }

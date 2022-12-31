@@ -41,6 +41,7 @@ struct MovieInfo: Decodable {
 }
 
 struct MovieDetail: Decodable {
+    let id: Int
     let backdropPath: String?
     let genres: [Genres]
     let originalTitle: String
@@ -56,7 +57,7 @@ struct MovieDetail: Decodable {
     let releaseDates: MovieReleaseDate
     
     enum CodingKeys: String, CodingKey {
-        case genres, overview, runtime, tagline, title
+        case id, genres, overview, runtime, tagline, title
         case backdropPath = "backdrop_path"
         case originalTitle = "original_title"
         case posterPath = "poster_path"

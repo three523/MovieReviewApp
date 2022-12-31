@@ -77,7 +77,7 @@ class HomeTableViewCell: UITableViewCell, UICollectionViewDelegate, UICollection
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MovieListCollectionViewCell.identifier, for: indexPath) as! MovieListCollectionViewCell
         cell.currentVC = currentVC
-        cell.movieId = movieList[indexPath.item].id
+        cell.movieId = "\(movieList[indexPath.item].id)"
         cell.presentMovieDetail()
     }
     

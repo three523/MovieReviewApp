@@ -10,6 +10,8 @@ import UIKit
 protocol AddExpectationsProtocol: AnyObject {
     func addCell() -> Void
     func deleteCell() -> Void
+    func addReaction(summaryMediaInfo: SummaryMediaInfo, type: MediaReaction) -> Void
+    func deleteReaction(summaryMediaInfo: SummaryMediaInfo, type: MediaReaction) -> Void
 }
 
 struct RecentlyMovie: Codable {
@@ -22,6 +24,7 @@ class MovieDetailViewController: UIViewController, UIGestureRecognizerDelegate {
     let header: MovieDetailHeaderView = MovieDetailHeaderView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.width))
     var movieId: String = ""
     lazy var detailViewModel: MovieDetailViewModel = MovieDetailViewModel(movieId: movieId)
+//    let myReactionModel: MyReactionModel = MyReactionModel()
     var director: String? = ""
     var count = 2
     
@@ -398,6 +401,17 @@ extension MovieDetailViewController: UITableViewDelegate, UITableViewDataSource,
             movieDetailTableView.deleteRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
             movieDetailTableView.endUpdates()
         }
+    }
+    
+    func addReaction(summaryMediaInfo: SummaryMediaInfo, type: MediaReaction) -> Void {
+        print("AddReaction : \(summaryMediaInfo)")
+        MyReactionModel.shared.addMediaInfo(mySummaryMediaInfo: summaryMediaInfo, type: type)
+//        myReactionModel.addMediaInfo(mySummaryMediaInfo: summaryMediaInfo, type: type)
+    }
+    
+    func deleteReaction(summaryMediaInfo: SummaryMediaInfo, type: MediaReaction) -> Void {
+        MyReactionModel.shared.deleteMediaInfo(mySummaryMediaInfo: summaryMediaInfo, type: type)
+//        myReactionModel.deleteMediaInfo(mySummaryMediaInfo: summaryMediaInfo, type: type)
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {

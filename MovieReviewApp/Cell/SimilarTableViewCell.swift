@@ -61,8 +61,7 @@ class SimilarTableViewCell: UITableViewCell, UICollectionViewDelegate, UICollect
                 
         if indexPath.row <= similarMovies.count {
             let similarMovie: SimilarMovie = similarMovies[indexPath.row]
-            
-            cell.movieId = similarMovie.id
+            cell.movieId = "\(similarMovie.id)"
             cell.movieTitleLabel.text = similarMovie.title
             cell.movieScoreLable.text = "\(similarMovie.voteAverage)"
             
