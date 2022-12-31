@@ -28,6 +28,7 @@ class MyReactionModel {
     }
     
     func addMediaInfo(mySummaryMediaInfo: SummaryMediaInfo, type: MediaReaction) {
+        //TODO: 중복 영화는 추가하지 않기
         switch type {
         case .rated:
             guard let _ = myReactionList.rated else {
@@ -37,7 +38,6 @@ class MyReactionModel {
             myReactionList.rated!.append(mySummaryMediaInfo)
             firebaseManager.setReaction(mySummaryMediaInfos: myReactionList.rated!.map({ $0.asDictionary }), type: type)
         case .wanted:
-            print("WantedMediaInfo: \(mySummaryMediaInfo)")
             guard let _ = myReactionList.wanted else {
                 myReactionList.wanted = [mySummaryMediaInfo]
                 firebaseManager.setReaction(mySummaryMediaInfos: [mySummaryMediaInfo.asDictionary], type: .wanted)
