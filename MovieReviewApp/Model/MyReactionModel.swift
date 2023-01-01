@@ -16,11 +16,8 @@ class MyReactionModel {
         firebaseManager.getDataSnapshot(type: .storage) { result in
             switch result {
             case .success(let dataSnapshot):
-                print("ReactionModel: \(dataSnapshot)")
                 self.myReactionList = self.dataSnapshotToReactionList(dataSnapshot: dataSnapshot)
-                print("MyRectionList: \(self.myReactionList)")
             case .failure(let failure):
-                print("ReactionModel failure")
                 print(failure)
                 self.myReactionList = MyReaction.empty
             }
@@ -31,24 +28,30 @@ class MyReactionModel {
         //TODO: 중복 영화는 추가하지 않기
         switch type {
         case .rated:
-            guard let _ = myReactionList.rated else {
+            guard let ratedList = myReactionList.rated,
+                  true == ratedList.isEmpty else {
                 myReactionList.rated = [mySummaryMediaInfo]
                 firebaseManager.setReaction(mySummaryMediaInfos: [mySummaryMediaInfo.asDictionary], type: .rated)
                 return }
+            guard myReactionList.rated!.contains(where: { $0.id == mySummaryMediaInfo.id }) else { return }
             myReactionList.rated!.append(mySummaryMediaInfo)
             firebaseManager.setReaction(mySummaryMediaInfos: myReactionList.rated!.map({ $0.asDictionary }), type: type)
         case .wanted:
-            guard let _ = myReactionList.wanted else {
+            guard let wantedList = myReactionList.wanted,
+                  true == wantedList.isEmpty else {
                 myReactionList.wanted = [mySummaryMediaInfo]
                 firebaseManager.setReaction(mySummaryMediaInfos: [mySummaryMediaInfo.asDictionary], type: .wanted)
                 return }
+            guard myReactionList.wanted!.contains(where: { $0.id == mySummaryMediaInfo.id }) else { return }
             myReactionList.wanted!.append(mySummaryMediaInfo)
             firebaseManager.setReaction(mySummaryMediaInfos: myReactionList.wanted!.map({ $0.asDictionary }), type: type)
         case .watching:
-            guard let _ = myReactionList.watching else {
+            guard let watchingList = myReactionList.watching,
+                  false == watchingList.isEmpty else {
                 myReactionList.watching = [mySummaryMediaInfo]
                 firebaseManager.setReaction(mySummaryMediaInfos: [mySummaryMediaInfo.asDictionary], type: .watching)
                 return }
+            guard false == myReactionList.watching!.contains(where: { $0.id == mySummaryMediaInfo.id }) else { return }
             myReactionList.watching!.append(mySummaryMediaInfo)
             firebaseManager.setReaction(mySummaryMediaInfos: myReactionList.watching!.map({ $0.asDictionary }), type: type)
         }

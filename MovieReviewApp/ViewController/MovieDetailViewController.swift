@@ -404,6 +404,7 @@ extension MovieDetailViewController: UITableViewDelegate, UITableViewDataSource,
     }
     
     func addReaction(summaryMediaInfo: SummaryMediaInfo, type: MediaReaction) -> Void {
+        print("type: \(type)")
         MyReactionModel.shared.addMediaInfo(mySummaryMediaInfo: summaryMediaInfo, type: type)
     }
     
