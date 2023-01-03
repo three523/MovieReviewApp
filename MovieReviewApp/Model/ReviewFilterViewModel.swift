@@ -52,12 +52,12 @@ class ReviewFilterViewModel {
         return count
     }
     
-    func getMovieList() -> [MovieInfo]? {
+    func getMovieList() -> [SummaryMediaInfo]? {
         guard let movieList = movieListModel?.results else { return nil }
         return movieList
     }
     
-    func getMovie(index: Int) -> MovieInfo? {
+    func getMovie(index: Int) -> SummaryMediaInfo? {
         guard let movieDetail = movieListModel?.results[index] else {
             print("movieDetail is nil")
             return nil

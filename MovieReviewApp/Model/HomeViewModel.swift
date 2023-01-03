@@ -27,31 +27,31 @@ class HomeViewModel {
         }
     }
     
-    func getPopualrMovieList() -> [MovieInfo] {
+    func getPopualrMovieList() -> [SummaryMediaInfo] {
         return movies.popularMovie.results
     }
     
-    func getPopularMovie(at index: Int) -> MovieInfo? {
+    func getPopularMovie(at index: Int) -> SummaryMediaInfo? {
         let movies = movies.popularMovie.results
         guard 0 <= index && index < movies.count else { return nil }
         return movies[index]
     }
     
-    func getTopratedMovieList() -> [MovieInfo] {
+    func getTopratedMovieList() -> [SummaryMediaInfo] {
         return movies.topRatedMovie.results
     }
     
-    func getTopratedMovie(at index: Int) -> MovieInfo? {
+    func getTopratedMovie(at index: Int) -> SummaryMediaInfo? {
         let movies = movies.topRatedMovie.results
         guard 0 <= index && index < movies.count else { return nil }
         return movies[index]
     }
     
-    func getUpcomingMovieList() -> [MovieInfo] {
+    func getUpcomingMovieList() -> [SummaryMediaInfo] {
         return movies.upComingMovie.results
     }
     
-    func getUpComingMovie(at index: Int) -> MovieInfo? {
+    func getUpComingMovie(at index: Int) -> SummaryMediaInfo? {
         let movies = movies.upComingMovie.results
         guard 0 <= index && index < movies.count else { return nil }
         return movies[index]

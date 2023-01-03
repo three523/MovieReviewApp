@@ -30,34 +30,3 @@ struct MyReaction: Codable {
         case watching = "Watching"
     }
 }
-
-struct SummaryMediaInfo: Codable {
-    let id: Int
-    let title: String
-    let posterPath: String?
-    let releaseDate: String?
-    let voteAverage: Double?
-    let genres: String?
-    let productionCountrie: String?
-    
-    var asDictionary: [String : Any] {
-        let dict: [String : Any] = [
-            "id" : id,
-            "title" : title,
-            "poster_path" : posterPath,
-            "release_date" : releaseDate,
-            "vote_average" : voteAverage,
-            "genres" : genres,
-            "production_countries" : productionCountrie
-        ]
-        return dict
-    }
-    
-    enum CodingKeys: String, CodingKey {
-        case id, title, genres
-        case posterPath = "poster_path"
-        case productionCountrie = "production_countries"
-        case releaseDate = "release_date"
-        case voteAverage = "vote_average"
-    }
-}

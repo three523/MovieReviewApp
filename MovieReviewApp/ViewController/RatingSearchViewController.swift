@@ -71,7 +71,7 @@ extension RatingSearchViewController: UITableViewDelegate, UITableViewDataSource
             return UITableViewCell()
         }
         let movieDetail = movieList[indexPath.row]
-        cell.setupViews(titleText: movieDetail.title, yearText: movieDetail.releaseDate)
+        cell.setupViews(titleText: movieDetail.title, yearText: movieDetail.releaseDate ?? "")
         guard let posterPath = movieDetail.posterPath else { return cell }
         ImageLoader.loader.profileImage(stringURL: posterPath, size: .poster) { posterImage in
             DispatchQueue.main.async {

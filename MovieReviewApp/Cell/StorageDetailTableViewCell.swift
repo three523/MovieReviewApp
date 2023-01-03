@@ -101,9 +101,7 @@ class StorageDetailTableViewCell: UITableViewCell {
     private func setData() {
         guard let movieInfo = movieInfo else { return }
         titleLabel.text = movieInfo.title
-        if let average = movieInfo.voteAverage {
-            averageLabel.text = "평균★\(average)"
-        }
+        averageLabel.text = "평균★\(movieInfo.voteAverage)"
         if let posterPath = movieInfo.posterPath {
             ImageLoader.loader.tmdbImageLoad(stringUrl: posterPath, size: .poster) { image in
                 DispatchQueue.main.async {

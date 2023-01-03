@@ -280,7 +280,7 @@ class SearchContentCell: UICollectionViewCell, UITableViewDelegate, UITableViewD
         return scope
     }()
     public var searchText: String = ""
-    public var movieList: [MovieInfo] = [MovieInfo]() {
+    public var movieList: [SummaryMediaInfo] = [SummaryMediaInfo]() {
         didSet {
             self.tableView.reloadData()
         }
@@ -351,9 +351,9 @@ class SearchContentCell: UICollectionViewCell, UITableViewDelegate, UITableViewD
         
         if mediaType == .movie {
             if !movieList.isEmpty && movieList.count > indexPath.row {
-                let movieInfo: MovieInfo = movieList[indexPath.row]
+                let movieInfo: SummaryMediaInfo = movieList[indexPath.row]
                 cell.title.text = movieInfo.title
-                cell.year.text = String(movieInfo.releaseDate.prefix(4))
+                cell.year.text = String(movieInfo.releaseDate?.prefix(4) ?? "")
                 guard let posterPath = movieInfo.posterPath else { return cell }
                 ImageLoader.loader.tmdbImageLoad(stringUrl: posterPath, size: .poster) { posterImage in
                     DispatchQueue.main.async {
