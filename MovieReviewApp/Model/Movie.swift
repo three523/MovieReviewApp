@@ -14,31 +14,43 @@ struct HomeVCMovie {
 }
 
 struct MovieList: Decodable {
-    let results: [MovieInfo]
+    let results: [SummaryMediaInfo]
 }
 
-struct MovieInfo: Decodable {
+struct SummaryMediaInfo: Codable {
     let id: Int
-    let backdropPath: String?
     let title: String
-    let originalTitle: String?
-    let overview: String?
-    let popularity: Double?
     let posterPath: String?
-    let releaseDate: String
+    let releaseDate: String?
     let voteAverage: Double
-    let voteCount: Int
+    let genres: String?
+    let productionCountrie: String?
+    
+    var myRate: Double?
+    
+    var asDictionary: [String : Any] {
+        let dict: [String : Any] = [
+            "id" : id,
+            "title" : title,
+            "poster_path" : posterPath,
+            "release_date" : releaseDate,
+            "vote_average" : voteAverage,
+            "genres" : genres,
+            "production_countries" : productionCountrie,
+            "myRate": myRate
+        ]
+        return dict
+    }
     
     enum CodingKeys: String, CodingKey {
-        case id, title, overview, popularity
-        case backdropPath = "backdrop_path"
-        case originalTitle = "original_title"
+        case id, title, genres
         case posterPath = "poster_path"
+        case productionCountrie = "production_countries"
         case releaseDate = "release_date"
         case voteAverage = "vote_average"
-        case voteCount = "vote_count"
     }
 }
+
 
 struct MovieDetail: Decodable {
     let id: Int

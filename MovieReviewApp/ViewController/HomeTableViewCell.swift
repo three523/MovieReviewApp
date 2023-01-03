@@ -12,7 +12,7 @@ class HomeTableViewCell: UITableViewCell, UICollectionViewDelegate, UICollection
     static let identifier: String = "\(HomeTableViewCell.self)"
     private var collectionView: UICollectionView?
     weak var currentVC: UIViewController? = nil
-    var movieList: [MovieInfo] = [MovieInfo]()
+    var movieList: [SummaryMediaInfo] = [SummaryMediaInfo]()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)

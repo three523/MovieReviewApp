@@ -16,12 +16,8 @@ class MyReactionModel {
         firebaseManager.getDataSnapshot(type: .storage) { result in
             switch result {
             case .success(let dataSnapshot):
-                print("ReactionModel: \(dataSnapshot)")
                 self.myReactionList = self.dataSnapshotToReactionList(dataSnapshot: dataSnapshot)
-                print("MyRectionList: \(self.myReactionList)")
             case .failure(let failure):
-                print("ReactionModel failure")
-                print(failure)
                 self.myReactionList = MyReaction.empty
             }
         }

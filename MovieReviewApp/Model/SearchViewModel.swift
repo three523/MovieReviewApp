@@ -15,8 +15,8 @@ enum MediaType: String {
 class SearchViewModel {
     private let shared: URLSession = URLSession.shared
     private let apiHandler: ApiHandler = ApiHandler()
-    private var popularMovies: [MovieInfo]? = nil
-    private var searchMovies: [MovieInfo]? = nil
+    private var popularMovies: [SummaryMediaInfo]? = nil
+    private var searchMovies: [SummaryMediaInfo]? = nil
     private var searchPersons: [SearchPersonResult]? = nil
     private var searchTVs: [TVSearchResult]? = nil
     private var query: [String: String] = ["api_key": APIKEY, "language": "ko"]
@@ -56,7 +56,7 @@ class SearchViewModel {
         }
     }
     
-    func getPopularMovieList() -> [MovieInfo]? {
+    func getPopularMovieList() -> [SummaryMediaInfo]? {
         return popularMovies
     }
     
@@ -65,7 +65,7 @@ class SearchViewModel {
         return popularMovies.count
     }
     
-    func getSearchMovieList() -> [MovieInfo]? {
+    func getSearchMovieList() -> [SummaryMediaInfo]? {
         return searchMovies
     }
     

@@ -291,9 +291,9 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
               let movieList = searchViewModel.getPopularMovieList() else { return UITableViewCell() }
         
         if movieList.count > indexPath.row {
-            let movie: MovieInfo = movieList[indexPath.row]
+            let movie: SummaryMediaInfo = movieList[indexPath.row]
             cell.title.text = movie.title
-            cell.year.text = String(movie.releaseDate.prefix(4))
+            cell.year.text = String(movie.releaseDate?.prefix(4) ?? "")
             
             guard let posterPath = movieList[indexPath.row].posterPath else { return cell }
             ImageLoader.loader.tmdbImageLoad(stringUrl: posterPath, size: .poster) { image in
@@ -425,7 +425,7 @@ class SearchDefaultTableViewCell: UITableViewCell {
         lb.sizeToFit()
         return lb
     }()
-    var movieDetail: MovieInfo? = nil
+    var movieDetail: SummaryMediaInfo? = nil
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)

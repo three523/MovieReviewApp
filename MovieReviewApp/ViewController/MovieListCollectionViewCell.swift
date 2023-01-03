@@ -32,7 +32,7 @@ class MovieListCollectionViewCell: MovieDetailCollectionViewCell {
     }()
     
     //MARK: movieInfo 없이 작동시 지울예정
-    var movie: MovieInfo? = nil {
+    var movie: SummaryMediaInfo? = nil {
         willSet {
             self.settingData()
         }
@@ -83,11 +83,7 @@ class MovieListCollectionViewCell: MovieDetailCollectionViewCell {
             }
             
             movieTitleLabel.text = movie.title
-            guard let average = movie.voteAverage else {
-                movieScoreLable.text = "평점: 0"
-                return
-            }
-            movieScoreLable.text = "평점: \(average)"
+            movieScoreLable.text = "평점: \(movie.voteAverage)"
         }
         //TODO: MovieInfo => SummaryMediaInfo 로 전부 전환후에 지우기
         guard let movie = movie else {
