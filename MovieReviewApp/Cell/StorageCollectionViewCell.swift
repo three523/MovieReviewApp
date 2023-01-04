@@ -51,7 +51,12 @@ class StorageCollectionViewCell: UICollectionViewCell, ViewSortDelegate {
         }
     }
     weak var delegate: NavigationPushDelegate?
-    var movies: [SummaryMediaInfo] = []
+    var movies: [SummaryMediaInfo] = [] {
+        didSet {
+            self.detailCollectionView.reloadData()
+            self.detailTableView.reloadData()
+        }
+    }
     
     override init(frame: CGRect) {
         super.init(frame: frame)

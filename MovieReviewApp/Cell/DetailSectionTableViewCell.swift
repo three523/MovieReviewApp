@@ -195,7 +195,9 @@ class DetailSectionTableViewCell: UITableViewCell {
         if rating == 0.0 {
             delegate?.deleteReaction(summaryMediaInfo: summaryMediaInfo, type: .rated)
         } else {
-            delegate?.addReaction(summaryMediaInfo: summaryMediaInfo, type: .rated)
+            var updateSummaryMediaInfo = summaryMediaInfo
+            updateSummaryMediaInfo.myRate = rating*2
+            delegate?.addReaction(summaryMediaInfo: updateSummaryMediaInfo, type: .rated)
         }
     }
     

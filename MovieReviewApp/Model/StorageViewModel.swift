@@ -8,20 +8,6 @@
 import Foundation
 import FirebaseDatabase
 
-/*
- moviestorage {
-    평가한 : String = movieId: String
-    보고싶어요 : String = movieId: String
-    보는중 : String = movieId: String
- }
- dramatorage: String = [
-    평가한 : String = movieId: String
-    보고싶어요 : String = movieId: String
-    보는중 : String = movieId: String
- ]
- [String: [String: String]]
- */
-
 enum MediaReaction: String {
     case rated = "Rated"
     case wanted = "Wanted"

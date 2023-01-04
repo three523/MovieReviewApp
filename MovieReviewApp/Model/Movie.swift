@@ -25,7 +25,6 @@ struct SummaryMediaInfo: Codable {
     let voteAverage: Double
     let genres: String?
     let productionCountrie: String?
-    
     var myRate: Double?
     
     var asDictionary: [String : Any] {
@@ -43,7 +42,7 @@ struct SummaryMediaInfo: Codable {
     }
     
     enum CodingKeys: String, CodingKey {
-        case id, title, genres
+        case id, title, genres, myRate
         case posterPath = "poster_path"
         case productionCountrie = "production_countries"
         case releaseDate = "release_date"
