@@ -40,7 +40,7 @@ class MyStorageViewController: UIViewController, NavigationPushDelegate {
             // TODO: Reload table
         }
     }
-    private let myReactionModel: MyReactionModel = MyReactionModel.shared
+    private let myReactionModel: MyReactionModel = MyReactionModel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -49,6 +49,7 @@ class MyStorageViewController: UIViewController, NavigationPushDelegate {
         setStorageCollectionView()
         setAutolayout()
         setNavigationController()
+        setViewModel()
     }
     
     private func viewAdd() {
@@ -83,6 +84,14 @@ class MyStorageViewController: UIViewController, NavigationPushDelegate {
         titleButton.sizeToFit()
         navigationItem.titleView = titleButton
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "chevron.backward"), style: .plain, target: self, action: #selector(backButtonClick))
+    }
+    
+    private func setViewModel() {
+        myReactionModel.viewUpdate = { [weak self] in
+            guard let self = self else { return }
+            self.storageCollectionView.reloadData()
+        }
+        myReactionModel.requestDataSnapshot()
     }
     
     @objc

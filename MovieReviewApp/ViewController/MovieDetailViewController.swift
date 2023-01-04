@@ -24,7 +24,7 @@ class MovieDetailViewController: UIViewController, UIGestureRecognizerDelegate {
     let header: MovieDetailHeaderView = MovieDetailHeaderView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.width))
     var movieId: String = ""
     lazy var detailViewModel: MovieDetailViewModel = MovieDetailViewModel(movieId: movieId)
-//    let myReactionModel: MyReactionModel = MyReactionModel()
+    private let myReactionModel: MyReactionModel = MyReactionModel()
     var director: String? = ""
     var count = 2
     
@@ -34,6 +34,8 @@ class MovieDetailViewController: UIViewController, UIGestureRecognizerDelegate {
         view.addSubview(movieDetailTableView)
                 
         navigationSetting()
+        
+        myReactionModel.requestDataSnapshot()
         
         let dismissAction: UIAction = UIAction { _ in self.dismiss(animated: true) }
         
@@ -404,12 +406,11 @@ extension MovieDetailViewController: UITableViewDelegate, UITableViewDataSource,
     }
     
     func addReaction(summaryMediaInfo: SummaryMediaInfo, type: MediaReaction) -> Void {
-        print("type: \(type)")
-        MyReactionModel.shared.addMediaInfo(mySummaryMediaInfo: summaryMediaInfo, type: type)
+        myReactionModel.addMediaInfo(mySummaryMediaInfo: summaryMediaInfo, type: type)
     }
     
     func deleteReaction(summaryMediaInfo: SummaryMediaInfo, type: MediaReaction) -> Void {
-        MyReactionModel.shared.deleteMediaInfo(mySummaryMediaInfo: summaryMediaInfo, type: type)
+        myReactionModel.deleteMediaInfo(mySummaryMediaInfo: summaryMediaInfo, type: type)
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {

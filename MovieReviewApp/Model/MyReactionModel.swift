@@ -9,17 +9,21 @@ import Foundation
 import FirebaseDatabase
 
 class MyReactionModel {
-    static var shared: MyReactionModel = MyReactionModel()
-    var myReactionList: MyReaction = MyReaction.empty
+    var myReactionList: MyReaction
+    var viewUpdate: ()->() = {}
     private let firebaseManager: FBDataBaseManager = FBDataBaseManager()
     init() {
+        myReactionList = MyReaction.empty
+    }
+    
+    func requestDataSnapshot() {
         firebaseManager.getDataSnapshot(type: .storage) { result in
             switch result {
             case .success(let dataSnapshot):
                 self.myReactionList = self.dataSnapshotToReactionList(dataSnapshot: dataSnapshot)
+                self.viewUpdate()
             case .failure(let failure):
                 print(failure)
-                self.myReactionList = MyReaction.empty
             }
         }
     }
@@ -29,11 +33,16 @@ class MyReactionModel {
         switch type {
         case .rated:
             guard let ratedList = myReactionList.rated,
-                  true == ratedList.isEmpty else {
+                  false == ratedList.isEmpty else {
                 myReactionList.rated = [mySummaryMediaInfo]
                 firebaseManager.setReaction(mySummaryMediaInfos: [mySummaryMediaInfo.asDictionary], type: .rated)
                 return }
-            guard myReactionList.rated!.contains(where: { $0.id == mySummaryMediaInfo.id }) else { return }
+            if let filterIndex = myReactionList.rated?.firstIndex(where: { $0.id == mySummaryMediaInfo.id }) {
+                guard let newRate = mySummaryMediaInfo.myRate else { return }
+                firebaseManager.rateUpdate(newRate, at: filterIndex)
+                myReactionList.rated![filterIndex].myRate = newRate
+                return
+            }
             myReactionList.rated!.append(mySummaryMediaInfo)
             firebaseManager.setReaction(mySummaryMediaInfos: myReactionList.rated!.map({ $0.asDictionary }), type: type)
         case .wanted:
