@@ -77,6 +77,14 @@ class MyStorageViewController: UIViewController, NavigationPushDelegate {
         storageCollectionView.register(StorageCollectionViewCell.self, forCellWithReuseIdentifier: StorageCollectionViewCell.identifier)
     }
     
+    private func setViewModel() {
+        myReactionModel.viewUpdate = { [weak self] in
+            guard let self = self else { return }
+            self.storageCollectionView.reloadData()
+        }
+        myReactionModel.requestDataSnapshot()
+    }
+    
     private func setNavigationController() {
         titleButton.setTitle(storageType.rawValue, for: .normal)
         titleButton.setTitleColor(.black, for: .normal)
@@ -130,11 +138,11 @@ extension MyStorageViewController: UICollectionViewDelegate, UICollectionViewDat
             print("Storage CollectionView Cell is nil")
             return UICollectionViewCell(frame: CGRect(x: 0, y: 0, width: collectionView.frame.width, height: 100))
         }
-        
         if indexPath.item == 0 { cell.movies = myReactionModel.myReactionList.rated ?? [] }
         else if indexPath.item == 1 { cell.movies = myReactionModel.myReactionList.wanted ?? [] }
         else if indexPath.item == 2 { cell.movies = myReactionModel.myReactionList.watching ?? [] }
         
+        cell.navigationController = navigationController
         cell.delegate = self
         return cell
     }

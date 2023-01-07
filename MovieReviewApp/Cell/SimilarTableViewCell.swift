@@ -20,7 +20,7 @@ class SimilarTableViewCell: UITableViewCell, UICollectionViewDelegate, UICollect
         let cv: UICollectionView = UICollectionView(frame: .zero, collectionViewLayout: similarLayout)
         return cv
     }()
-    weak var currentVC: UIViewController? = nil
+    weak var navigationController: UINavigationController? = nil
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -61,7 +61,7 @@ class SimilarTableViewCell: UITableViewCell, UICollectionViewDelegate, UICollect
                 
         if indexPath.row <= similarMovies.count {
             let similarMovie: SimilarMovie = similarMovies[indexPath.row]
-            cell.movieId = "\(similarMovie.id)"
+            cell.movieId = similarMovie.id
             cell.movieTitleLabel.text = similarMovie.title
             cell.movieScoreLable.text = "\(similarMovie.voteAverage)"
             
@@ -76,8 +76,8 @@ class SimilarTableViewCell: UITableViewCell, UICollectionViewDelegate, UICollect
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let cell = collectionView.cellForItem(at: indexPath) as? MovieListCollectionViewCell,
-        let currentVC = currentVC else { return }
-        cell.currentVC = currentVC
+        let navigationController = navigationController else { return }
+        cell.navigationController = navigationController
         cell.presentMovieDetail()
     }
     

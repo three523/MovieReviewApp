@@ -7,12 +7,15 @@
 import UIKit
 
 class MovieDetailTableViewCell: UITableViewCell {
-    weak var currentVC: UIViewController? = nil
+    weak var navigationController: UINavigationController? = nil
     var movieId: Int? = nil
+    var rated: Double?
+    let myReactionModel: MyReactionModel = MyReactionModel()
     
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        myReactionModel.requestDataSnapshot()
     }
     
     required init?(coder: NSCoder) {
@@ -20,7 +23,7 @@ class MovieDetailTableViewCell: UITableViewCell {
     }
     
     func presentMovieDetail() {
-        guard let currentVC = currentVC,
+        guard let navigationController = navigationController,
             let movieId = movieId else {
             print("currentVC or movieId is nil")
             return
@@ -28,16 +31,24 @@ class MovieDetailTableViewCell: UITableViewCell {
         let movieDetailVC: MovieDetailViewController = MovieDetailViewController()
         movieDetailVC.modalPresentationStyle = .fullScreen
         movieDetailVC.movieId = "\(movieId)"
-        currentVC.present(movieDetailVC, animated: true)
+        if let rateMediaInfo = myReactionModel.myReactionList.rated?.first(where: { $0.id == movieId }) {
+            movieDetailVC.rated = rateMediaInfo.myRate
+            print("MovieRated: \(rateMediaInfo)")
+        }
+        navigationController.pushViewController(movieDetailVC, animated: true)
     }
 }
 
 class MovieDetailCollectionViewCell: UICollectionViewCell {
-    weak var currentVC: UIViewController? = nil
-    var movieId: String? = nil
+    weak var navigationController: UINavigationController? = nil
+    var movieId: Int? = nil
+    var rated: Double?
+    let myReactionModel: MyReactionModel = MyReactionModel()
+
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        myReactionModel.requestDataSnapshot()
     }
     
     required init?(coder: NSCoder) {
@@ -45,15 +56,18 @@ class MovieDetailCollectionViewCell: UICollectionViewCell {
     }
     
     func presentMovieDetail() {
-        guard let currentVC = currentVC,
+        guard let navigationController = navigationController,
             let movieId = movieId else {
             print("currentVC is nil")
             return
         }
         let movieDetailVC: MovieDetailViewController = MovieDetailViewController()
         movieDetailVC.modalPresentationStyle = .fullScreen
-        movieDetailVC.movieId = movieId
-//        currentVC.present(movieDetailVC, animated: true)
-        currentVC.navigationController?.pushViewController(movieDetailVC, animated: true)
+        movieDetailVC.movieId = "\(movieId)"
+        if let rateMediaInfo = myReactionModel.myReactionList.rated?.first(where: { $0.id == movieId }) {
+            movieDetailVC.rated = rateMediaInfo.myRate
+            print("MovieRated: \(rateMediaInfo)")
+        }
+        navigationController.pushViewController(movieDetailVC, animated: true)
     }
 }

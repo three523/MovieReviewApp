@@ -18,6 +18,7 @@ class DetailSectionTableViewCell: UITableViewCell {
     static let identifier: String = "\(DetailSectionTableViewCell.self)"
     weak var delegate: AddExpectationsProtocol?
     var movieDefaultInfo: [String: String] = [:]
+    var rated: Double? = nil
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -41,6 +42,14 @@ class DetailSectionTableViewCell: UITableViewCell {
         createViews(type: type)
     }
     
+    init(style: UITableViewCell.CellStyle, reuseIdentifier: String?, type: DetailSectionCell, delegate: AddExpectationsProtocol, rated: Double?) {
+        self.type = type
+        self.delegate = delegate
+        self.rated = rated
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        createViews(type: type)
+    }
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -53,10 +62,14 @@ class DetailSectionTableViewCell: UITableViewCell {
         switch type {
         case .starCell:
             let starView: CosmosView = CosmosView()
-            starView.rating = 0.0
             starView.settings.minTouchRating = 0.0
             starView.settings.fillMode = .half
             starView.settings.starSize = 60.0
+            if let rated = rated {
+                starView.rating = rated/2
+            } else {
+                starView.rating = 0.0
+            }
             starView.didFinishTouchingCosmos = didFinishTouchStarView(_:)
             contentView.addSubview(starView)
             starView.translatesAutoresizingMaskIntoConstraints = false

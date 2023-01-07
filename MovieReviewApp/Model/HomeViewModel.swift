@@ -11,17 +11,27 @@ class HomeViewModel {
     private let apiHandler: ApiHandler = ApiHandler()
     private let kinds: [String] = ["movie/popular?", "movie/top_rated?", "movie/upcoming?"]
     private var movies: HomeVCMovie = HomeVCMovie(popularMovie: MovieList(results: []), topRatedMovie: MovieList(results: []), upComingMovie: MovieList(results: []))
+    private var reactionMediaModel: MyReactionModel = MyReactionModel()
+    var viewUpdate: ()->() = {}
     
-    func getMovies(completed: @escaping (HomeVCMovie) -> Void) {
-        
-        for index in 0..<kinds.count {
-            apiHandler.getJson(type: MovieList.self ,path: kinds[index], query: ["api_key": APIKEY, "language": "ko"]) { movieList in
-                if index == 0 { self.movies.popularMovie = movieList }
-                else if index == 1 { self.movies.topRatedMovie = movieList }
-                else { self.movies.upComingMovie = movieList }
-                
-                if !(self.moviesIsEmpty()) {
-                    completed(self.movies)
+    init() {
+        NotificationCenter.default.addObserver(self, selector: #selector(updateReactionList), name: Notification.Name("UpdateReactionList"), object: nil)
+    }
+    
+    func getMovies() {
+        reactionMediaModel.fetchRatedMediaInfos { summaryMediaInfos in
+            for index in 0..<self.kinds.count {
+                self.apiHandler.getJson(type: MovieList.self ,path: self.kinds[index], query: ["api_key": APIKEY, "language": "ko"]) { movieList in
+                    var filterMovies = movieList
+                    for (index, movie) in movieList.results.enumerated() {
+                        if let ratedMovie = summaryMediaInfos.first(where: { $0.id == movie.id }) {
+                            filterMovies.results[index] = ratedMovie
+                        }
+                    }
+                    if index == 0 { self.movies.popularMovie = filterMovies }
+                    else if index == 1 { self.movies.topRatedMovie = filterMovies }
+                    else { self.movies.upComingMovie = filterMovies }
+                    self.viewUpdate()
                 }
             }
         }
@@ -59,5 +69,10 @@ class HomeViewModel {
     
     func moviesIsEmpty() -> Bool {
         return movies.popularMovie.results.isEmpty || movies.topRatedMovie.results.isEmpty || movies.upComingMovie.results.isEmpty
+    }
+    
+    @objc
+    func updateReactionList() {
+        getMovies()
     }
 }

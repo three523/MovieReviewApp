@@ -18,11 +18,12 @@ class HomeViewController: UIViewController {
         
         viewSetting()
         
-        homeViewModel.getMovies { movies in
-            DispatchQueue.main.async {
-                self.mainTableView.reloadData()
+        homeViewModel.viewUpdate = {
+            DispatchQueue.main.async { [weak self] in
+                self?.mainTableView.reloadData()
             }
         }
+        homeViewModel.getMovies()
         
     }
     
@@ -106,7 +107,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: HomeTableViewCell.identifier, for: indexPath) as! HomeTableViewCell
-        cell.currentVC = self
+        cell.navigationController = navigationController
         if indexPath.section == 0 { cell.movieList = homeViewModel.getPopualrMovieList() }
         else if indexPath.section == 1 { cell.movieList = homeViewModel.getTopratedMovieList() }
         else { cell.movieList = homeViewModel.getUpcomingMovieList() }

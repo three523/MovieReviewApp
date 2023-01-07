@@ -14,7 +14,7 @@ struct HomeVCMovie {
 }
 
 struct MovieList: Decodable {
-    let results: [SummaryMediaInfo]
+    var results: [SummaryMediaInfo]
 }
 
 struct SummaryMediaInfo: Codable {

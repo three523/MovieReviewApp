@@ -31,15 +31,9 @@ class MovieListCollectionViewCell: MovieDetailCollectionViewCell {
         return label
     }()
     
-    //MARK: movieInfo 없이 작동시 지울예정
     var movie: SummaryMediaInfo? = nil {
-        willSet {
-            self.settingData()
-        }
-    }
-    var movieTest: SummaryMediaInfo? = nil {
         didSet {
-            settingData()
+            self.settingData()
         }
     }
     
@@ -73,19 +67,6 @@ class MovieListCollectionViewCell: MovieDetailCollectionViewCell {
     }
     
     func settingData() {
-        if let movie = movieTest {
-            if let posterPath = movie.posterPath {
-                ImageLoader.loader.tmdbImageLoad(stringUrl: posterPath, size: .poster) { image in
-                    DispatchQueue.main.async {
-                        self.moviePoster.image = image
-                    }
-                }
-            }
-            
-            movieTitleLabel.text = movie.title
-            movieScoreLable.text = "평점: \(movie.voteAverage)"
-        }
-        //TODO: MovieInfo => SummaryMediaInfo 로 전부 전환후에 지우기
         guard let movie = movie else {
             return
         }
@@ -98,8 +79,13 @@ class MovieListCollectionViewCell: MovieDetailCollectionViewCell {
         }
         
         movieTitleLabel.text = movie.title
-        movieScoreLable.text = "평점: \(movie.voteAverage)"
-        
+        if let myRate = movie.myRate {
+            movieScoreLable.text = "평가함✭: \(myRate)"
+            movieScoreLable.textColor = .systemYellow
+        } else {
+            movieScoreLable.text = "평점✭: \(movie.voteAverage)"
+            movieScoreLable.textColor = .systemPink
+        }
     }
     
     required init?(coder: NSCoder) {

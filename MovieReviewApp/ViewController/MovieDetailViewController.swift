@@ -24,6 +24,7 @@ class MovieDetailViewController: UIViewController, UIGestureRecognizerDelegate {
     let header: MovieDetailHeaderView = MovieDetailHeaderView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.width))
     var movieId: String = ""
     lazy var detailViewModel: MovieDetailViewModel = MovieDetailViewModel(movieId: movieId)
+    var rated: Double? = nil
     private let myReactionModel: MyReactionModel = MyReactionModel()
     var director: String? = ""
     var count = 2
@@ -102,6 +103,7 @@ class MovieDetailViewController: UIViewController, UIGestureRecognizerDelegate {
         movieDetailTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         movieDetailTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
             
+        myReactionModel.requestDataSnapshot()
     }
     
     func appendRecentlyMovie(recentlyMovie: RecentlyMovie) {
@@ -198,7 +200,7 @@ extension MovieDetailViewController: UITableViewDelegate, UITableViewDataSource,
         if indexPath.section == 0 {
             let rowCount = tableView.numberOfRows(inSection: 0)
             if indexPath.row == 0 && rowCount == 2 {
-                let starCell: UITableViewCell = DetailSectionTableViewCell(style: .default, reuseIdentifier: DetailSectionTableViewCell.identifier, type: .starCell, delegate: self)
+                let starCell: UITableViewCell = DetailSectionTableViewCell(style: .default, reuseIdentifier: DetailSectionTableViewCell.identifier, type: .starCell, delegate: self, rated: rated)
                 return starCell
             } else if indexPath.row == 0 && rowCount == 3 {
                 let expectationsCell: UITableViewCell = DetailSectionTableViewCell(style: .default, reuseIdentifier: DetailSectionTableViewCell.identifier, type: .expectationsCell)
@@ -270,7 +272,7 @@ extension MovieDetailViewController: UITableViewDelegate, UITableViewDataSource,
         } else if indexPath.section == 4 {
             print("similarCell")
             guard let similarCell: SimilarTableViewCell = tableView.dequeueReusableCell(withIdentifier: SimilarTableViewCell.identifier) as? SimilarTableViewCell else { return cell }
-            similarCell.currentVC = self
+            similarCell.navigationController = navigationController
             return similarCell
         }
         return cell
