@@ -52,6 +52,7 @@ class StorageCollectionViewCell: UICollectionViewCell, ViewSortDelegate {
     }
     weak var delegate: NavigationPushDelegate?
     weak var navigationController: UINavigationController?
+
     var movies: [SummaryMediaInfo] = [] {
         didSet {
             self.detailCollectionView.reloadData()

@@ -24,8 +24,8 @@ class MovieDetailViewController: UIViewController, UIGestureRecognizerDelegate {
     let header: MovieDetailHeaderView = MovieDetailHeaderView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.width))
     var movieId: String = ""
     lazy var detailViewModel: MovieDetailViewModel = MovieDetailViewModel(movieId: movieId)
-    let myReactionModel: MyReactionModel = MyReactionModel()
     var rated: Double? = nil
+    private let myReactionModel: MyReactionModel = MyReactionModel()
     var director: String? = ""
     var count = 2
     
@@ -35,6 +35,8 @@ class MovieDetailViewController: UIViewController, UIGestureRecognizerDelegate {
         view.addSubview(movieDetailTableView)
                 
         navigationSetting()
+        
+        myReactionModel.requestDataSnapshot()
         
         let dismissAction: UIAction = UIAction { _ in self.dismiss(animated: true) }
         

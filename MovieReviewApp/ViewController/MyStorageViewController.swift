@@ -94,6 +94,14 @@ class MyStorageViewController: UIViewController, NavigationPushDelegate {
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "chevron.backward"), style: .plain, target: self, action: #selector(backButtonClick))
     }
     
+    private func setViewModel() {
+        myReactionModel.viewUpdate = { [weak self] in
+            guard let self = self else { return }
+            self.storageCollectionView.reloadData()
+        }
+        myReactionModel.requestDataSnapshot()
+    }
+    
     @objc
     func backButtonClick() {
         navigationController?.popViewController(animated: true)
