@@ -316,12 +316,13 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
             return
         }
         
+        guard let cell = defaultTableView.cellForRow(at: indexPath) as? SearchDefaultTableViewCell else { return }
         guard let movieList = searchViewModel.getPopularMovieList() else { return }
         let movieId = movieList[indexPath.row].id
-        let detailVC = MovieDetailViewController()
-        detailVC.movieId = String(movieId)
         
-        navigationController?.pushViewController(detailVC, animated: true)
+        cell.navigationController = navigationController
+        cell.movieId = movieList[indexPath.item].id
+        cell.presentMovieDetail()
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -401,7 +402,7 @@ class RecentlyMoviesCollectionViewCell: UICollectionViewCell {
     }
 }
 
-class SearchDefaultTableViewCell: UITableViewCell {
+class SearchDefaultTableViewCell: MovieDetailTableViewCell {
     
     static let identifier: String = "\(SearchDefaultTableViewCell.self)"
     

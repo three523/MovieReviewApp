@@ -40,7 +40,7 @@ class MyStorageViewController: UIViewController, NavigationPushDelegate {
             // TODO: Reload table
         }
     }
-    private let myReactionModel: MyReactionModel = MyReactionModel.shared
+    private let myReactionModel: MyReactionModel = MyReactionModel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -49,6 +49,7 @@ class MyStorageViewController: UIViewController, NavigationPushDelegate {
         setStorageCollectionView()
         setAutolayout()
         setNavigationController()
+        setViewModel()
     }
     
     private func viewAdd() {
@@ -74,6 +75,14 @@ class MyStorageViewController: UIViewController, NavigationPushDelegate {
         storageCollectionView.dataSource = self
         storageCollectionView.delegate = self
         storageCollectionView.register(StorageCollectionViewCell.self, forCellWithReuseIdentifier: StorageCollectionViewCell.identifier)
+    }
+    
+    private func setViewModel() {
+        myReactionModel.viewUpdate = { [weak self] in
+            guard let self = self else { return }
+            self.storageCollectionView.reloadData()
+        }
+        myReactionModel.requestDataSnapshot()
     }
     
     private func setNavigationController() {
@@ -121,11 +130,11 @@ extension MyStorageViewController: UICollectionViewDelegate, UICollectionViewDat
             print("Storage CollectionView Cell is nil")
             return UICollectionViewCell(frame: CGRect(x: 0, y: 0, width: collectionView.frame.width, height: 100))
         }
-        
         if indexPath.item == 0 { cell.movies = myReactionModel.myReactionList.rated ?? [] }
         else if indexPath.item == 1 { cell.movies = myReactionModel.myReactionList.wanted ?? [] }
         else if indexPath.item == 2 { cell.movies = myReactionModel.myReactionList.watching ?? [] }
         
+        cell.navigationController = navigationController
         cell.delegate = self
         return cell
     }

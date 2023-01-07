@@ -9,28 +9,53 @@ import Foundation
 import FirebaseDatabase
 
 class MyReactionModel {
-    static var shared: MyReactionModel = MyReactionModel()
-    var myReactionList: MyReaction = MyReaction.empty
+    var myReactionList: MyReaction
     private let firebaseManager: FBDataBaseManager = FBDataBaseManager()
+    var viewUpdate: ()->() = {}
     init() {
+        self.myReactionList = MyReaction.empty
+        NotificationCenter.default.addObserver(self, selector: #selector(updateReactionList), name: Notification.Name("UpdateReactionList"), object: nil)
+    }
+    
+    func fetchRatedMediaInfos(completion: @escaping ([SummaryMediaInfo]) -> Void) {
         firebaseManager.getDataSnapshot(type: .storage) { result in
             switch result {
             case .success(let dataSnapshot):
                 self.myReactionList = self.dataSnapshotToReactionList(dataSnapshot: dataSnapshot)
+                self.viewUpdate()
             case .failure(let failure):
-                self.myReactionList = MyReaction.empty
+                print(failure)
+            }
+            completion(self.myReactionList.rated ?? [])
+        }
+    }
+    
+    func requestDataSnapshot() {
+        firebaseManager.getDataSnapshot(type: .storage) { result in
+            switch result {
+            case .success(let dataSnapshot):
+                self.myReactionList = self.dataSnapshotToReactionList(dataSnapshot: dataSnapshot)
+                self.viewUpdate()
+            case .failure(let failure):
+                print(failure)
             }
         }
     }
     
     func addMediaInfo(mySummaryMediaInfo: SummaryMediaInfo, type: MediaReaction) {
-        //TODO: 중복 영화는 추가하지 않기
         switch type {
         case .rated:
-            guard let _ = myReactionList.rated else {
+            guard let ratedList = myReactionList.rated,
+                  false == ratedList.isEmpty else {
                 myReactionList.rated = [mySummaryMediaInfo]
                 firebaseManager.setReaction(mySummaryMediaInfos: [mySummaryMediaInfo.asDictionary], type: .rated)
                 return }
+            if let filterIndex = myReactionList.rated?.firstIndex(where: { $0.id == mySummaryMediaInfo.id }) {
+                guard let newRate = mySummaryMediaInfo.myRate else { return }
+                firebaseManager.rateUpdate(newRate, at: filterIndex)
+                myReactionList.rated![filterIndex].myRate = newRate
+                return
+            }
             myReactionList.rated!.append(mySummaryMediaInfo)
             firebaseManager.setReaction(mySummaryMediaInfos: myReactionList.rated!.map({ $0.asDictionary }), type: type)
         case .wanted:
@@ -48,6 +73,7 @@ class MyReactionModel {
             myReactionList.watching!.append(mySummaryMediaInfo)
             firebaseManager.setReaction(mySummaryMediaInfos: myReactionList.watching!.map({ $0.asDictionary }), type: type)
         }
+        NotificationCenter.default.post(name: Notification.Name("UpdateReactionList"), object: nil)
     }
     
     func deleteMediaInfo(mySummaryMediaInfo: SummaryMediaInfo, type: MediaReaction) {
@@ -65,6 +91,11 @@ class MyReactionModel {
             myReactionList.watching!.removeAll { $0.id == mySummaryMediaInfo.id }
             firebaseManager.setReaction(mySummaryMediaInfos: myReactionList.watching!.map({ $0.asDictionary }), type: type)
         }
+    }
+    
+    @objc
+    func updateReactionList() {
+        requestDataSnapshot()
     }
     
     private func dataSnapshotToReactionList(dataSnapshot: DataSnapshot) -> MyReaction {

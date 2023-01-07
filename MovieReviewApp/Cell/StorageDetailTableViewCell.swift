@@ -7,7 +7,7 @@
 
 import UIKit
 
-class StorageDetailTableViewCell: UITableViewCell {
+class StorageDetailTableViewCell: MovieDetailTableViewCell {
     
     static let identifier: String = "\(StorageDetailTableViewCell.self)"
     private let posterImageView: UIImageView = {

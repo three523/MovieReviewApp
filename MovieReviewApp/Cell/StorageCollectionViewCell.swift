@@ -51,7 +51,13 @@ class StorageCollectionViewCell: UICollectionViewCell, ViewSortDelegate {
         }
     }
     weak var delegate: NavigationPushDelegate?
-    var movies: [SummaryMediaInfo] = []
+    weak var navigationController: UINavigationController?
+    var movies: [SummaryMediaInfo] = [] {
+        didSet {
+            self.detailCollectionView.reloadData()
+            self.detailTableView.reloadData()
+        }
+    }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -125,7 +131,7 @@ extension StorageCollectionViewCell: UICollectionViewDelegate, UICollectionViewD
             return UICollectionViewCell(frame: CGRect(x: 0, y: 0, width: collectionView.frame.width, height: 100))
         }
         
-        cell.movieTest = movies[indexPath.item]
+        cell.movie = movies[indexPath.item]
         
         return cell
     }
@@ -137,8 +143,12 @@ extension StorageCollectionViewCell: UICollectionViewDelegate, UICollectionViewD
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let movieId = movies[indexPath.item].id
-        delegate?.movieDetailViewController(movieId: movieId)
+        guard let cell = collectionView.cellForItem(at: indexPath) as? MovieDetailCollectionViewCell else { return }
+        cell.navigationController = navigationController
+        cell.movieId = movies[indexPath.item].id
+        cell.presentMovieDetail()
+//        let movieId = movies[indexPath.item].id
+//        delegate?.movieDetailViewController(movieId: movieId)
     }
     
 }
@@ -155,7 +165,16 @@ extension StorageCollectionViewCell: UITableViewDelegate, UITableViewDataSource 
             return UITableViewCell()
         }
         cell.movieInfo = movies[indexPath.row]
+        
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard let cell = tableView.cellForRow(at: indexPath) as? MovieDetailTableViewCell else { return }
+        
+        cell.navigationController = navigationController
+        cell.movieId = movies[indexPath.item].id
+        cell.presentMovieDetail()
     }
         
 }

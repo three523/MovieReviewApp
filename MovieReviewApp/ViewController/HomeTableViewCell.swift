@@ -11,7 +11,7 @@ class HomeTableViewCell: UITableViewCell, UICollectionViewDelegate, UICollection
     
     static let identifier: String = "\(HomeTableViewCell.self)"
     private var collectionView: UICollectionView?
-    weak var currentVC: UIViewController? = nil
+    weak var navigationController: UINavigationController? = nil
     var movieList: [SummaryMediaInfo] = [SummaryMediaInfo]()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -76,8 +76,9 @@ class HomeTableViewCell: UITableViewCell, UICollectionViewDelegate, UICollection
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MovieListCollectionViewCell.identifier, for: indexPath) as! MovieListCollectionViewCell
-        cell.currentVC = currentVC
-        cell.movieId = "\(movieList[indexPath.item].id)"
+        cell.navigationController = navigationController
+        cell.movieId = movieList[indexPath.item].id
+        cell.rated = movieList[indexPath.item].myRate
         cell.presentMovieDetail()
     }
     

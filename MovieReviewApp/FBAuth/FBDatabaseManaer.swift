@@ -49,7 +49,6 @@ final class FBDataBaseManager {
         }
         switch type {
         case .profile:
-            print(uid)
             let ref = baseRef.child("User").child(uid).child("Profile")
             ref.getData { error, snapshot in
                 if let error = error {
@@ -80,6 +79,15 @@ final class FBDataBaseManager {
         }
     }
     
+    public func rateUpdate(_ rate: Double, at index: Int) {
+        guard let uid = Auth.auth().currentUser?.uid else {
+            print("RateUpdate uid is nil")
+            return
+        }
+        let ref = baseRef.child("User").child(uid).child("Reaction").child("Movie").child("Rated").child("\(index)").child("myRate")
+        ref.setValue(rate)
+    }
+    
     public func setProfile(profile: Profile) {
         guard let uid = Auth.auth().currentUser?.uid else {
             print("CurrentUser is nil")
@@ -98,7 +106,6 @@ final class FBDataBaseManager {
         }
         let ref = baseRef.child("User").child(uid).child("Reaction")
         let movieReactionRef = ref.child("Movie").child(type.rawValue)
-        print("Firebase: \(mySummaryMediaInfos)")
         movieReactionRef.setValue(mySummaryMediaInfos)
     }
     

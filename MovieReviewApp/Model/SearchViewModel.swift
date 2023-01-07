@@ -21,12 +21,21 @@ class SearchViewModel {
     private var searchTVs: [TVSearchResult]? = nil
     private var query: [String: String] = ["api_key": APIKEY, "language": "ko"]
     private var path: String = "search/"
+    private var myReactionModel: MyReactionModel = MyReactionModel()
     
     func getPopularMovie( completed: @escaping () -> Void ) {
         let popularPath: String = "movie/popular?"
         apiHandler.getJson(type: MovieList.self ,path: popularPath, query: query) { movieList in
-            self.popularMovies = movieList.results
-            completed()
+            self.fetchMyReactionMovie(movieList: movieList.results) { summaryMediaInfos in
+                var filterMovies = movieList
+                for (index, movie) in movieList.results.enumerated() {
+                    if let ratedMovie = summaryMediaInfos.first(where: { $0.id == movie.id }) {
+                        filterMovies.results[index] = ratedMovie
+                    }
+                }
+                self.popularMovies = filterMovies.results
+                completed()
+            }
         }
     }
     
@@ -35,9 +44,17 @@ class SearchViewModel {
         let searchQuery = search.replacingOccurrences(of: " ", with: "+")
         query["query"] = searchQuery
         if mediaType == .movie {
-            apiHandler.getJson(type: MovieList.self, path: searchPath, query: query) { movies in
-                self.searchMovies = movies.results
-                completed()
+            apiHandler.getJson(type: MovieList.self, path: searchPath, query: query) { movieList in
+                self.fetchMyReactionMovie(movieList: movieList.results) { summaryMediaInfos in
+                    var filterMovies = movieList
+                    for (index, movie) in movieList.results.enumerated() {
+                        if let ratedMovie = summaryMediaInfos.first(where: { $0.id == movie.id }) {
+                            filterMovies.results[index] = ratedMovie
+                        }
+                    }
+                    self.searchMovies =  filterMovies.results
+                    completed()
+                }
             }
         } else {
             apiHandler.getJson(type: TV.self, path: searchPath, query: query) { tvList in
@@ -96,5 +113,17 @@ class SearchViewModel {
             return 0
         }
         return searchPersons.count
+    }
+    
+    func fetchMyReactionMovie(movieList: [SummaryMediaInfo], completion: @escaping ([SummaryMediaInfo]) -> Void) {
+        myReactionModel.fetchRatedMediaInfos { summaryMediaInfos in
+            var filterMovies = movieList
+            for (index, movie) in movieList.enumerated() {
+                if let ratedMovie = summaryMediaInfos.first(where: { $0.id == movie.id }) {
+                    filterMovies[index] = ratedMovie
+                }
+            }
+            completion(filterMovies)
+        }
     }
 }
